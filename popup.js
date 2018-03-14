@@ -60,7 +60,8 @@ chrome.storage.local.get(function(result){
   console.log(result);
 })*/
 
-loadList()
+
+loadList();
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('suppr').addEventListener('click', resetList);

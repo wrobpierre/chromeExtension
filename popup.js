@@ -1,7 +1,7 @@
 function generateList(data) {
   var section = document.querySelector('body>section');
   var ol = document.createElement('ol');
-  var li, p, em, code, text;
+  var li, p, em, code, title, keywords;
   var i;
   for (var i = 0; i < data.length; i++) {
     li = document.createElement('li');
@@ -10,12 +10,17 @@ function generateList(data) {
     em.textContent = i+1;
     code = document.createElement('code');
     code.textContent = data[i]['url'];
-    text = document.createElement('p');
-    text.textContent = "Title: "+data[i]['title'];
+    title = document.createElement('p');
+    title.textContent = "Title: "+data[i]['title'];
+    keywords = document.createElement('p');
+    data[i]['keywords'].forEach( function(element) {
+      keywords.textContent = keywords.textContent+", "+element;
+    });
 
     p.appendChild(em);
     p.appendChild(code);
-    p.appendChild(text);
+    p.appendChild(title);
+    p.appendChild(keywords);
     li.appendChild(p);
     ol.appendChild(li);
   }

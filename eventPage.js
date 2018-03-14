@@ -29,8 +29,19 @@ function getCurrentTabUrl() {
     var tab = tabs[0];
     var url = tab.url;
     var title = tab.title;
-    var values = {'url':url, 'title':title}
-    saveList(values);
+    var keywords;
+
+    chrome.tabs.executeScript( null, {
+      code: 
+        "document.getElementsByTagName('meta');"
+      }, function(results){
+        keywords = results;
+        
+        var values = {'url':url, 'title':title, 'keywords':results}
+        saveList(values);
+      }
+    );
+
   });
 }
 

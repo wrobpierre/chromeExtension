@@ -30,18 +30,18 @@ function getCurrentTabUrl() {
     var url = tab.url;
     alert(url)
     var title = tab.title;
-    alert(url)
-    var keywords = [];
-    var keywordsAttr = document.getElementsByTagName('meta');
-    var keywordsElem = ""
-    keywordsAttr.forEach(function(element){
-      if(element.getAttribute("name") == "keywords"){
-        keywordsElem = element.getAttribute("content");
-        keywords = keywordsElem.split(",");
+    var keywords;
+
+    chrome.tabs.executeScript( null, {
+      code: 
+        "document.getElementsByTagName('meta');"
+      }, function(results){
+        keywords = results;
+        
+        var values = {'url':url, 'title':title, 'keywords':results}
+        saveList(values);
       }
-    });
-    var values = {'url':url, 'title':title, 'keywords':keywords};
-    saveList(values);
+    );
   });
 }
 

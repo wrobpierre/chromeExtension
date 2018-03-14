@@ -1,19 +1,3 @@
-function getCurrentTabUrl() {
-  var urlRes
-  var queryInfo = {
-    active: true,
-    currentWindow: true
-  };
-  chrome.tabs.query(queryInfo, (tabs) => {
-    var tab = tabs[0];
-    var url = tab.url;
-    saveList(url);
-    //console.log(listUrl);
-    //generateList(url);
-    //console.log(url);
-  });
-}
-
 function generateList(data) {
   var section = document.querySelector('body>section');
   var ol = document.createElement('ol');
@@ -42,22 +26,6 @@ function loadList() {
   storage.get('data', function(result) {
     generateList(result.data);
   })
-}
-
-function saveList(url) {
-  var storage = chrome.storage.local;
-  storage.get('data', function(result) {
-    if (result.data == undefined) {
-      var obj = {}
-      obj['data'] = [{'url':url}]
-      storage.set(obj)
-    }
-    else {
-      result.data.push({'url':url});
-      storage.set({'data':result.data})
-    }
-    loadList();
-  })  
 }
 
 function resetList() {
@@ -94,3 +62,7 @@ getCurrentTabUrl();
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('suppr').addEventListener('click', resetList);
 });
+
+chrome.storage.local.get('event', function(result) {
+  console.log(result.event)
+})

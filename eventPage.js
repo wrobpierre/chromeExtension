@@ -26,20 +26,22 @@ function getCurrentTabUrl() {
   chrome.tabs.query(queryInfo, (tabs) => {
     var tab = tabs[0];
     var url = tab.url;
-    saveList(url);
+    var title = tab.title;
+    var values = {'url':url, 'title':title}
+    saveList(values);
   });
 }
 
-function saveList(url) {
+function saveList(values) {
   var storage = chrome.storage.local;
   storage.get('data', function(result) {
     if (result.data == undefined) {
       var obj = {}
-      obj['data'] = [{'url':url}]
+      obj['data'] = [values]
       storage.set(obj)
     }
     else {
-      result.data.push({'url':url});
+      result.data.push(values);
       storage.set({'data':result.data})
     }
   })  

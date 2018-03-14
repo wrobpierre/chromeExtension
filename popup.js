@@ -10,10 +10,12 @@ function generateList(data) {
     em.textContent = i+1;
     code = document.createElement('code');
     code.textContent = data[i]['url'];
-    //console.log(code.textContent);
+    text = document.createElement('p');
+    text.textContent = "Title: "+data[i]['title'];
 
     p.appendChild(em);
     p.appendChild(code);
+    p.appendChild(text);
     li.appendChild(p);
     ol.appendChild(li);
   }
@@ -24,6 +26,7 @@ function generateList(data) {
 function loadList() {
   var storage = chrome.storage.local;
   storage.get('data', function(result) {
+    console.log(result);
     generateList(result.data);
   })
 }
@@ -57,7 +60,7 @@ chrome.storage.local.get(function(result){
   console.log(result);
 })*/
 
-getCurrentTabUrl();
+loadList()
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('suppr').addEventListener('click', resetList);

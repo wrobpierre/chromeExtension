@@ -1,31 +1,33 @@
 function generateList(data) {
-  var section = document.querySelector('body>section');
-  var ol = document.createElement('ol');
-  var li, p, em, code, title, keywords;
-  var i;
-  for (var i = 0; i < data.length; i++) {
-    li = document.createElement('li');
-    p = document.createElement('p');
-    em = document.createElement('em');
-    em.textContent = i+1;
-    code = document.createElement('code');
-    code.textContent = data[i]['url'];
-    title = document.createElement('p');
-    title.textContent = "Title: "+data[i]['title'];
-    keywords = document.createElement('p');
-    data[i]['keywords'].forEach( function(element) {
-      keywords.textContent = keywords.textContent+", "+element;
-    });
+  if (data != undefined) {    
+    var section = document.querySelector('body>section');
+    var ol = document.createElement('ol');
+    var li, p, em, code, title, keywords;
+    var i;
+    for (var i = 0; i < data.length; i++) {
+      li = document.createElement('li');
+      p = document.createElement('p');
+      em = document.createElement('em');
+      em.textContent = i+1;
+      code = document.createElement('code');
+      code.textContent = data[i]['url'];
+      title = document.createElement('p');
+      title.textContent = "Title: "+data[i]['title'];
+      /*keywords = document.createElement('p');
+      data[i]['keywords'].forEach( function(element) {
+        keywords.textContent = keywords.textContent+", "+element; 
+      });*/
 
-    p.appendChild(em);
-    p.appendChild(code);
-    p.appendChild(title);
-    p.appendChild(keywords);
-    li.appendChild(p);
-    ol.appendChild(li);
+      p.appendChild(em);
+      p.appendChild(code);
+      p.appendChild(title);
+      //p.appendChild(keywords);
+      li.appendChild(p);
+      ol.appendChild(li);
+    }
+    section.innerHTML = '';
+    section.appendChild(ol);
   }
-  section.innerHTML = '';
-  section.appendChild(ol);
 }
 
 function loadList() {
@@ -40,7 +42,7 @@ function resetList() {
   chrome.storage.local.clear(function() {
     var error = chrome.runtime.lastError;
     if (error) {
-        console.error(error);
+      console.error(error);
     }
   });
 }
@@ -69,7 +71,7 @@ chrome.storage.local.get(function(result){
 loadList();
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('suppr').addEventListener('click', resetList);
+  document.getElementById('suppr').addEventListener('click', resetList);
 });
 
 chrome.storage.local.get('event', function(result) {

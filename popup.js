@@ -57,7 +57,7 @@ chrome.storage.local.get(function(result){
   console.log(result);
 })*/
 
-getCurrentTabUrl();
+loadList();
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('suppr').addEventListener('click', resetList);

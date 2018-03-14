@@ -14,7 +14,9 @@ chrome.webNavigation.onDOMContentLoaded.addListener(function() {
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  if (changeInfo.status == "complete") {
    getCurrentTabUrl();
+ }
 }); 
 
 function getCurrentTabUrl() {

@@ -30,19 +30,32 @@ function getCurrentTabUrl() {
     var url = tab.url;
     var title = tab.title;
     var keywords = [];
+    var date = new Date();
+    var dateBegin =createDate();
+
 
     chrome.tabs.executeScript({
       file:
         "./scripts/requestMeta.js", runAt: "document_end"
       }, function(results){
-
-        var values = {'url':url, 'title':title, 'keywords':results}
-
+        
+        var values = {'url':url, 'title':title, 'keywords':results, 'dateBegin': dateBegin, 'timeOnPage': dateBegin}
         saveList(values);
       }
     );
   });
 }
+
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+  var storage = chrome.storage.local;
+  storage.get('data', function(result) {
+    var dateEnd = createDate();
+    result.data.forEach(function(element) {
+      // element['timeOnPage'] = dateEnd - element['dateBegin']; 
+      alert(element.dateBegin);
+    })
+  });
+});
 
 function saveList(values) {
   var storage = chrome.storage.local;
@@ -57,4 +70,11 @@ function saveList(values) {
       storage.set({'data':result.data})
     }
   })  
+}
+
+function createDate(){
+  var date = new Date();
+  var result = date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear()+" "+
+      date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+  return result;
 }

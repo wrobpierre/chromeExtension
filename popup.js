@@ -21,7 +21,7 @@ function generateList(data) {
       p.appendChild(title);
       
       keywords = document.createElement('p');
-      if (data[i]['keywords'] != undefined) {
+      if (data[i]['keywords'] != null) {
         data[i]['keywords'].forEach( function(element) {
           keywords.textContent += element+",    "; 
           p.appendChild(keywords);
@@ -84,5 +84,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 chrome.storage.local.get('event', function(result) {
-  console.log(result.event)
+  console.log(result.event);
 })

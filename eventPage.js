@@ -37,10 +37,10 @@ function getCurrentTabUrl() {
       }, function(results){
 
         var values = {'url':url, 'title':title, 'keywords':results}
+
         saveList(values);
       }
     );
-
   });
 }
 

@@ -1,8 +1,13 @@
 function generateList(data) {
-  if (data != undefined) {    
+  if (data != undefined) {
+
+    data.sort(function(a,b){
+      return b.numRequests - a.numRequests;
+    });
+
     var section = document.querySelector('body>section');
     var ol = document.createElement('ol');
-    var li, p, em, code, title, keywords;
+    var li, p, em, code, title, keywords, numReq;
     var i;
     for (var i = 0; i < data.length; i++) {
       li = document.createElement('li');
@@ -16,17 +21,25 @@ function generateList(data) {
       code.textContent = data[i]['url'];
       p.appendChild(code);
       
+      numReq = document.createElement('p');
+      numReq.textContent = "Views: "+data[i]['numRequests'];
+      p.appendChild(numReq);
+
       title = document.createElement('p');
       title.textContent = "Title: "+data[i]['title'];
       p.appendChild(title);
       
       keywords = document.createElement('p');
-      if (data[i]['keywords'] != undefined) {
+      keywords.textContent = "Keywords: "; 
+      if (data[i]['keywords'] != null) {
         data[i]['keywords'].forEach( function(element) {
-          keywords.textContent += element+",    "; 
-          p.appendChild(keywords);
+          keywords.textContent += element+","; 
         });   
       }
+      else {
+        keywords.textContent += "nothing"; 
+      }
+      p.appendChild(keywords);
 
       li.appendChild(p);
       ol.appendChild(li);

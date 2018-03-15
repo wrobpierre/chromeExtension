@@ -1,4 +1,5 @@
-chrome.webNavigation.onDOMContentLoaded.addListener(function() {
+chrome.webNavigation.onTabReplaced.addListener(function() {
+  alert('coucou');
 	chrome.storage.local.get('event', function(result){
 		var obj = {}
 		if (result.event == undefined) {
@@ -36,7 +37,7 @@ function getCurrentTabUrl() {
         "./scripts/requestMeta.js", runAt: "document_end"
       }, function(results){
 
-        var values = {'url':url, 'title':title, 'keywords':results}
+        var values = {'url':url, 'title':title, 'keywords':results, 'numRequests':1}
 
         saveList(values);
       }
@@ -48,13 +49,19 @@ function saveList(values) {
   var storage = chrome.storage.local;
   storage.get('data', function(result) {
     if (result.data == undefined) {
-      var obj = {}
-      obj['data'] = [values]
-      storage.set(obj)
+      var obj = {};
+      obj['data'] = [values];
+      storage.set(obj);
     }
     else {
-      result.data.push(values);
-      storage.set({'data':result.data})
+      var find = result.data.find(val => val.url == values.url);
+      if (find != undefined) {
+        result.data[result.data.indexOf(find)].numRequests += 1;
+      }
+      else {
+        result.data.push(values);
+      }
+      storage.set({'data':result.data});
     }
   })  
 }

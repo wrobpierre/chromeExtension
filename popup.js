@@ -12,16 +12,15 @@ function generateList(data) {
     code.textContent = data[i]['url'];
     title = document.createElement('p');
     title.textContent = "Title: "+data[i]['title'];
-    
-    // keywords = document.createElement('p');
-    // data[i]['keywords'].forEach( function(element) {
-    //   keywords.textContent = keywords.textContent+", "+element;
-    // });
+    keywords = document.createElement('p');
+    data[i]['keywords'].forEach( function(element) {
+      keywords.textContent = keywords.textContent+", "+element;
+    });
 
     p.appendChild(em);
     p.appendChild(code);
     p.appendChild(title);
-    // p.appendChild(keywords);
+    p.appendChild(keywords);
     li.appendChild(p);
     ol.appendChild(li);
   }

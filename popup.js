@@ -7,26 +7,35 @@ function generateList(data) {
     for (var i = 0; i < data.length; i++) {
       li = document.createElement('li');
       p = document.createElement('p');
+      
       em = document.createElement('em');
       em.textContent = i+1;
+      p.appendChild(em);
+      
       code = document.createElement('code');
       code.textContent = data[i]['url'];
+      p.appendChild(code);
+      
       title = document.createElement('p');
       title.textContent = "Title: "+data[i]['title'];
-      /*keywords = document.createElement('p');
-      data[i]['keywords'].forEach( function(element) {
-        keywords.textContent = keywords.textContent+", "+element; 
-      });*/
-
-      p.appendChild(em);
-      p.appendChild(code);
       p.appendChild(title);
-      //p.appendChild(keywords);
+      
+      keywords = document.createElement('p');
+      if (data[i]['keywords'] != undefined) {
+        data[i]['keywords'].forEach( function(element) {
+          keywords.textContent += element+",    "; 
+          p.appendChild(keywords);
+        });   
+      }
+
       li.appendChild(p);
       ol.appendChild(li);
     }
     section.innerHTML = '';
     section.appendChild(ol);
+  }
+  else {
+    console.log('fail data')
   }
 }
 

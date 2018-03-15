@@ -28,17 +28,14 @@ function getCurrentTabUrl() {
   chrome.tabs.query(queryInfo, (tabs) => {
     var tab = tabs[0];
     var url = tab.url;
-    alert(url)
     var title = tab.title;
     var keywords;
 
     chrome.tabs.executeScript( null, {
-      code: 
-        "document.getElementsByTagName('meta');"
+      file: 
+        "./scripts/requestMeta.js"
       }, function(results){
-        keywords = results;
-        
-        var values = {'url':url, 'title':title, 'keywords':results}
+        var values = {'url':url, 'title':title, 'keywords':results};
         saveList(values);
       }
     );

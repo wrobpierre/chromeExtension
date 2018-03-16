@@ -1,3 +1,5 @@
+var currentUrl;
+
 chrome.webNavigation.onDOMContentLoaded.addListener(function() {
 	chrome.storage.local.get('event', function(result){
 		var obj = {}
@@ -14,6 +16,9 @@ chrome.webNavigation.onDOMContentLoaded.addListener(function() {
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+    currentUrl = tabs[0].url;
+  });
   if (changeInfo.status == "complete") {
    getCurrentTabUrl();
  }
@@ -30,15 +35,13 @@ function getCurrentTabUrl() {
     var url = tab.url;
     var title = tab.title;
     var keywords = [];
-    var date = new Date();
-    var dateBegin =createDate();
-
+    var dateBegin = new Date();
+    dateBegin = dateBegin.toJSON();
 
     chrome.tabs.executeScript({
       file:
         "./scripts/requestMeta.js", runAt: "document_end"
       }, function(results){
-        
         var values = {'url':url, 'title':title, 'keywords':results, 'dateBegin': dateBegin, 'timeOnPage': dateBegin}
         saveList(values);
       }
@@ -48,13 +51,16 @@ function getCurrentTabUrl() {
 
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
   var storage = chrome.storage.local;
-  storage.get('data', function(result) {
-    var dateEnd = createDate();
-    result.data.forEach(function(element) {
-      // element['timeOnPage'] = dateEnd - element['dateBegin']; 
-      alert(element.dateBegin);
-    })
-  });
+  var dateEnd = new Date();
+  
+    storage.get('data', function(result) {
+      result.data.forEach(function(element) {
+        alert("current / "+currentUrl);
+        alert("to see / "+element.url);
+        compareDate(element.dateBegin, dateEnd.toJSON());
+        
+      });
+    });
 });
 
 function saveList(values) {
@@ -72,9 +78,27 @@ function saveList(values) {
   })  
 }
 
-function createDate(){
-  var date = new Date();
-  var result = date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear()+" "+
-      date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
-  return result;
+function compareDate(dateBegin, dateEnd){
+  var timeBegin = new Date(dateBegin).getTime();
+  var timeEnd = new Date(dateEnd).getTime();
+  var durationMilliSec = (timeEnd - timeBegin)/1000;
+  var hours = 0;
+  var minutes = 0;
+  
+  
+  
+  if((durationMilliSec/3600) >= 1){
+    hours = durationMilliSec/3600;
+    durationMilliSec -= Math.round(hours)*3600;
+    hours = Math.round(hours);
+  }
+  if((durationMilliSec/60)>= 1){
+    minutes = durationMilliSec/60
+    durationMilliSec -= Math.round(minutes)*60;
+    minutes = Math.round(minutes);
+  }
+  var secondes = Math.round(durationMilliSec);
+
+  var duration = [hours, minutes, secondes];
+  alert(hours+" / "+minutes+" / "+secondes);
 }

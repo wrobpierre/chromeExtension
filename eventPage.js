@@ -15,10 +15,16 @@ chrome.webNavigation.onTabReplaced.addListener(function() {
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  
   if (changeInfo.status == "complete") {
+    alert(tab.url)
    getCurrentTabUrl();
  }
 }); 
+
+chrome.tabs.onCreated.addListener(function(tab) {
+
+})
 
 function getCurrentTabUrl() {
   var urlRes

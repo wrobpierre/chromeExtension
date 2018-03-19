@@ -9,7 +9,7 @@ function generateList(data) {
     for (var i = 0; i < data.length; i++) {
       var tr = document.createElement('tr');
       var rank = document.createElement('td');
-      rank.textContent = i;
+      rank.textContent = i+1;
       
       var url = document.createElement('td');
       url.textContent = data[i]['url'];

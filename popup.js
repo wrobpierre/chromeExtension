@@ -30,11 +30,19 @@ function generateList(data) {
       var views = document.createElement('td');
       views.textContent = data[i]['numRequests'];
 
+      var time = document.createElement('td');
+      time.textContent = data[i]['timeOnPage']['hours']+":"+data[i]['timeOnPage']['minutes']+":"+data[i]['timeOnPage']['secondes'];
+
+      var scroll = document.createElement('td');
+      scroll.textContent = data[i]['scrollPourcent'];
+
       tr.appendChild(rank);
       tr.appendChild(url);
       tr.appendChild(title);
       tr.appendChild(keywords);
       tr.appendChild(views);
+      tr.appendChild(time);
+      tr.appendChild(scroll);
       table.appendChild(tr);
     }
 
@@ -64,6 +72,7 @@ function generateList(data) {
       
       keywords = document.createElement('p');
       keywords.textContent = "Keywords: "; 
+      
       if (data[i]['keywords'] != null) {
         data[i]['keywords'].forEach( function(element) {
           keywords.textContent += element+","; 
@@ -130,5 +139,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 chrome.storage.local.get('event', function(result) {
-  console.log(result.event)
+  console.log(result.event);
 })

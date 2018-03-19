@@ -19,6 +19,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     currentUrl = tabs[0].url;
   });
+
   if (changeInfo.status == "complete") {
    getCurrentTabUrl();
  }
@@ -49,7 +50,7 @@ function getCurrentTabUrl() {
   });
 }
 
-chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+chrome.tabs.onActivated.addListener(function(tabId, removeInfo) {
   var storage = chrome.storage.local;
   var dateEnd = new Date();
 
@@ -59,6 +60,14 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
           compareDate(result.data[result.data.indexOf(find)].dateBegin, dateEnd.toJSON(), result.data[result.data.indexOf(find)]);
           storage.set({'data':result.data}); 
         }
+          chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+            currentUrl = tabs[0].url;
+            find = result.data.find(val => val.url == currentUrl);
+            if (find != undefined) {
+              result.data[result.data.indexOf(find)].dateBegin = new Date().toJSON();
+              storage.set({'data':result.data}); 
+            }
+          });
     });
 });
 

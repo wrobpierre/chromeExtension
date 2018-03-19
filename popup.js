@@ -9,7 +9,7 @@ function generateList(data) {
     for (var i = 0; i < data.length; i++) {
       var tr = document.createElement('tr');
       var rank = document.createElement('td');
-      rank.textContent = i;
+      rank.textContent = i+1;
       
       var url = document.createElement('td');
       url.textContent = data[i]['url'];
@@ -30,11 +30,19 @@ function generateList(data) {
       var views = document.createElement('td');
       views.textContent = data[i]['numRequests'];
 
+      var time = document.createElement('td');
+      time.textContent = data[i]['timeOnPage']['hours']+":"+data[i]['timeOnPage']['minutes']+":"+data[i]['timeOnPage']['secondes'];
+
+      var scroll = document.createElement('td');
+      scroll.textContent = data[i]['scrollPourcent'];
+
       tr.appendChild(rank);
       tr.appendChild(url);
       tr.appendChild(title);
       tr.appendChild(keywords);
       tr.appendChild(views);
+      tr.appendChild(time);
+      tr.appendChild(scroll);
       table.appendChild(tr);
     }
 

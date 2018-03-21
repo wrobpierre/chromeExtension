@@ -16,14 +16,9 @@ chrome.webNavigation.onDOMContentLoaded.addListener(function() {
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-
-  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-    currentUrl = tabs[0].url;
-  });
-
-
+  saveTime();
+  
   if (changeInfo.status == "complete") {
-    //alert(tab.url)
    getCurrentTabUrl();
  }
 }); 
@@ -48,35 +43,39 @@ function getCurrentTabUrl() {
 
     chrome.tabs.executeScript({
       file:
-        "./scripts/requestMeta.js", runAt: "document_end"
-      }, function(results){
-        var values = {'url':url, 'title':title, 'keywords':results, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'numRequests':1, 'scrollPercent': 0}
-        saveList(values);
-      }
+      "./scripts/requestMeta.js", runAt: "document_end"
+    }, function(results){
+      var values = {'url':url, 'title':title, 'keywords':results, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'numRequests':1, 'scrollPercent': 0}
+      saveList(values);
+    }
     );
   });
 }
 
 chrome.tabs.onActivated.addListener(function(tabId, removeInfo) {
-  var storage = chrome.storage.local;
+  saveTime();
+});
+
+function saveTime(){
+    var storage = chrome.storage.local;
   var dateEnd = new Date();
 
-    storage.get('data', function(result) {
-      var find = result.data.find(val => val.url == currentUrl);
+  storage.get('data', function(result) {
+    var find = result.data.find(val => val.url == currentUrl);
+    if (find != undefined) {
+      compareDate(result.data[result.data.indexOf(find)].dateBegin, dateEnd.toJSON(), result.data[result.data.indexOf(find)]);
+      storage.set({'data':result.data}); 
+    }
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+      currentUrl = tabs[0].url;
+      find = result.data.find(val => val.url == currentUrl);
       if (find != undefined) {
-          compareDate(result.data[result.data.indexOf(find)].dateBegin, dateEnd.toJSON(), result.data[result.data.indexOf(find)]);
-          storage.set({'data':result.data}); 
-        }
-          chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-            currentUrl = tabs[0].url;
-            find = result.data.find(val => val.url == currentUrl);
-            if (find != undefined) {
-              result.data[result.data.indexOf(find)].dateBegin = new Date().toJSON();
-              storage.set({'data':result.data}); 
-            }
-          });
+        result.data[result.data.indexOf(find)].dateBegin = new Date().toJSON();
+        storage.set({'data':result.data}); 
+      }
     });
-});
+  });
+}
 
 function saveList(values) {
   var storage = chrome.storage.local;

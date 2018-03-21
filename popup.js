@@ -47,45 +47,45 @@ function generateList(data) {
     }
 
 
-    var liste = document.getElementById('dropdown');
-    var ol = document.createElement('ol');
-    var li, p, em, code, title, keywords, numReq;
-    for (var i = 0; i < data.length; i++) {
-      li = document.createElement('li');
-      p = document.createElement('p');
+    // var liste = document.getElementById('dropdown');
+    // var ol = document.createElement('ol');
+    // var li, p, em, code, title, keywords, numReq;
+    // for (var i = 0; i < data.length; i++) {
+    //   li = document.createElement('li');
+    //   p = document.createElement('p');
       
-      em = document.createElement('em');
-      em.textContent = i+1;
-      p.appendChild(em);
+    //   em = document.createElement('em');
+    //   em.textContent = i+1;
+    //   p.appendChild(em);
       
-      code = document.createElement('code');
-      code.textContent = data[i]['url'];
-      p.appendChild(code);
+    //   code = document.createElement('code');
+    //   code.textContent = data[i]['url'];
+    //   p.appendChild(code);
       
-      numReq = document.createElement('p');
-      numReq.textContent = "Views: "+data[i]['numRequests'];
-      p.appendChild(numReq);
+    //   numReq = document.createElement('p');
+    //   numReq.textContent = "Views: "+data[i]['numRequests'];
+    //   p.appendChild(numReq);
 
-      title = document.createElement('p');
-      title.textContent = "Title: "+data[i]['title'];
-      p.appendChild(title);
+    //   title = document.createElement('p');
+    //   title.textContent = "Title: "+data[i]['title'];
+    //   p.appendChild(title);
       
-      keywords = document.createElement('p');
-      keywords.textContent = "Keywords: "; 
+    //   keywords = document.createElement('p');
+    //   keywords.textContent = "Keywords: "; 
       
-      if (data[i]['keywords'] != null) {
-        data[i]['keywords'].forEach( function(element) {
-          keywords.textContent += element+","; 
-        });   
-      }
-      else {
-        keywords.textContent += "nothing"; 
-      }
-      p.appendChild(keywords);
+    //   if (data[i]['keywords'] != null) {
+    //     data[i]['keywords'].forEach( function(element) {
+    //       keywords.textContent += element+","; 
+    //     });   
+    //   }
+    //   else {
+    //     keywords.textContent += "nothing"; 
+    //   }
+    //   p.appendChild(keywords);
 
-      li.appendChild(p);
-      ol.appendChild(li);
-    }
+    //   li.appendChild(p);
+    //   ol.appendChild(li);
+    // }
     liste.innerHTML = '';
     liste.appendChild(ol);
   }

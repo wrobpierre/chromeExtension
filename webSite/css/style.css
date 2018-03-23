@@ -6,6 +6,12 @@
  .nytg {
   font-family: Arial;
 }
+
+#page {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
 #nytg-chartFrame{
   width: 970px;
   height: 550px;

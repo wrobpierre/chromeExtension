@@ -4,9 +4,10 @@
 	<title>Chrome Extension</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link rel="image_src" href="https://static01.nyt.com/images/2012/02/13/us/politics/promo-budget-190x126.png">
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="./css/style.css">
 	<link rel="stylesheet" type="text/css" href="https://static01.nyt.com/css/0.1/screen/build/interactive/us/politics/styles.css">
 	<link rel="stylesheet" type="text/css" media="print" href="https://static01.nyt.com/css/0.1/print/styles.css">
+	<link rel="stylesheet" type="text/css" href="./css/header_footer.css">
 <!--[if IE]>
         <style type="text/css">
             @import url(http://graphics8.nytimes.com/css/0.1/screen/common/ie.css);
@@ -24,6 +25,7 @@
     <script type="text/javascript" src="https://static01.nyt.com/js/article/articleShare.js"></script>
 </head>
 <body id="interactiveABC">
+	<header><div id="header"><img src="./img/home.svg" alt="Home"></div></header>
 	<div id="shell">
 		<div id="page" class="tabContent active">	    		          
 			<div id="main">
@@ -194,12 +196,17 @@ nytg.category_data = [{"label":"Health and Human Services","total":921605000,"nu
 
 </script>
 
-<script src="http://code.jquery.com/jquery-1.7.1.js"></script>
+<script src="../jquery.js"></script>
+
+<!-- D3 script -->
 <script src="../d3/d3.min.js"></script>
 <script src="../d3/d3.geom.min.js"></script>
 <script src="../d3/d3.layout.min.js"></script>
 
-<script type='text/javascript' src="script.js"></script>
+<!-- Header and footer script -->
+<script src="./js/header_footer.js"></script>
+
+<script type='text/javascript' src="./js/script.js"></script>
 <!--END Stencil generated content. -->    </div><!--close main free form -->
 </div><!--close .insetHFullWidth -->
 </div><!--close .ledeStory -->
@@ -224,6 +231,7 @@ var regstatus="non-registered";
 <noscript>
 	<div><img alt="DCSIMG" id="DCSIMG" width="1" height="1" src="http://wt.o.nytimes.com/dcsym57yw10000s1s8g0boozt_9t1x/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=1.0.7"/></div>
 </noscript>
-
+<div id="info"><img src="./img/info.svg" alt="Information"></div>
+<footer><div id="footer"></div></footer>
 </body>
 </html>

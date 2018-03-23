@@ -1,8 +1,3 @@
-var static_kw = "";
-var dynamic_kw = "";
-var nyt_google_contents = dynamic_kw + static_kw;
-var nyt_google_ad_channel = "us_politics";
-
 // BEGIN nytg Additions
 jQuery.noConflict();
 var $j = jQuery;
@@ -152,15 +147,6 @@ nytg.formatNumber = function(n,decimals) {
       
       this.scatterPlotY = this.changeScale(0);
       
-      /*this.pctFormat = function(p){
-        if (p === Infinity ||p === -Infinity) {
-          return "N.A."
-        } else {
-          return that.pFormat(p)
-        }
-        
-      }*/
-      
       this.radiusScale = function(n){ return that.rScale(Math.abs(n)); };
       this.getStrokeColor = function(d){
         // if (d.isNegative) {
@@ -255,10 +241,6 @@ nytg.formatNumber = function(n,decimals) {
           out.y = n.positions.total.y + (n.positions.total.y - (150)) * 0.5;
         };
 
-        /*if ((n[this.currentYearDataColumn] > 0)!==(n[this.previousYearDataColumn] > 0)) {
-          out.change = "N.A.";
-          out.changeCategory = 0;
-        };*/
         this.nodes.push(out)
       };
       
@@ -338,7 +320,7 @@ nytg.formatNumber = function(n,decimals) {
       .attr('cy', 55);
       
 
-      var departmentOverlay = $j("#nytg-departmentOverlay")
+      /*var departmentOverlay = $j("#nytg-departmentOverlay")
       
       for (var i=0; i < nytg.category_data.length; i++) {
         var cat = nytg.category_data[i]['label']
@@ -357,7 +339,7 @@ nytg.formatNumber = function(n,decimals) {
         catNode.css({'left':this.categoryPositionLookup[cat].x-catWidth/2,'top': this.categoryPositionLookup[cat].y - catYOffset, 'width':catWidth})
         departmentOverlay.append(catNode)
 
-      };
+      };*/
       
       // This is the every circle
       this.circle = this.svg.selectAll("circle")
@@ -381,13 +363,8 @@ nytg.formatNumber = function(n,decimals) {
 
         d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
         d3.select("#nytg-tooltip .nytg-department").text(d.group)
-        d3.select("#nytg-tooltip .nytg-value").html("$"+that.bigFormat(d.value))
+        d3.select("#nytg-tooltip .nytg-value").html("$"+that.bigFormat(d.value)) })
 
-        /*var pctchngout = that.pctFormat(d.change)
-        if (d.change == "N.A.") {
-          pctchngout = "N.A."
-        };*/
-        d3.select("#nytg-tooltip .nytg-change").html(pctchngout) })
       .on("mouseout",function(d,i) { 
         d3.select(this)
         .style("stroke-width",1)

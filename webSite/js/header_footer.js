@@ -1,4 +1,4 @@
-$(document).ready(function(){
+document.addEventListener("DOMContentLoaded",function(){
 	var beginHeader = 0;
 	var beginFooter = 0;
 	var textHeader = document.getElementsByClassName('textHeader');

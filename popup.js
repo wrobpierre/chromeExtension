@@ -86,8 +86,8 @@ function generateList(data) {
     //   li.appendChild(p);
     //   ol.appendChild(li);
     // }
-    liste.innerHTML = '';
-    liste.appendChild(ol);
+    //liste.innerHTML = '';
+    //liste.appendChild(ol);
   }
   else {
     console.log('fail data')
@@ -109,6 +109,14 @@ function resetList() {
       console.error(error);
     }
   });
+}
+
+function sendData() {
+  var post = $.post('http://localhost/chromeExtension/dataBase.php');
+
+  post.done(function(data) {
+    console.log(data)
+  })
 }
 
 /*var obj = {};
@@ -136,6 +144,7 @@ loadList();
 
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('suppr').addEventListener('click', resetList);
+  document.getElementById('save').addEventListener('click', sendData);
 });
 
 chrome.storage.local.get('event', function(result) {

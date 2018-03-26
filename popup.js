@@ -2,7 +2,7 @@ function generateList(data) {
   if (data != undefined) {
 
     data.sort(function(a,b){
-      return b.numRequests - a.numRequests;
+      return b.views - a.views;
     });
 
     var table = document.querySelector('table>tbody');
@@ -19,16 +19,14 @@ function generateList(data) {
 
       var keywords = document.createElement('td');
       if (data[i]['keywords'] != null) {
-        data[i]['keywords'].forEach( function(element) {
-          keywords.textContent += element+","; 
-        });   
+          keywords.textContent = data[i]['keywords'].join(', '); 
       }
       else {
-        keywords.textContent += "nothing"; 
+        keywords.textContent = "nothing..."; 
       }
 
       var views = document.createElement('td');
-      views.textContent = data[i]['numRequests'];
+      views.textContent = data[i]['views'];
 
       var time = document.createElement('td');
       time.textContent = data[i]['timeOnPage']['hours']+":"+data[i]['timeOnPage']['minutes']+":"+data[i]['timeOnPage']['secondes'];
@@ -53,26 +51,26 @@ function generateList(data) {
     // for (var i = 0; i < data.length; i++) {
     //   li = document.createElement('li');
     //   p = document.createElement('p');
-      
+
     //   em = document.createElement('em');
     //   em.textContent = i+1;
     //   p.appendChild(em);
-      
+
     //   code = document.createElement('code');
     //   code.textContent = data[i]['url'];
     //   p.appendChild(code);
-      
+
     //   numReq = document.createElement('p');
-    //   numReq.textContent = "Views: "+data[i]['numRequests'];
+    //   numReq.textContent = "Views: "+data[i]['views'];
     //   p.appendChild(numReq);
 
     //   title = document.createElement('p');
     //   title.textContent = "Title: "+data[i]['title'];
     //   p.appendChild(title);
-      
+
     //   keywords = document.createElement('p');
     //   keywords.textContent = "Keywords: "; 
-      
+
     //   if (data[i]['keywords'] != null) {
     //     data[i]['keywords'].forEach( function(element) {
     //       keywords.textContent += element+","; 
@@ -111,11 +109,16 @@ function resetList() {
   });
 }
 
-function sendData() {
-  var post = $.post('http://localhost/chromeExtension/dataBase.php');
+function sendData(key) {
+  var storage = chrome.storage.local;
 
-  post.done(function(data) {
-    console.log(data)
+  storage.get('data', function(result){
+    var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, key:key });
+
+    post.done(function(data) {
+      var test = $.parseJSON(data);
+      console.log(test);
+    })
   })
 }
 
@@ -144,7 +147,9 @@ loadList();
 
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('suppr').addEventListener('click', resetList);
-  document.getElementById('save').addEventListener('click', sendData);
+  document.getElementById('add').addEventListener('click', function(){ sendData("add") });
+  document.getElementById('load').addEventListener('click', function(){ sendData("load") });
+  document.getElementById('delete').addEventListener('click', function(){ sendData("delete") });
 });
 
 chrome.storage.local.get('event', function(result) {

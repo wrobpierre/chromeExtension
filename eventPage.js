@@ -37,7 +37,7 @@ function getCurrentTabUrl() {
     var tab = tabs[0];
     var url = tab.url;
     var title = tab.title;
-    var keywords = [];
+    var keywords;
     var dateBegin = new Date();
     dateBegin = dateBegin.toJSON();
 
@@ -45,7 +45,8 @@ function getCurrentTabUrl() {
       file:
       "./scripts/requestMeta.js", runAt: "document_end"
     }, function(results){
-      var values = {'url':url, 'title':title, 'keywords':results, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'numRequests':1, 'scrollPercent': 0}
+      keywords = results[0]
+      var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'scrollPercent': 0}
       saveList(values);
     }
     );
@@ -88,7 +89,7 @@ function saveList(values) {
     else {
       var find = result.data.find(val => val.url == values.url);
       if (find != undefined) {
-        result.data[result.data.indexOf(find)].numRequests += 1;
+        result.data[result.data.indexOf(find)].views += 1;
 
         var dateBegin = new Date();
         dateBegin = dateBegin.toJSON();

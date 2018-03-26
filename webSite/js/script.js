@@ -99,17 +99,18 @@ nytg.formatNumber = function(n,decimals) {
     charge          : null,
     changeTickValues: [-0.25, -0.15, -0.05, 0.05, 0.15, 0.25],
     categorizeChange: function(c){
-      if (isNaN(c)) { return 0;
-      } else if ( c < -0.25) { return -3;
-      } else if ( c < -0.05){ return -2;
-      } else if ( c < -0.001){ return -1;
-      } else if ( c <= 0.001){ return 0;
-      } else if ( c <= 0.05){ return 1;
-      } else if ( c <= 0.25){ return 2;
+      var time = c['hours']*3600 + c['minutes']*60 + c['secondes'];
+      console.log(time)
+
+      if (time < 10) { return -2;
+      } else if ( c < 60) { return -1;
+      } else if ( c < 300){ return 0;
+      } else if ( c < 600){ return 1;
+      } else if ( c < 900){ return 2;
       } else { return 3; }
     },
-    fillColor       : d3.scale.ordinal().domain([-3,-2,-1,0,1,2,3]).range(["#d84b2a", "#ee9586","#e4b7b2","#AAA",/*"#beccae"*/"#3678e2", "#9caf84", "#7aa25c"]),
-    strokeColor     : d3.scale.ordinal().domain([-3,-2,-1,0,1,2,3]).range(["#c72d0a", "#e67761","#d9a097","#999",/*"#a7bb8f"*/"#000000", "#7e965d", "#5a8731"]),
+    fillColor       : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#d84b2a", "#ee9586","#e4b7b2",/*"#AAA","#beccae"*/"#3678e2", "#9caf84", "#7aa25c"]),
+    strokeColor     : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#c72d0a", "#e67761","#d9a097",/*"#999","#a7bb8f"*/"#000000", "#7e965d", "#5a8731"]),
     getFillColor    : null,
     getStrokeColor  : null,
     pFormat         : d3.format("+.1%"),
@@ -126,14 +127,14 @@ nytg.formatNumber = function(n,decimals) {
       } else {return d}
     },  
     
-    rScale          : d3.scale.pow().exponent(0.5).domain([0,1000000000]).range([1,90]),
+    rScale          : d3.scale.pow().exponent(0.2).domain([0,1000000000]).range([1,90]),
     radiusScale     : null,
     changeScale     : d3.scale.linear().domain([-0.28,0.28]).range([620,180]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
     groupScale      : {},
     
     //data settings
-    currentYearDataColumn   : 'budget_2013',
+    //currentYearDataColumn   : 'budget_2013',
     previousYearDataColumn  : 'budget_2012',
     data                    : nytg.budget_array_data,
     categoryPositionLookup  : {},
@@ -223,14 +224,14 @@ nytg.formatNumber = function(n,decimals) {
         var n = this.data[i];
         var out = {
           sid: n['id'],
-          radius: this.radiusScale(n[this.currentYearDataColumn]),
-          group: n['department'],
+          radius: this.radiusScale(n[/*this.currentYearDataColumn*/'view']),
+          group: n['domain'],
           change: n['change'],
           changeCategory: this.categorizeChange(n['change']),
-          value: n[this.currentYearDataColumn],
+          value: n[/*this.currentYearDataColumn*/'view'],
           url: n['url'],
           discretion: n['discretion'],
-          isNegative: (n[this.currentYearDataColumn] < 0),
+          //isNegative: (n[this.currentYearDataColumn] < 0),
           positions: n.positions,
           x:Math.random() * 1000,
           y:Math.random() * 1000
@@ -242,15 +243,16 @@ nytg.formatNumber = function(n,decimals) {
 
         this.nodes.push(out)
       };
+      console.log(this.nodes)
 
       this.nodes.sort(function(a, b){  
         return Math.abs(b.value) - Math.abs(a.value);  
       });
       
       for (var i=0; i < this.nodes.length; i++) {
-        if(!this.nodes[i].isNegative ){
+        //if(!this.nodes[i].isNegative ){
           this.positiveNodes.push(this.nodes[i])
-        }
+        //}
       };
       
       this.svg = d3.select("#nytg-chartCanvas").append("svg:svg")
@@ -359,7 +361,7 @@ nytg.formatNumber = function(n,decimals) {
         d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url))
 
         d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
-        d3.select("#nytg-tooltip .nytg-department").text(d.group)
+        d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         d3.select("#nytg-tooltip .nytg-value").html("$"+that.bigFormat(d.value)) })
 
       .on("mouseout",function(d,i) { 
@@ -536,13 +538,13 @@ nytg.formatNumber = function(n,decimals) {
         var targetX = that.width / 2;
         
         
-        if (d.isNegative) {
+        /*if (d.isNegative) {
           if (d.changeCategory > 0) {
             d.x = - 200
           } else {
             d.x =  1100
           }
-        }
+        }*/
         
         // if (d.positions.total) {
         //   targetX = d.positions.total.x
@@ -592,14 +594,14 @@ nytg.formatNumber = function(n,decimals) {
         var targetY = that.centerY;
         var targetX = 0;
         
-        if (d.isNegative) {
+        //if (d.isNegative) {
           if (d.changeCategory > 0) {
             d.x = - 200
           } else {
             d.x =  1100
           }
           return;
-        }
+        //}
         
         
         if (d.discretion === that.DISCRETIONARY) {
@@ -628,14 +630,14 @@ nytg.formatNumber = function(n,decimals) {
         var targetY = that.height / 2;
         var targetX = 0;
         
-        if (d.isNegative) {
+        //if (d.isNegative) {
           if (d.changeCategory > 0) {
             d.x = - 200
           } else {
             d.x =  1100
           }
           return;
-        }
+        //}
         
         
         if (d.discretion === "Discretionary") {

@@ -117,7 +117,9 @@ function sendData(key) {
 
     post.done(function(data) {
       var test = $.parseJSON(data);
-      console.log(test);
+      $.each($.parseJSON(test[0]['timer']), function(i, element){
+        console.log(element)
+      })
     })
   })
 }

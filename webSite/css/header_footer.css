@@ -39,14 +39,16 @@ header{
 #header img {
 	width: 30%;
 	/*padding-top: 30px;*/
-	margin-top: -90px;
+	margin: auto;
+	margin-top: 90px;
 }
 
 .textHeader {
-	visibility: hidden;
+	display: none;
 	margin: auto;
 	color: white;
 	margin-top: 10px;
+
 }
 
 footer{

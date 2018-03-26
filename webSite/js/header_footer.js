@@ -25,9 +25,9 @@ document.addEventListener("DOMContentLoaded",function(){
 				} else {
 					pos += 5; 
 					header.style.top = pos + 'px';
-					imgHeader.style.visibility = "hidden";
-					textHeader[0].style.visibility = "visible";
-					textHeader[1].style.visibility = "visible";					
+					imgHeader.style.display = "none";
+					textHeader[0].style.display = "block";
+					textHeader[1].style.display = "block";					
 
 					if(count%2 == 0 ){
 						width += 5;
@@ -51,9 +51,9 @@ document.addEventListener("DOMContentLoaded",function(){
 				} else {
 					pos -= 5; 
 					header.style.top = pos + 'px'; 
-					imgHeader.style.visibility = "visible";
-					textHeader[0].style.visibility = "hidden";
-					textHeader[1].style.visibility = "hidden";
+					imgHeader.style.display = "block";
+					textHeader[0].style.display = "none";
+					textHeader[1].style.display = "none";
 					if(count%2 == 0 ){
 						width -= 5;
 						height -= 5;

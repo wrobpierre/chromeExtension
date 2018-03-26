@@ -214,7 +214,6 @@ nytg.formatNumber = function(n,decimals) {
           positionInRow:positionInRow
         }        
       };
-      console.log(nytg.category_data)
 
       //
       this.groupScale = d3.scale.ordinal().domain(this.categoriesList).rangePoints([0,1]);
@@ -243,8 +242,6 @@ nytg.formatNumber = function(n,decimals) {
 
         this.nodes.push(out)
       };
-      
-      console.log()
 
       this.nodes.sort(function(a, b){  
         return Math.abs(b.value) - Math.abs(a.value);  

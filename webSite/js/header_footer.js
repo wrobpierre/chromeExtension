@@ -13,12 +13,28 @@ document.addEventListener("DOMContentLoaded",function(){
 
 
 	header.addEventListener("click" , function(){
+
 		if(beginHeader%2 == 0){
 			var pos = 0;
 			var width = 150;
 			var height =  150;
 			var count = 0;
+			var opacity = 0;
+
 			var id = setInterval(frame, 1);
+
+			var opacityDiv = document.createElement("div");
+			opacityDiv.id = "opacityDiv";
+			opacityDiv.style.position = "fixed";
+			opacityDiv.style.top = "0";
+			opacityDiv.style.left = "0";
+			opacityDiv.style.width = "100%";
+			opacityDiv.style.height = "100%";
+			opacityDiv.style.zIndex = "101";
+			opacityDiv.style.backgroundColor = "#bdbdbd";
+			opacityDiv.style.opacity = "0";
+			document.body.appendChild(opacityDiv);
+
 			function frame() {
 				if (pos == 350) {
 					clearInterval(id);
@@ -27,14 +43,15 @@ document.addEventListener("DOMContentLoaded",function(){
 					header.style.top = pos + 'px';
 					imgHeader.style.display = "none";
 					textHeader[0].style.display = "block";
-					textHeader[1].style.display = "block";					
-
+					textHeader[1].style.display = "block";
 					if(count%2 == 0 ){
-						width += 5;
-						height += 5;
+						width += 10;
+						height += 10;
 						header.style.width = width + 'px';
 						header.style.height = height + 'px';
+						opacityDiv.style.opacity = opacity;
 					}
+					opacity += 0.005;
 					count++;
 				}
 			}
@@ -45,6 +62,13 @@ document.addEventListener("DOMContentLoaded",function(){
 			var height =  325;
 			var count = 0;
 			var id = setInterval(frame, 1);
+			var opacityDiv = document.getElementById('opacityDiv');
+
+			if(opacityDiv != null){
+				document.body.removeChild(opacityDiv);
+			}
+
+			
 			function frame() {
 				if (pos == 0) {
 					clearInterval(id);

@@ -27,8 +27,7 @@ header{
 	padding-top: 0px; 
 	border: solid 10px #E7E7E7;
 	text-align: center;
-	z-index: 101;
-	box-shadow: 4px 4px 12px #aaa;
+	z-index: 104;
 	}
 
 #header p {
@@ -55,7 +54,7 @@ footer{
 	height: 0px;
 	width: 100%;
 	bottom: 0;
-	z-index: 101;
+	z-index: 103;
 }
 
 #info{
@@ -68,9 +67,8 @@ footer{
 	border-radius:4rem 4rem 0 0;
 	margin-bottom: 10px;
 	bottom: 0;
-	z-index: 101;
+	z-index: 102;
 	text-align: center;
-	box-shadow: 4px 4px 12px #aaa;
 }
 
 #footer{
@@ -79,7 +77,6 @@ footer{
 	width: 100%;
 	background: #e74c3c;
 	border-top: none;
-	z-index: 101;
 	padding: 0;
 	color: white;
 	z-index: 102;

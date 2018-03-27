@@ -102,10 +102,10 @@ nytg.formatNumber = function(n,decimals) {
       var time = c['hours']*3600 + c['minutes']*60 + c['secondes'];
 
       if (time < 10) { return -2;
-      } else if ( c < 60) { return -1;
-      } else if ( c < 300){ return 0;
-      } else if ( c < 600){ return 1;
-      } else if ( c < 900){ return 2;
+      } else if ( time < 60) { return -1;
+      } else if ( time < 300){ return 0;
+      } else if ( time < 600){ return 1;
+      } else if ( time < 900){ return 2;
       } else { return 3; }
     },
     fillColor       : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#d84b2a", "#ee9586","#e4b7b2",/*"#AAA","#beccae"*/"#3678e2", "#9caf84", "#7aa25c"]),

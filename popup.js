@@ -119,9 +119,9 @@ function sendData(key) {
       var test = $.parseJSON(data);
       $.each($.parseJSON(test[0]['timer']), function(i, element){
         console.log(element)
-      })
-    })
-  })
+      });
+    });
+  });
 }
 
 /*var obj = {};

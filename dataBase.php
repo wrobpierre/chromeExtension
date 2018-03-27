@@ -1,5 +1,5 @@
 <?php 
-
+header('Access-Control-Allow-Origin: *');
 //var_dump($_POST['d']['data']);
 
 class site {
@@ -22,8 +22,8 @@ if (isset($_POST['key'])) {
     // set the PDO error mode to exception
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		if (isset($_POST['d'])) {
-			if ($_POST['key'] == 'add') {
+		if ($_POST['key'] == 'add') {
+			if (isset($_POST['d'])) {
 				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer)
 					VALUES (:url, :title, :keywords, :view, :timer)");
 				$stmt->bindParam(':url', $url);

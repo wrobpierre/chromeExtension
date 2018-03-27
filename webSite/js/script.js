@@ -100,7 +100,6 @@ nytg.formatNumber = function(n,decimals) {
     changeTickValues: [-0.25, -0.15, -0.05, 0.05, 0.15, 0.25],
     categorizeChange: function(c){
       var time = c['hours']*3600 + c['minutes']*60 + c['secondes'];
-      console.log(time)
 
       if (time < 10) { return -2;
       } else if ( c < 60) { return -1;

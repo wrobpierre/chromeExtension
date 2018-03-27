@@ -47,20 +47,20 @@ if (isset($_POST['key'])) {
 					$stmt->execute();
 				}
 
+			}
 				//echo "New records created successfully";
-			}
-			elseif ($_POST['key'] == 'load') {
-				$stmt = $conn->prepare("SELECT * FROM sites");
-				$stmt->execute();
+		}
+		elseif ($_POST['key'] == 'load') {
+			$stmt = $conn->prepare("SELECT * FROM sites");
+			$stmt->execute();
 
-				echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "site"));
-			}
-			elseif ($_POST['key'] == 'delete') {
-				$stmt = $conn->prepare("DELETE FROM sites");
-				$stmt->execute();
+			echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "site"));
+		}
+		elseif ($_POST['key'] == 'delete') {
+			$stmt = $conn->prepare("DELETE FROM sites");
+			$stmt->execute();
 
 				//echo "All datas deleted";
-			}
 		}
 	}
 	catch(PDOException $e)

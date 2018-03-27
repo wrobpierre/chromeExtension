@@ -131,17 +131,17 @@
 
 								<script src="http://code.jquery.com/jquery-1.7.1.js"></script>
 								<script type="text/javascript" charset="utf-8">
+
+
 									var nytg = nytg || {};
 
 									var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
 
     								post.done(function(data) {
-    									alert(data)
-								      //var test = JSON.parse(data);
-								      //$.each($.parseJSON(), function(i, element){
-								      	//console.log(element);
-								        //element["positions"] = {"total":{"x": , "y": }}
-								      //});
+								      var test = JSON.parse(data);
+								      test.forEach(function(element){
+								        element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
+								      });
 								    });
 								    post.fail(function(data){
 								    	console.log('fail');

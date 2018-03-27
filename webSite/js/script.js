@@ -1,6 +1,6 @@
 
 
-var post = $.post('http://localhost/entrainement japon/extension2/chromeExtension/dataBase.php', { key:"load" });
+var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
 
 post.done(function(data) {
   var nytg = nytg || {}; 
@@ -28,16 +28,9 @@ var $j = jQuery;
 
 var nytg = nytg || {};
 
-nytg.formatNumber = function(n,decimals) {
-  var s, remainder, num, negativePrefix, negativeSuffix, prefix, suffix;
+nytg.formatNumber = function(n) {
+  var s, suffix;
   suffix = ""
-  /*negativePrefix = ""
-  negativeSuffix = ""
-  if (n < 0) {
-    negativePrefix = "";
-    negativeSuffix = " in income"
-    n = -n
-  };*/
 
   if (n >= 1000000000000) {
     suffix = " trillion"
@@ -50,29 +43,12 @@ nytg.formatNumber = function(n,decimals) {
   } else if (n >= 1000000) {
     suffix = " million"
     n = n / 1000000
-    //decimals = 1
+    decimals = 1
   } 
 
-
-  prefix = ""
-  if (decimals > 0) {
-    if (n<1) {prefix = "0"};
-    s = String(Math.round(n * (Math.pow(10,decimals))));
-    if (s < 10) {
-      remainder = "0" + s.substr(s.length-(decimals),decimals);
-      num = "";
-    } else{
-      remainder = s.substr(s.length-(decimals),decimals);
-      num = s.substr(0,s.length - decimals);
-    }
-
-
-    return  negativePrefix + prefix + num.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + "." + remainder + suffix + negativeSuffix;
-  } else {
-    s = String(Math.round(n));
-    s = s.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-    return  negativePrefix + s + suffix + negativeSuffix;
-  }
+  s = String(Math.round(n));
+  s = s.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+  return  s + suffix;
 };
 
 
@@ -89,7 +65,7 @@ nytg.formatNumber = function(n,decimals) {
     width           : 970,
     height          : 850,
     groupPadding    : 10,
-    totalValue      : 3700000000,
+    totalValue      : 3700000000000,
     deficitValue    : 901000,
     // CONST
     MANDATORY       : "Mandatory",
@@ -122,7 +98,8 @@ nytg.formatNumber = function(n,decimals) {
     charge          : null,
     changeTickValues: [-0.25, -0.15, -0.05, 0.05, 0.15, 0.25],
     categorizeChange: function(c){
-      var time = c['hours']*3600 + c['minutes']*60 + c['secondes'];
+
+      var time = parseInt(c['hours'])*3600 + parseInt(c['minutes'])*60 + parseInt(c['secondes']);
 
       if (time < 10) { return -2;
       } else if ( time < 60) { return -1;
@@ -141,7 +118,7 @@ nytg.formatNumber = function(n,decimals) {
     simpleFormat    : d3.format(","),
     simpleDecimal   : d3.format(",.2f"),
 
-    bigFormat       : function(n){return nytg.formatNumber(n*1000)},
+    bigFormat       : function(n){return nytg.formatNumber(n)},
     nameFormat      : function(n){return n},
     discretionFormat: function(d){
       if (d == 'Discretionary' || d == 'Mandatory') {
@@ -149,7 +126,7 @@ nytg.formatNumber = function(n,decimals) {
       } else {return d}
     },  
     
-    rScale          : d3.scale.pow().exponent(0.2).domain([0,1000000000]).range([1,90]),
+    rScale          : d3.scale.pow().exponent(0.15).domain([0,1000000000]).range([1,90]),
     radiusScale     : null,
     changeScale     : d3.scale.linear().domain([-0.28,0.28]).range([620,180]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
@@ -382,7 +359,7 @@ nytg.formatNumber = function(n,decimals) {
 
         d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
-        d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+'views') })
+        d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views') })
 
       .on("mouseout",function(d,i) { 
         d3.select(this)
@@ -391,7 +368,9 @@ nytg.formatNumber = function(n,decimals) {
         d3.select("#nytg-tooltip").style('display','none')})
 
       .on("click", function(d) {
-        document.location.href=that.nameFormat(d.url)
+        //document.location.href=that.nameFormat(d.url)
+        var win = window.open(d.url, '_blank');
+        win.focus();
       });
       
 

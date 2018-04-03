@@ -1,19 +1,7 @@
 var lastUrl;
 var onUpdatedUrl;
-
-chrome.webNavigation.onDOMContentLoaded.addListener(function() {
-  chrome.storage.local.get('event', function(result){
-    var obj = {}
-    if (result.event == undefined) {
-      obj['event'] = 1
-      chrome.storage.local.set(obj)
-    }
-    else {
-      obj['event'] = result.event+1
-      chrome.storage.local.set(obj)
-    }
-  })
-})
+var storage = chrome.storage.local;
+var listen = false;
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
@@ -76,7 +64,7 @@ chrome.tabs.onActivated.addListener(function(tabId, removeInfo) {
 });
 
 function saveTime(){
-  var storage = chrome.storage.local;
+  storage = chrome.storage.local;
   var dateEnd = new Date();
 
   storage.get('data', function(result) {
@@ -97,27 +85,29 @@ function saveTime(){
 }
 
 function saveList(values) {
-  var storage = chrome.storage.local;
+  storage = chrome.storage.local;
   storage.get('data', function(result) {
-    if (result.data == undefined) {
-      var obj = {}
-      obj['data'] = [values]
-      storage.set(obj)
-    }
-    else {
-      var find = result.data.find(val => val.url == values.url);
-      if (find != undefined) {
-        result.data[result.data.indexOf(find)].views += 1;
-
-        var dateBegin = new Date();
-        dateBegin = dateBegin.toJSON();
-
-        result.data[result.data.indexOf(find)].dateBegin = dateBegin;
+    if (listen) {
+      if (result.data == undefined) {
+        var obj = {}
+        obj['data'] = [values]
+        storage.set(obj)
       }
       else {
-        result.data.push(values);
-      }
-      storage.set({'data':result.data});
+        var find = result.data.find(val => val.url == values.url);
+        if (find != undefined) {
+          result.data[result.data.indexOf(find)].views += 1;
+
+          var dateBegin = new Date();
+          dateBegin = dateBegin.toJSON();
+
+          result.data[result.data.indexOf(find)].dateBegin = dateBegin;
+        }
+        else {
+          result.data.push(values);
+        }
+        storage.set({'data':result.data});
+      } 
     }
   })  
 }
@@ -142,9 +132,9 @@ function compareDate(dateBegin, dateEnd, element){
   var secondes = Math.floor(durationMilliSec);
 
   var duration = [hours, minutes, secondes];
-  
+
   element.timeOnPage.secondes += secondes;
-  
+
   if (element.timeOnPage.secondes >= 60) {
     element.timeOnPage.minutes++;
     element.timeOnPage.secondes -= 60 ;
@@ -159,3 +149,31 @@ function compareDate(dateBegin, dateEnd, element){
 
   element.timeOnPage.hours += hours;
 }
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+  if (message.type === 'start') {
+      listen = true;
+      sendResponse({result: listen});
+  }
+  else if (message.type === 'stop') {
+      listen = false;
+      sendResponse({result: listen});
+  }
+  else if (message.type === 'get') {
+      sendResponse({result: listen});
+  }
+});
+
+  /*chrome.webNavigation.onDOMContentLoaded.addListener(function() {
+   chrome.storage.local.get('event', function(result){
+    var obj = {}
+    if (result.event == undefined) {
+     obj['event'] = 1
+     chrome.storage.local.set(obj)
+   }
+   else {
+     obj['event'] = result.event+1
+     chrome.storage.local.set(obj)
+   }
+ })
+})*/

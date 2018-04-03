@@ -42,8 +42,7 @@ nytg.formatNumber = function(n) {
     //decimals = 1
   } else if (n >= 1000000) {
     suffix = " million"
-    n = n / 1000000
-    decimals = 1
+    n = n / 1000
   } 
 
   s = String(Math.round(n));

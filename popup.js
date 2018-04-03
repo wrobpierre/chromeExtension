@@ -227,20 +227,33 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('load').addEventListener('click', function(){ sendData("load") });
   document.getElementById('delete').addEventListener('click', function(){ sendData("delete") });
 
+  chrome.runtime.sendMessage({type: 'get'}, function get(response){
+    console.log(response.result);
+    if (response.result) {
+      console.log("1");
+      document.getElementById('start').disabled = response.result;   
+      document.getElementById('stop').disabled = !response.result;
+    }
+    else{
+      console.log("2");
+      document.getElementById('start').disabled = response.result;   
+      document.getElementById('stop').disabled = !response.result; 
+    }
+  });
+
   document.getElementById('start').addEventListener('click', function(){
-    chrome.runtime.sendMessage({type: 'get'}, function get(response){ 
-      document.getElementById('start').disabled = !response.result;   
-      document.getElementById('stop').disabled = response.result;
-      chrome.runtime.sendMessage({type: 'start'}, function start(response){ console.log(response.result) })
-    });
+
+    document.getElementById('start').disabled = true; 
+    document.getElementById('stop').disabled = false;
+    chrome.runtime.sendMessage({type: 'start'}, function start(response){ console.log(response.result) })
+
   });
 
   document.getElementById('stop').addEventListener('click', function(){
-    chrome.runtime.sendMessage({type: 'get'}, function get(response){ 
-      document.getElementById('start').disabled = response.result;
-      document.getElementById('stop').disabled = !response.result;
-      chrome.runtime.sendMessage({type: 'stop'}, function stop(response){ if (!response.result) { sendData("add") } })
-    });
+
+    document.getElementById('start').disabled = false;
+    document.getElementById('stop').disabled = true;
+    chrome.runtime.sendMessage({type: 'stop'}, function stop(response){ if (!response.result) { sendData("add") } })
   });
 });
 

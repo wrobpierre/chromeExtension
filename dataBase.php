@@ -12,11 +12,10 @@ class site {
 
 if (isset($_POST['key'])) {
 
-	$servername = "localhost";
+	$servername = "163.172.59.102";
 	$username = "root";
-	$password = "";
+	$password = "stageOsaka";
 	$dbname = "chrome_extension";
-
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     // set the PDO error mode to exception

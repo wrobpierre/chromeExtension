@@ -1,42 +1,54 @@
-var currentUrl;
+var lastUrl;
+var onUpdatedUrl;
 
 chrome.webNavigation.onDOMContentLoaded.addListener(function() {
-	chrome.storage.local.get('event', function(result){
-		var obj = {}
-		if (result.event == undefined) {
-			obj['event'] = 1
-			chrome.storage.local.set(obj)
-		}
-		else {
-			obj['event'] = result.event+1
-			chrome.storage.local.set(obj)
-		}
-	})
+  chrome.storage.local.get('event', function(result){
+    var obj = {}
+    if (result.event == undefined) {
+      obj['event'] = 1
+      chrome.storage.local.set(obj)
+    }
+    else {
+      obj['event'] = result.event+1
+      chrome.storage.local.set(obj)
+    }
+  })
 })
 
-
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  saveTime();
-  
+
+  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+    if(changeInfo.status == "loading"){
+      onUpdatedUrl = tabs[0].url;
+    }
+  });
   if (changeInfo.status == "complete") {
-   getCurrentTabUrl();
- }
+    saveTime();
+    getCurrentTabUrl(onUpdatedUrl);
+  }
+  
 }); 
 
 chrome.tabs.onCreated.addListener(function(tab) {
 
 })
 
-function getCurrentTabUrl() {
+function getCurrentTabUrl(eventUrl) {
   var urlRes
   var queryInfo = {
     active: true,
     currentWindow: true
   };
   chrome.tabs.query(queryInfo, (tabs) => {
-    var tab = tabs[0];
-    var url = tab.url;
-    var title = tab.title;
+    var tab = tabs.find(val => val.url == eventUrl);
+    var url;
+    var title;
+    if(tab != undefined){
+      url = tab.url;
+    }
+    else{
+      url = eventUrl;
+    }
     var keywords;
     var dateBegin = new Date();
     dateBegin = dateBegin.toJSON();
@@ -45,7 +57,8 @@ function getCurrentTabUrl() {
       file:
       "./scripts/requestMeta.js", runAt: "document_end"
     }, function(results){
-      keywords = results[0]
+      keywords = results[0];
+      title = results[1];
       var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'scrollPercent': 0}
       saveList(values);
     }
@@ -54,22 +67,27 @@ function getCurrentTabUrl() {
 }
 
 chrome.tabs.onActivated.addListener(function(tabId, removeInfo) {
-  saveTime();
+  var currentUrl;
+  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+    currentUrl = tabs[0].url;
+    getCurrentTabUrl(currentUrl);
+    saveTime();
+  });
 });
 
 function saveTime(){
-    var storage = chrome.storage.local;
+  var storage = chrome.storage.local;
   var dateEnd = new Date();
 
   storage.get('data', function(result) {
-    var find = result.data.find(val => val.url == currentUrl);
+    var find = result.data.find(val => val.url == lastUrl);
     if (find != undefined) {
       compareDate(result.data[result.data.indexOf(find)].dateBegin, dateEnd.toJSON(), result.data[result.data.indexOf(find)]);
       storage.set({'data':result.data}); 
     }
     chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-      currentUrl = tabs[0].url;
-      find = result.data.find(val => val.url == currentUrl);
+      lastUrl = tabs[0].url;
+      find = result.data.find(val => val.url == lastUrl);
       if (find != undefined) {
         result.data[result.data.indexOf(find)].dateBegin = new Date().toJSON();
         storage.set({'data':result.data}); 

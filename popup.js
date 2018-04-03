@@ -41,7 +41,7 @@ var example = {
   {'url':'http://www.maphilo.net/', 'title':'maphilo', 'keywords':['LCI', 'information', 'en direct'], 'dateBegin': "", 'timeOnPage': {'hours': 0, 'minutes': 7, 'secondes': 12}, 'views':569, 'scrollPercent': 0},
   {'url':'http://www.philocours.com/', 'title':'philocours', 'keywords':['LCI', 'information', 'en direct'], 'dateBegin': "", 'timeOnPage': {'hours': 0, 'minutes': 3, 'secondes': 50}, 'views':1235, 'scrollPercent': 0},
   {'url':'https://dicophilo.fr/', 'title':'dicophilo', 'keywords':['LCI', 'information', 'en direct'], 'dateBegin': "", 'timeOnPage': {'hours': 0, 'minutes': 4, 'secondes': 0}, 'views':10356, 'scrollPercent': 0},
-  {'url':'http://www.philopratique.com/', 'title':'philopratique', 'keywords':['LCI', 'information', 'en direct'], 'dateBegin': "", 'timeOnPage': {'hours': 0, 'minutes': 15, 'secondes': 0}, 'views':986, 'scrollPercent': 0},
+  {'url':'http://www.philopratique.com/', 'title':'philopratique', 'keywords':['LCI', 'information', 'en direct'], 'dateBegin': "", 'timeOnPage': {'hours': 0, 'minutes': 15, 'secondes': 0}, 'views':1004567, 'scrollPercent': 0},
   {'url':'https://www.franceculture.fr/', 'title':'franceculture', 'keywords':['LCI', 'information', 'en direct'], 'dateBegin': "", 'timeOnPage': {'hours': 0, 'minutes': 14, 'secondes': 0}, 'views':5648, 'scrollPercent': 0},
   {'url':'http://www.philolog.fr/', 'title':'philolog', 'keywords':['LCI', 'information', 'en direct'], 'dateBegin': "", 'timeOnPage': {'hours': 0, 'minutes': 13, 'secondes': 0}, 'views':1298, 'scrollPercent': 0},
   {'url':'http://www.philosophiecontresuperstition.com/', 'title':'philosophiecontresuperstition', 'keywords':['LCI', 'information', 'en direct'], 'dateBegin': "", 'timeOnPage': {'hours': 0, 'minutes': 3, 'secondes': 0}, 'views':654, 'scrollPercent': 0},
@@ -171,10 +171,10 @@ function sendData(key) {
   storage.get('data', function(result){
 
     if (key == "load") {
-      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
+      var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
     }
     else{
-      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, key:key });
+      var post = $.post('http://163.172.59.102/dataBase.php', { d:result, key:key });
     }
     post.done(function(data) {
       // var test = $.parseJSON(data);

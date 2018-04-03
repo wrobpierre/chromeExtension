@@ -151,7 +151,7 @@ function generateList(data) {
 function loadList() {
   var storage = chrome.storage.local;
   storage.get('data', function(result) {
-    console.log(result);
+    //console.log(result);
     generateList(result.data);
   })
 }
@@ -171,10 +171,10 @@ function sendData(key) {
   storage.get('data', function(result){
 
     if (key == "load") {
-      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
+      var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
     }
     else{
-      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, key:key });
+      var post = $.post('http://163.172.59.102/dataBase.php', { d:result, key:key });
     }
     post.done(function(data) {
       // var test = $.parseJSON(data);
@@ -209,10 +209,39 @@ chrome.storage.local.get(function(result){
 loadList();
 
 document.addEventListener('DOMContentLoaded', function () {
+
+  document.getElementsByClassName("nav")[0].addEventListener("click",function(e) {
+    console.log(e.target)
+    var overlays = document.getElementById('overlays').children;
+    for (var i = 0; i < overlays.length; i++) {
+      overlays[i].style.display = 'none';
+      if (e.target.id == i+1) {
+        overlays[i].style.display = 'block';
+      }
+    }
+  });
+
+
   document.getElementById('suppr').addEventListener('click', resetList);
-  document.getElementById('add').addEventListener('click', function(){ sendData("add") });
+  //document.getElementById('add').addEventListener('click', function(){ sendData("add") });
   document.getElementById('load').addEventListener('click', function(){ sendData("load") });
   document.getElementById('delete').addEventListener('click', function(){ sendData("delete") });
+
+  document.getElementById('start').addEventListener('click', function(){
+    chrome.runtime.sendMessage({type: 'get'}, function get(response){ 
+      document.getElementById('start').disabled = !response.result;   
+      document.getElementById('stop').disabled = response.result;
+      chrome.runtime.sendMessage({type: 'start'}, function start(response){ console.log(response.result) })
+    });
+  });
+
+  document.getElementById('stop').addEventListener('click', function(){
+    chrome.runtime.sendMessage({type: 'get'}, function get(response){ 
+      document.getElementById('start').disabled = response.result;
+      document.getElementById('stop').disabled = !response.result;
+      chrome.runtime.sendMessage({type: 'stop'}, function stop(response){ if (!response.result) { sendData("add") } })
+    });
+  });
 });
 
 chrome.storage.local.get('event', function(result) {

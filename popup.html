@@ -22,29 +22,55 @@
     </style>-->
   </head>
   <body>
-    <h1>Tableau</h1>
-    <table id="data">
-      <tr>
-        <th>Rank</th>
-        <th>Url</th>
-        <th>Title</th>
-        <th>Keywords</th>
-        <th>Views</th>
-        <th>Time</th>
-        <th>Scroll pourcent</th>
-      </tr>
-    </table>
+    <div class="navBar">
+      <ul class="nav">
+        <li id="1" class="selected">Datas</li>
+        <li id="2">Questions</li>
+      </ul>
+    </div>
     
-<!--     <h1>Liste</h1>
-    <section id="dropdown"> -->
+    <div id="overlays">  
+      <div id="data-overlay" class="overlay">
+        <h1>Tableau</h1>
+        <table>
+          <tr>
+            <th>Rank</th>
+            <th>Url</th>
+            <th>Title</th>
+            <th>Keywords</th>
+            <th>Views</th>
+            <th>Time</th>
+            <th>Scroll pourcent</th>
+          </tr>
+        </table>
+      </div>
+      <div id="questions-overlay" class="overlay" style="display: none;">
+        <ul>
+          <li>
+            <p>Analyse d'un document</p>
+            <a href="https://163.172.59.102/webSite/questions?q=1" target="_blank">link</a>
+          </li>
+          <li>
+            <p>Image 1</p>
+            <a href="https://163.172.59.102/webSite/questions?q=2" target="_blank">link</a>
+          </li>
+          <li>
+            <p>Images 2</p>
+            <a href="https://163.172.59.102/webSite/questions?q=3" target="_blank">link</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+  <button id="suppr">supprimer</button>
+  <!--<button id="add">Add to BD</button>-->
+  <button id="load">Load BD</button>
+  <button id="delete">Delete BD</button>
 
-    </section>
-    <button id="suppr">supprimer</button>
-    <button id="add">Add to BD</button>
-    <button id="load">Load BD</button>
-    <button id="delete">Delete BD</button>
+  <button id="start">Start</button>
+  <button id="stop" disabled>Stop</button>
 
-    <script src="jquery.js"></script>
-    <script src="popup.js"></script>
-  </body>
-  </html>
+  <script src="jquery.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

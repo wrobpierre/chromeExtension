@@ -13,8 +13,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.status == "complete") {
     saveTime();
     getCurrentTabUrl(onUpdatedUrl);
-  }
-  
+  }  
 }); 
 
 chrome.tabs.onCreated.addListener(function(tab) {
@@ -152,15 +151,26 @@ function compareDate(dateBegin, dateEnd, element){
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type === 'start') {
-      listen = true;
-      sendResponse({result: listen});
+    storage = chrome.storage.local;
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+      var firstUrl = tabs[0].url;
+      storage.get('firstUrl', function(result) {
+        if (result.firstUrl == undefined) {
+          var obj = {}
+          obj['firstUrl'] = [{'firstUrl': firstUrl}];
+          storage.set(obj);
+        }
+      });
+    });
+    listen = true;
+    sendResponse({result: listen});
   }
   else if (message.type === 'stop') {
-      listen = false;
-      sendResponse({result: listen});
+    listen = false;
+    sendResponse({result: listen});
   }
   else if (message.type === 'get') {
-      sendResponse({result: listen});
+    sendResponse({result: listen});
   }
 });
 

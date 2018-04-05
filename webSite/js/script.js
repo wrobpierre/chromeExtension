@@ -1,6 +1,7 @@
 
 
-var post = $.post('http://163.172.59.102/dataBase.php', { key:"load" });
+// var post = $.post('http://163.172.59.102/dataBase.php', { key:"load" });
+var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
 
 post.done(function(data) {
   var nytg = nytg || {}; 
@@ -107,8 +108,8 @@ nytg.formatNumber = function(n) {
       } else if ( time < 900){ return 2;
       } else { return 3; }
     },
-    fillColor       : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#d84b2a", "#ee9586","#e4b7b2",/*"#AAA","#beccae"*/"#3678e2", "#9caf84", "#7aa25c"]),
-    strokeColor     : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#c72d0a", "#e67761","#d9a097",/*"#999","#a7bb8f"*/"#000000", "#7e965d", "#5a8731"]),
+    fillColor       : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#d84b2a", "#ee9586","#e4b7b2",/*"#AAA","#beccae"*/"#BECCAE", "#9caf84", "#7aa25c"]),
+    strokeColor     : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#c72d0a", "#e67761","#d9a097",/*"#999","#a7bb8f"*/"#b5c1a6", "#7e965d", "#5a8731"]),
     getFillColor    : null,
     getStrokeColor  : null,
     pFormat         : d3.format("+.1%"),
@@ -354,8 +355,8 @@ nytg.formatNumber = function(n) {
         d3.select("#nytg-tooltip").style('top',ypos+"px").style('left',xpos+"px").style('display','block')
         .classed('nytg-plus', (d.changeCategory > 0))
         .classed('nytg-minus', (d.changeCategory < 0));
-        d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url))
 
+        d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url))
         d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views') })

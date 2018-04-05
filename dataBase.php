@@ -12,9 +12,11 @@ class site {
 
 if (isset($_POST['key'])) {
 
-	$servername = "163.172.59.102";
+	// $servername = "163.172.59.102";
+	$servername = "localhost";
 	$username = "root";
-	$password = "stageOsaka";
+	// $password = "stageOsaka";
+	$password = "";
 	$dbname = "chrome_extension";
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -25,11 +27,13 @@ if (isset($_POST['key'])) {
 			if (isset($_POST['d'])) {
 				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer)
 					VALUES (:url, :title, :keywords, :view, :timer)");
+				//$reponse = $conn->query('SELECT id FROM firsturl WHERE key_first_url = '+$key_first_url);
 				$stmt->bindParam(':url', $url);
 				$stmt->bindParam(':title', $title);
 				$stmt->bindParam(':keywords', $keywords);
 				$stmt->bindParam(':view', $view);
 				$stmt->bindParam(':timer', $timer);
+				// $stmt->bindParam(':key_first_url', $key_first_url);
 
 				foreach ($_POST['d']['data'] as $key => $value) {
 					$url = $value['url'];
@@ -42,6 +46,7 @@ if (isset($_POST['key'])) {
 					}
 					$view = $value['views'];
 					$timer = json_encode($value['timeOnPage']);
+					// $key_first_url = $value['firstUrl'];
 
 					$stmt->execute();
 				}
@@ -60,6 +65,17 @@ if (isset($_POST['key'])) {
 			$stmt->execute();
 
 				//echo "All datas deleted";
+		}
+		elseif ($_POST['key'] == 'first') {
+			if (isset($_POST['d'])) {
+				$stmt = $conn->prepare("INSERT INTO firsturl (url)
+					VALUES (:url)");
+				$stmt->bindParam(':url', $url);
+
+				$url = $_POST['d']['firstUrl'][0]['firstUrl'];
+				$stmt->execute();
+
+			}
 		}
 	}
 	catch(PDOException $e)

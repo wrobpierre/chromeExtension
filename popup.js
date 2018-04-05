@@ -171,10 +171,13 @@ function sendData(key) {
   storage.get('data', function(result){
 
     if (key == "load") {
-      var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
+      // var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
+      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
+
     }
     else{
-      var post = $.post('http://163.172.59.102/dataBase.php', { d:result, key:key });
+      // var post = $.post('http://163.172.59.102/dataBase.php', { d:result, key:key });
+      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, key:key });
     }
     post.done(function(data) {
       // var test = $.parseJSON(data);
@@ -242,10 +245,15 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.getElementById('start').addEventListener('click', function(){
-
     document.getElementById('start').disabled = true; 
     document.getElementById('stop').disabled = false;
-    chrome.runtime.sendMessage({type: 'start'}, function start(response){ console.log(response.result) })
+    chrome.runtime.sendMessage({type: 'start'}, function start(response){
+     var storage = chrome.storage.local;
+     storage.get('firstUrl', function(result) {
+      alert(result.firstUrl[0].firstUrl);
+      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, key:"first" });
+    });
+   });
 
   });
 

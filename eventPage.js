@@ -45,7 +45,7 @@ function getCurrentTabUrl(eventUrl) {
       "./scripts/requestMeta.js", runAt: "document_end"
     }, function(results){
       keywords = results[0];
-      title = results[1];
+      title = keywords[keywords.length-1];
       var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'scrollPercent': 0}
       saveList(values);
     }

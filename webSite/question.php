@@ -15,10 +15,10 @@ $val = $_GET['q'];
 		} ?>	
 	</title>
 	<style type="text/css">
-	.question{
-		margin: 0 0 20px 0;
-	}
-</style>
+		div {
+			margin: 0 0 40px 0;
+		}
+	</style>
 </head>
 <body>
 	<div id="content">
@@ -33,6 +33,7 @@ $val = $_GET['q'];
 			echo "<h2>Quizz :</h2>";
 			echo "<form action=\"checkAnswers.php\" method=\"post\">";
 
+			echo '<input type="hidden" name="key" value="question">';
 			echo '<input type="hidden" name="val" value="'.$val.'">';
 
 			echo "<div class=\"question\" id=\"1\">";
@@ -43,13 +44,13 @@ $val = $_GET['q'];
 
 			echo "<div class=\"question\" id=\"2\">";
 			echo "<p>How long has lasted the first OnTour of this building ?</p>";
-			echo "<input type=\"number\" name=\"q[]\"><span> years</span>";
+			echo "<input type=\"number\" step=\"any\" name=\"q[]\"><span> years</span>";
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
 			echo "<div class=\"question\" id=\"3\">";
 			echo "<p>What is the number of women from this country between the ages of 20 and 24 in the year 2000 ?</p>";
-			echo "<input type=\"number\" name=\"q[]\"><span> millions</span>";
+			echo "<input type=\"number\" step=\"any\" name=\"q[]\"><span> millions</span>";
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
@@ -59,7 +60,11 @@ $val = $_GET['q'];
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
+			echo "<div>";
+			echo "<p>Don't forget to send your questionnaire and to press the button \"stop\"</p>";
 			echo "<input type=\"submit\" value=\"send\">";
+			echo "</div>";
+
 			echo "</form>";
 		} elseif ($val == 3) {
 			echo "<h1>Image search 2</h1>";
@@ -68,6 +73,7 @@ $val = $_GET['q'];
 			echo "<h2>Quizz :</h2>";
 			echo "<form action=\"checkAnswers.php\" method=\"post\">";
 
+			echo '<input type="hidden" name="key" value="question">';
 			echo '<input type="hidden" name="val" value="'.$val.'">';
 
 			echo "<div class=\"question\" id=\"1\">";
@@ -78,7 +84,7 @@ $val = $_GET['q'];
 
 			echo "<div class=\"question\" id=\"2\">";
 			echo "<p>How many people have worked to paint this wall ?</p>";
-			echo "<input type=\"number\" name=\"q[]\"><span> peoples</span>";
+			echo "<input type=\"number\" step=\"any\" name=\"q[]\"><span> peoples</span>";
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
@@ -94,7 +100,11 @@ $val = $_GET['q'];
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
+			echo "<div>";
+			echo "<p>Don't forget to send your questionnaire and to press the button \"stop\"</p>";
 			echo "<input type=\"submit\" value=\"send\">";
+			echo "</div>";
+
 			echo "</form>";
 		} ?>
 	</div>
@@ -105,6 +115,7 @@ $val = $_GET['q'];
 		$(document).ready(function(){
 
 			$('div.question[id!=1]').css('display','none');
+			$('form div:last-child').css('display','none');
 
 			alert("Don't forget to press the button \"start\" when you become your research !");
 			

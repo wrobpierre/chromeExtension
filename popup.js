@@ -171,10 +171,12 @@ function sendData(key) {
   storage.get('data', function(result){
 
     if (key == "load") {
-      var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
+      //var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
+      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
     }
     else{
-      var post = $.post('http://163.172.59.102/dataBase.php', { d:result, key:key });
+      //var post = $.post('http://163.172.59.102/dataBase.php', { d:result, key:key });
+      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, key:key });
     }
     post.done(function(data) {
       // var test = $.parseJSON(data);

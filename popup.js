@@ -57,7 +57,7 @@ var example = {
 function generateList(data) {
   if (data != undefined) {
 
-    data.sort(function(a,b){
+    /*data.sort(function(a,b){
       return b.views - a.views;
     });
 
@@ -97,7 +97,7 @@ function generateList(data) {
       tr.appendChild(views);
       tr.appendChild(time);
       tr.appendChild(scroll);
-      table.appendChild(tr);
+      table.appendChild(tr);*/
     }
 
 

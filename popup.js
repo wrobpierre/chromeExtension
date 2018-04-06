@@ -1,7 +1,7 @@
 function generateList(data) {
   if (data != undefined) {
 
-    /*data.sort(function(a,b){
+    data.sort(function(a,b){
       return b.views - a.views;
     });
 
@@ -41,7 +41,7 @@ function generateList(data) {
       tr.appendChild(views);
       tr.appendChild(time);
       tr.appendChild(scroll);
-      table.appendChild(tr);*/
+      table.appendChild(tr);
     }
 
 
@@ -115,13 +115,15 @@ function sendData(key) {
   storage.get('data', function(result){
 
     if (key == "load") {
-
-      //var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
+      // var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
       var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
+
     }
     else{
-      //var post = $.post('http://163.172.59.102/dataBase.php', { d:result, key:key });
-      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, key:key });
+      // var post = $.post('http://163.172.59.102/dataBase.php', { d:result, key:key });
+      storage.get('firstUrl', function(resultUrl){
+        var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:resultUrl, key:key });
+      });
     }
     post.done(function(data) {
       // var test = $.parseJSON(data);
@@ -194,8 +196,11 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.runtime.sendMessage({type: 'start'}, function start(response){
       alert(response.result);
       if(response.result){
+        alert("1");
         var storage = chrome.storage.local;
         storage.get('firstUrl', function(result) {
+          alert("2")
+          alert(result.firstUrl)
           var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"first" });
         });
       }

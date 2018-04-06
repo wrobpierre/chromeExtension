@@ -70,18 +70,43 @@ try {
 					$result = true;
 				}
 			}
-			/*echo $image;
-			echo "<br>";
-			echo $question;
-			echo "<br>";
-			echo $answer;
-			echo "<br>";
-			echo $result;*/
 			$stmt->execute();
 		}
 	} elseif ($_POST['val'] == 3) {
+		$val = (int)$_POST['val']-1;
+		$image = "image_".$val;
 		foreach ($_POST['q'] as $key => $value) {
-		# code...
+
+			$question = $key+1;
+			$answer = $value;
+			$result = false;
+
+			if ($key == 0) {
+				$tmp = mb_strtoupper($value, 'UTF-8');
+				$tmp = explode(" ", $tmp);
+
+				if (array_search("PREHISTORIC", $tmp) !== false && array_search("WALL", $tmp) !== false && array_search("VINALES", $tmp) !== false) {
+					$result = true;
+				}
+			} elseif ($key == 1) {
+				if ($value == 18) {
+					$result = true;	
+				}
+			} elseif ($key == 2) {
+				$tmp = mb_strtoupper($value, 'UTF-8');
+				$tmp = explode(" ", $tmp);
+
+				if (array_search("THE", $tmp) !== false && array_search("UNTOUCHABLES", $tmp) !== false) {
+					$result = true;
+				}
+			} elseif ($key == 3) {
+				$tmp = mb_strtoupper($value, 'UTF-8');
+				$tmp = explode(" ", $tmp);
+				if (array_search("ROMEO", $tmp) !== false && array_search("JULIETA", $tmp) !== false) {
+					$result = true;
+				}
+			}
+			$stmt->execute();
 		}
 	}
 }

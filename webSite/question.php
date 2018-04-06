@@ -18,6 +18,14 @@ $val = $_GET['q'];
 		div {
 			margin: 0 0 40px 0;
 		}
+		
+		div input {
+			margin: 0 0 10px 0;
+		}
+
+		div input[type="button"] {
+			display: block;
+		}
 	</style>
 </head>
 <body>

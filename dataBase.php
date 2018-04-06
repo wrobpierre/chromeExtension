@@ -24,16 +24,19 @@ if (isset($_POST['key'])) {
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		if ($_POST['key'] == 'add') {
-			if (isset($_POST['d'])) {
-				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer)
-					VALUES (:url, :title, :keywords, :view, :timer)");
+			if (isset($_POST['d']) && isset($_POST['url'])) {
+				// $stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, key_first_url)
+				// 	VALUES (:url, :title, :keywords, :view, :timer, :key_first_url)");
+				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, key_first_url) SELECT :url ,:title ,:keywords,:view,:timer, id FROM firsturl WHERE url like :first_url");
 				//$reponse = $conn->query('SELECT id FROM firsturl WHERE key_first_url = '+$key_first_url);
 				$stmt->bindParam(':url', $url);
 				$stmt->bindParam(':title', $title);
 				$stmt->bindParam(':keywords', $keywords);
 				$stmt->bindParam(':view', $view);
 				$stmt->bindParam(':timer', $timer);
-				// $stmt->bindParam(':key_first_url', $key_first_url);
+				$stmt->bindParam(':first_url', $first_url);
+
+				$first_url = $_POST['url']['firstUrl'];
 
 				foreach ($_POST['d']['data'] as $key => $value) {
 					$url = $value['url'];
@@ -46,7 +49,6 @@ if (isset($_POST['key'])) {
 					}
 					$view = $value['views'];
 					$timer = json_encode($value['timeOnPage']);
-					// $key_first_url = $value['firstUrl'];
 
 					$stmt->execute();
 				}
@@ -67,12 +69,12 @@ if (isset($_POST['key'])) {
 				//echo "All datas deleted";
 		}
 		elseif ($_POST['key'] == 'first') {
-			if (isset($_POST['d'])) {
+			if (isset($_POST['url'])) {
 				$stmt = $conn->prepare("INSERT INTO firsturl (url)
 					VALUES (:url)");
 				$stmt->bindParam(':url', $url);
 
-				$url = $_POST['d']['firstUrl'][0]['firstUrl'];
+				$url = $_POST['url'];
 				$stmt->execute();
 
 			}

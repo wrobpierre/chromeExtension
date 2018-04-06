@@ -36,20 +36,23 @@ function getCurrentTabUrl(eventUrl) {
     else{
       url = eventUrl;
     }
-    var keywords;
-    var dateBegin = new Date();
-    dateBegin = dateBegin.toJSON();
+    storage.get('firstUrl', function(result) {
+      if(result.firstUrl != undefined && result.firstUrl != url){
+        var keywords;
+        var dateBegin = new Date();
+        dateBegin = dateBegin.toJSON();
 
-    chrome.tabs.executeScript({
-      file:
-      "./scripts/requestMeta.js", runAt: "document_end"
-    }, function(results){
-      keywords = results[0];
-      title = keywords[keywords.length-1];
-      var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'scrollPercent': 0}
-      saveList(values);
-    }
-    );
+        chrome.tabs.executeScript({
+          file:
+          "./scripts/requestMeta.js", runAt: "document_end"
+        }, function(results){
+          keywords = results[0];
+          title = keywords[keywords.length-1];
+          var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'scrollPercent': 0}
+          saveList(values);
+        });
+      }
+    });
   });
 }
 
@@ -151,28 +154,40 @@ function compareDate(dateBegin, dateEnd, element){
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type === 'start') {
-    storage = chrome.storage.local;
-    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-      var firstUrl = tabs[0].url;
-      storage.get('firstUrl', function(result) {
-        if (result.firstUrl == undefined) {
-          var obj = {}
-          obj['firstUrl'] = [{'firstUrl': firstUrl}];
-          storage.set(obj);
-        }
-      });
-    });
     listen = true;
+    sendFirstUrl();
+    //Problème a résoudre ne trouve pas 
     sendResponse({result: listen});
+
   }
   else if (message.type === 'stop') {
     listen = false;
     sendResponse({result: listen});
   }
   else if (message.type === 'get') {
-    sendResponse({result: listen});
+    sendResponse({url: sendFirstUrl(), result: listen});
   }
 });
+
+function sendFirstUrl(){
+  storage.get('firstUrl', function(result) {
+    var firstUrl;
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+      firstUrl = tabs[0].url;
+
+      if (result.firstUrl == undefined) {
+        var obj = {}
+        obj['firstUrl'] = firstUrl;
+        storage.set(obj);
+        result.firstUrl = firstUrl;
+      }
+      else{
+        result.firstUrl = firstUrl;
+      }
+    });
+    return result.firstUrl;
+  });
+}
 
   /*chrome.webNavigation.onDOMContentLoaded.addListener(function() {
    chrome.storage.local.get('event', function(result){

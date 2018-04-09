@@ -1,7 +1,7 @@
 function generateList(data) {
   if (data != undefined) {
 
-    data.sort(function(a,b){
+    /*data.sort(function(a,b){
       return b.views - a.views;
     });
 
@@ -42,7 +42,7 @@ function generateList(data) {
       tr.appendChild(time);
       tr.appendChild(scroll);
       table.appendChild(tr);
-    }
+    }*/
 
 
     // var liste = document.getElementById('dropdown');
@@ -107,6 +107,8 @@ function resetList() {
       console.error(error);
     }
   });
+  chrome.runtime.sendMessage({type: 'reset'}, function get(response){
+  });
 }
 
 function sendData(key) {
@@ -120,10 +122,10 @@ function sendData(key) {
 
     }
     else{
-      // var post = $.post('http://163.172.59.102/dataBase.php', { d:result, key:key });
       storage.get('firstUrl', function(resultUrl){
-        var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:resultUrl, key:key });
-      });
+      // var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:resultUrl, key:key });
+      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:resultUrl, key:key });
+    });
     }
     post.done(function(data) {
       // var test = $.parseJSON(data);
@@ -135,11 +137,8 @@ function sendData(key) {
 }
 
 /*var obj = {};
-
 obj['data'] = [{'url':'http://google.fr'}]
-
 chrome.storage.local.set(obj)
-
 storage.get('k1',function(result){
   console.log(result.k1);
   result.k1.push({test:'test'})
@@ -147,9 +146,7 @@ storage.get('k1',function(result){
   storage.set(obj)
   //console output = {k1:'s1'}
 });
-
 storage.set(obj)
-
 chrome.storage.local.get(function(result){
   console.log(result);
 })*/
@@ -194,17 +191,13 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('start').disabled = true; 
     document.getElementById('stop').disabled = false;
     chrome.runtime.sendMessage({type: 'start'}, function start(response){
-      alert(response.result);
       if(response.result){
-        alert("1");
         var storage = chrome.storage.local;
         storage.get('firstUrl', function(result) {
-          alert("2")
-          alert(result.firstUrl)
           var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"first" });
         });
       }
-   });
+    });
 
   });
 

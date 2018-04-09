@@ -15,10 +15,10 @@ class firsturl {}
 if (isset($_POST['key'])) {
 
 	$servername = "localhost";
-	//$servername = "163.172.59.102";
+	// $servername = "163.172.59.102";
 	$username = "root";
 	$password = "";
-	//$password = "stageOsaka";
+	// $password = "stageOsaka";
 	$dbname = "chrome_extension";
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -86,7 +86,6 @@ if (isset($_POST['key'])) {
 				$stmt = $conn->prepare("INSERT INTO firsturl (url)
 					VALUES (:url)");
 				$stmt->bindParam(':url', $url);
-
 				$url = $_POST['url'];
 				$stmt->execute();
 

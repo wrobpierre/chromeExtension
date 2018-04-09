@@ -2,6 +2,7 @@ var lastUrl;
 var onUpdatedUrl;
 var storage = chrome.storage.local;
 var listen = false;
+var firstUrl;
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
@@ -155,22 +156,38 @@ function compareDate(dateBegin, dateEnd, element){
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type === 'start') {
     listen = true;
-    sendFirstUrl();
-    sendResponse({result: listen});
+    sendResponse({url: sendFirstUrl(), result: listen});
   }
   else if (message.type === 'stop') {
     listen = false;
     sendResponse({result: listen});
   }
   else if (message.type === 'get') {
+    if(firstUrl === undefined){
     sendResponse({url: sendFirstUrl(), result: listen});
+    }
+    else{
+      alert(firstUrl);
+      
+      sendResponse({url: sendSecondUrl(), result: listen});
+    }
+  }
+  else if (message.type === 'reset'){
+    firstUrl = undefined;
   }
 });
-
+function sendSecondUrl(){
+  storage.get('firstUrl', function(result) {
+        var obj = {}
+        obj['firstUrl'] = firstUrl;
+        storage.set(obj);
+        result.firstUrl = firstUrl;
+  return result.firstUrl;
+      });
+}
 function sendFirstUrl(){
   storage.get('firstUrl', function(result) {
-    var firstUrl;
-    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+    chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
       firstUrl = tabs[0].url;
 
       if (result.firstUrl == undefined) {
@@ -178,8 +195,12 @@ function sendFirstUrl(){
         obj['firstUrl'] = firstUrl;
         storage.set(obj);
         result.firstUrl = firstUrl;
+
       }
       else{
+        var obj = {}
+        obj['firstUrl'] = firstUrl;
+        storage.set(obj);
         result.firstUrl = firstUrl;
       }
     });

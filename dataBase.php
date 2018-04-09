@@ -1,5 +1,5 @@
 <?php 
-//header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: *');
 //var_dump($_POST['d']['data']);
 
 class site {
@@ -9,6 +9,8 @@ class site {
 	public $view;
 	public $timer;*/
 }
+
+class firsturl {}
 
 if (isset($_POST['key'])) {
 
@@ -57,7 +59,18 @@ if (isset($_POST['key'])) {
 				//echo "New records created successfully";
 		}
 		elseif ($_POST['key'] == 'load') {
-			$stmt = $conn->prepare("SELECT * FROM sites");
+			$requete = "";
+			if (isset($_POST['id'])) {
+				$requete = "SELECT s.* 
+				FROM sites s
+				INNER JOIN firsturl fu on s.key_first_url = fu.id
+				WHERE fu.id = ".$_POST['id']."";
+			}
+			else {
+				$requete = "SELECT * FROM sites";
+			}
+
+			$stmt = $conn->prepare($requete);
 			$stmt->execute();
 
 			echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "site"));
@@ -77,6 +90,14 @@ if (isset($_POST['key'])) {
 				$url = $_POST['url'];
 				$stmt->execute();
 
+			}
+		}
+		elseif ($_POST['key'] == 'get_id_firstUrl') {
+			if (isset($_POST['url'])) {
+				$stmt = $conn->prepare("SELECT id FROM firsturl WHERE url like '".$_POST['url']."'");
+				$stmt->execute();
+
+				echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "firsturl"));
 			}
 		}
 	}

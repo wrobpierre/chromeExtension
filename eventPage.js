@@ -156,9 +156,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type === 'start') {
     listen = true;
     sendFirstUrl();
-    //Problème a résoudre ne trouve pas 
     sendResponse({result: listen});
-
   }
   else if (message.type === 'stop') {
     listen = false;

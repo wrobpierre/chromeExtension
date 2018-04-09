@@ -1,7 +1,7 @@
 function generateList(data) {
   if (data != undefined) {
 
-    data.sort(function(a,b){
+    /*data.sort(function(a,b){
       return b.views - a.views;
     });
 
@@ -42,7 +42,7 @@ function generateList(data) {
       tr.appendChild(time);
       tr.appendChild(scroll);
       table.appendChild(tr);
-    }
+    }*/
 
 
     // var liste = document.getElementById('dropdown');
@@ -194,17 +194,19 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('start').disabled = true; 
     document.getElementById('stop').disabled = false;
     chrome.runtime.sendMessage({type: 'start'}, function start(response){
-      alert(response.result);
+      resetList();
+      //alert(response.result);
       if(response.result){
-        alert("1");
+        //alert("1");
         var storage = chrome.storage.local;
         storage.get('firstUrl', function(result) {
-          alert("2")
-          alert(result.firstUrl)
+          //alert("2")
+          //alert(result.firstUrl)
+          //var post = $.post('http://163.172.59.102/dataBase.php', { url:result.firstUrl, key:"first" });
           var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"first" });
         });
       }
-   });
+    });
 
   });
 
@@ -212,10 +214,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('start').disabled = false;
     document.getElementById('stop').disabled = true;
-    chrome.runtime.sendMessage({type: 'stop'}, function stop(response){ if (!response.result) { sendData("add") } })
-  });
-});
+    chrome.runtime.sendMessage({type: 'stop'}, function stop(response){ 
+      if (!response.result) { 
+        sendData("add");
+        var storage = chrome.storage.local;
+        storage.get('firstUrl', function(result) {
+          //var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
+          //alert(result.firstUrl);
+          var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"get_id_firstUrl" });
+          post.done(function(data){
+            console.log('envoie');
+            dataParse = JSON.parse(data);
+            //alert(dataParse[0].id);
+            var a = document.createElement('a');
+            a.target = "_blank";
+            if (dataParse.length == 0) {
+              //a.href = "http://163.172.59.102/webSite/index.php";
+              //a.textContent = "http://163.172.59.102/webSite/index.php";
+              a.href = "http://localhost/chromeExtension/webSite/index.php";
+              a.textContent = "http://localhost/chromeExtension/webSite/index.php";
 
-chrome.storage.local.get('event', function(result) {
-  console.log(result.event);
-})
+            }
+            else {
+              //a.href = "http://163.172.59.102/webSite/index.php?=";
+              //a.textContent = "http://163.172.59.102/webSite/index.php?=";
+              a.href = "http://localhost/chromeExtension/webSite/index.php?="+dataParse[0].id;
+              a.textContent = "http://localhost/chromeExtension/webSite/index.php?="+dataParse[0].id;
+            }
+            document.getElementById('data-overlay').appendChild(a);
+          });
+        });
+      }
+    });
+  });
+
+  chrome.storage.local.get('event', function(result) {
+    console.log(result.event);
+  })
+});

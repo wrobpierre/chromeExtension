@@ -167,8 +167,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     sendResponse({url: sendFirstUrl(), result: listen});
     }
     else{
-      alert(firstUrl);
-      
+      //alert(firstUrl); 
       sendResponse({url: sendSecondUrl(), result: listen});
     }
   }

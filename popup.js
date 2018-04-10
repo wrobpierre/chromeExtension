@@ -107,13 +107,10 @@ function resetList() {
       console.error(error);
     }
   });
-  chrome.runtime.sendMessage({type: 'reset'}, function get(response){
-  });
 }
 
 function sendData(key) {
   var storage = chrome.storage.local;
-
   storage.get('data', function(result){
 
     if (key == "load") {
@@ -188,10 +185,10 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.getElementById('start').addEventListener('click', function(){
+    //resetList();
     document.getElementById('start').disabled = true; 
     document.getElementById('stop').disabled = false;
     chrome.runtime.sendMessage({type: 'start'}, function start(response){
-      resetList();
       if(response.result){
         var storage = chrome.storage.local;
         storage.get('firstUrl', function(result) {
@@ -200,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
     });
-
   });
 
   document.getElementById('stop').addEventListener('click', function(){
@@ -208,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('start').disabled = false;
     document.getElementById('stop').disabled = true;
     chrome.runtime.sendMessage({type: 'stop'}, function stop(response){ 
-      if (!response.result) { 
+      if (!response.result) {
         sendData("add");
         var storage = chrome.storage.local;
         storage.get('firstUrl', function(result) {
@@ -239,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
     });
+    chrome.runtime.sendMessage({type: 'reset'}, function get(response){});
   });
 
   chrome.storage.local.get('event', function(result) {

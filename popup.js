@@ -225,12 +225,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             }
             else {
-              //a.href = "http://163.172.59.102/webSite/index.php?=";
-              //a.textContent = "http://163.172.59.102/webSite/index.php?=";
-              a.href = "http://localhost/chromeExtension/webSite/index.php?="+dataParse[0].id;
-              a.textContent = "http://localhost/chromeExtension/webSite/index.php?="+dataParse[0].id;
+              //a.href = "http://163.172.59.102/webSite/index.php?id="+dataParse[0].id;
+              //a.textContent = "http://163.172.59.102/webSite/index.php?id="+dataParse[0].id;
+              a.href = "http://localhost/chromeExtension/webSite/index.php?id="+dataParse[0].id;
+              a.textContent = "http://localhost/chromeExtension/webSite/index.php?id="+dataParse[0].id;
             }
             document.getElementById('data-overlay').appendChild(a);
+            resetList();
           });
         });
       }

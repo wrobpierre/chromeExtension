@@ -164,7 +164,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
   else if (message.type === 'get') {
     if(firstUrl === undefined){
-    sendResponse({url: sendFirstUrl(), result: listen});
+      sendResponse({url: sendFirstUrl(), result: listen});
     }
     else{
       //alert(firstUrl); 
@@ -175,15 +175,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     firstUrl = undefined;
   }
 });
+
 function sendSecondUrl(){
   storage.get('firstUrl', function(result) {
-        var obj = {}
-        obj['firstUrl'] = firstUrl;
-        storage.set(obj);
-        result.firstUrl = firstUrl;
-  return result.firstUrl;
-      });
+    var obj = {}
+    obj['firstUrl'] = firstUrl;
+    storage.set(obj);
+    result.firstUrl = firstUrl;
+    return result.firstUrl;
+  });
 }
+
 function sendFirstUrl(){
   storage.get('firstUrl', function(result) {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {

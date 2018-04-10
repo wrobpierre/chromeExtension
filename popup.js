@@ -107,24 +107,21 @@ function resetList() {
       console.error(error);
     }
   });
-  chrome.runtime.sendMessage({type: 'reset'}, function get(response){
-  });
 }
 
 function sendData(key) {
   var storage = chrome.storage.local;
-
   storage.get('data', function(result){
 
     if (key == "load") {
-      // var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
-      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
+      var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
+      // var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
 
     }
     else{
       storage.get('firstUrl', function(resultUrl){
-      // var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:resultUrl, key:key });
-      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:resultUrl, key:key });
+      var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:resultUrl, key:key });
+      // var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:resultUrl, key:key });
     });
     }
     post.done(function(data) {
@@ -188,27 +185,60 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.getElementById('start').addEventListener('click', function(){
+    //resetList();
     document.getElementById('start').disabled = true; 
     document.getElementById('stop').disabled = false;
     chrome.runtime.sendMessage({type: 'start'}, function start(response){
       if(response.result){
         var storage = chrome.storage.local;
         storage.get('firstUrl', function(result) {
-          var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"first" });
+          var post = $.post('http://163.172.59.102/dataBase.php', { url:result.firstUrl, key:"first" });
+          // var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"first" });
         });
       }
     });
-
   });
 
   document.getElementById('stop').addEventListener('click', function(){
 
     document.getElementById('start').disabled = false;
     document.getElementById('stop').disabled = true;
-    chrome.runtime.sendMessage({type: 'stop'}, function stop(response){ if (!response.result) { sendData("add") } })
-  });
-});
+    chrome.runtime.sendMessage({type: 'stop'}, function stop(response){ 
+      if (!response.result) {
+        sendData("add");
+        var storage = chrome.storage.local;
+        storage.get('firstUrl', function(result) {
+          var post = $.post('http://163.172.59.102/dataBase.php', { url:result.firstUrl, key:"get_id_firstUrl" });
+          //alert(result.firstUrl);
+          // var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"get_id_firstUrl" });
+          post.done(function(data){
+            console.log('envoie');
+            dataParse = JSON.parse(data);
+            //alert(dataParse[0].id);
+            var a = document.createElement('a');
+            a.target = "_blank";
+            if (dataParse.length == 0) {
+              a.href = "http://163.172.59.102/webSite/index.php";
+              a.textContent = "http://163.172.59.102/webSite/index.php";
+              // a.href = "http://localhost/chromeExtension/webSite/index.php";
+              // a.textContent = "http://localhost/chromeExtension/webSite/index.php";
 
-chrome.storage.local.get('event', function(result) {
-  console.log(result.event);
-})
+            }
+            else {
+              a.href = "http://163.172.59.102/webSite/index.php?id="+dataParse[0].id;
+              a.textContent = "http://163.172.59.102/webSite/index.php?id="+dataParse[0].id;
+              // a.href = "http://localhost/chromeExtension/webSite/index.php?id="+dataParse[0].id;
+              // a.textContent = "http://localhost/chromeExtension/webSite/index.php?id="+dataParse[0].id;
+            }
+            document.getElementById('data-overlay').appendChild(a);
+          });
+        });
+      }
+    });
+    chrome.runtime.sendMessage({type: 'reset'}, function get(response){});
+  });
+
+  chrome.storage.local.get('event', function(result) {
+    console.log(result.event);
+  })
+});

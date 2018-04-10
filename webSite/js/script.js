@@ -1,15 +1,23 @@
+var id = $('input[type="hidden"]');
 
-
+if (id.val() !== undefined) {
+  console.log(id.val());
+  var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load", id:id.val() });  
+}
+else {
+  console.log('pas d\'url');
+  var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
+}
 
 // var post = $.post('http://163.172.59.102/dataBase.php', { key:"load" });
-var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
+//var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
 
 post.done(function(data) {
-  console.log(data);
+  //console.log(data);
   var nytg = nytg || {}; 
   nytg.budget_array_data = [];
-  test = JSON.parse(data);
-  test.forEach(function(element){
+  dataParse = JSON.parse(data);
+  dataParse.forEach(function(element){
     element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
     element["domain"] = "Health and Human Services";
     element["timer"] = JSON.parse(element["timer"]);

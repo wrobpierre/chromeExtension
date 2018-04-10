@@ -97,13 +97,13 @@ $val = $_GET['q'];
 			echo "</div>";
 
 			echo "<div class=\"question\" id=\"3\">";
-			echo "<p>What is the name of the movie released in 1987 which one of the Cuban actors played in the godfather ?</p>";
+			echo "<p>A Cuban actor played in one of \"The Godfather\". What is the name of the other movie released in 1987 in which he played ?</p>";
 			echo "<input type=\"text\" name=\"q[]\">";
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
 			echo "<div class=\"question\" id=\"4\">";
-			echo "<p>A Cuban cigar is named after a famous play, what is the name of this cigar ?</p>";
+			echo "<p>A Cuban cigar is named after a famous theatrical play, what is the name of this cigar in its original language (spanish)?</p>";
 			echo "<input type=\"text\" name=\"q[]\">";
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";

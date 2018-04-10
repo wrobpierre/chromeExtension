@@ -9,7 +9,7 @@ else {
   var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
 }
 
-// var post = $.post('http://163.172.59.102/dataBase.php', { key:"load" });
+//var post = $.post('http://163.172.59.102/dataBase.php', { key:"load" });
 //var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
 
 post.done(function(data) {

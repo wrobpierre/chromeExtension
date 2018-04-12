@@ -130,11 +130,10 @@ nytg.formatNumber = function(n) {
       var divisionTime = (nbSecondesMax - nbSecondesMin)/6;
 
       var multiplyTime = 1;
-        var hours =0;
-        var minutes =0;
-        var secondes =0;
+      var hours =0;
+      var minutes =0;
+      var secondes =0;
       for (var i = 0; i < $j(".nytg-colorLabels")[0].children.length; i++) {
-        console.log($j(".nytg-colorLabels")[0].children[i]);
         var convertTime = Math.round(divisionTime*multiplyTime);
         var print = "";
         if (hours > 0) {
@@ -190,7 +189,7 @@ nytg.formatNumber = function(n) {
       } else {return d}
     },  
     
-    rScale          : d3.scale.pow().exponent(0.15).domain([0,1000000000]).range([1,90]),
+    rScale          : d3.scale.pow().exponent(0.15).domain([0,1000000000]).range([1,100]),
     radiusScale     : null,
     changeScale     : d3.scale.linear().domain([-0.28,0.28]).range([620,180]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
@@ -279,15 +278,31 @@ nytg.formatNumber = function(n) {
         }        
       };
 
-      //
       this.groupScale = d3.scale.ordinal().domain(this.categoriesList).rangePoints([0,1]);
 
+      var maxView = null;
+      var minView = null;
+
+      for (var i=0; i < this.data.length; i++) {
+        if (maxView == null || maxView < this.data[i].view) {
+          maxView = this.data[i].view;
+        }
+        if (minView == null || minView > this.data[i].view) {
+          minView = this.data[i].view;
+        }
+      }
+      console.log(maxView);
+      console.log(minView);
       // Builds the nodes data array from the original data
       for (var i=0; i < this.data.length; i++) {
         var n = this.data[i];
+
+        //Mettre un max et un min
+        var res = Math.exp(this.data[i].view);
+        
         var out = {
           sid: n['id'],
-          radius: this.radiusScale(n[/*this.currentYearDataColumn*/'view']),
+          radius: this.radiusScale(res),
           group: n['domain'],
           change: n['timer'],
           changeCategory: this.categorizeChange(n['timer']),
@@ -427,7 +442,6 @@ nytg.formatNumber = function(n) {
 
         $j("#nytg-tooltip .nytg-domain").html('<img id="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
         if(errorImg){
-          console.log("aSome")
           $j("#icon").src = "dhzahazcha";
         }
 
@@ -459,8 +473,6 @@ nytg.formatNumber = function(n) {
           x:Math.round(d.x),
           y:Math.round(d.y)
         }
-        
-        
       })
       return JSON.stringify(circlePositions)
     },
@@ -545,7 +557,7 @@ nytg.formatNumber = function(n) {
           })
       .start();
     },
-     
+
     comparisonLayout: function() {
       var that = this;
       this.force
@@ -615,12 +627,12 @@ nytg.formatNumber = function(n) {
         };
       },
 
-    mandatorySort: function(alpha) {
-      var that = this;
-      return function(d){
-        var targetY = that.centerY;
-        var targetX = 0;
-        
+      mandatorySort: function(alpha) {
+        var that = this;
+        return function(d){
+          var targetY = that.centerY;
+          var targetX = 0;
+
         //if (d.isNegative) {
           if (d.changeCategory > 0) {
             d.x = - 200
@@ -678,7 +690,7 @@ nytg.formatNumber = function(n) {
         d.x = d.x + (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.1
       };
     },
-        
+
     departmentSort: function(alpha){
       var that = this;
       return function(d){

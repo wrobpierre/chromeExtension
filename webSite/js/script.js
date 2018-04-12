@@ -1,4 +1,8 @@
 var id = $('input[type="hidden"]');
+var minTime = null;
+var maxTime = null;
+
+var errorImg = false;
 
 if (id.val() !== undefined) {
   console.log(id.val());
@@ -17,22 +21,31 @@ else {
 post.done(function(data) {
   //console.log(data);
   var nytg = nytg || {}; 
+  var time = 0;
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
   dataParse.forEach(function(element){
     element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
     element["domain"] = "Health and Human Services";
     element["timer"] = JSON.parse(element["timer"]);
+    if(minTime == null || minTime.hours >= parseInt(element.timer.hours)) {
+      if (minTime == null || minTime.hours > parseInt(element.timer.hours) || minTime.minutes >= parseInt(element.timer.minutes)) {
+        if (minTime == null || minTime.hours > parseInt(element.timer.hours) || minTime.minutes > parseInt(element.timer.minutes) || minTime.secondes >= parseInt(element.timer.secondes)) {
+          minTime = element.timer;
+        }
+      }
+    }
+    if(maxTime == null || maxTime.hours <= parseInt(element.timer.hours)) {
+      if (maxTime == null || maxTime.hours < parseInt(element.timer.hours) || maxTime.minutes <= parseInt(element.timer.minutes)) {
+        if (maxTime == null || maxTime.hours < parseInt(element.timer.hours) || maxTime.minutes < parseInt(element.timer.minutes) || maxTime.secondes <= parseInt(element.timer.secondes)) {
+          maxTime = element.timer;
+        }
+      }
+    }
     nytg.budget_array_data.push(element);
   })
 
-
-
   nytg.category_data = [{"label":"Health and Human Services","total":921605000,"num_children":26,"short_label":"Health and Human Services"},{"label":"State","total":31608000,"num_children":8,"short_label":"State"},{"label":"Judicial Branch","total":7502000,"num_children":13,"short_label":"Judicial Branch"},{"label":"International Assistance Programs","total":37399000,"num_children":16,"short_label":"International"},{"label":"Agriculture","total":154667000,"num_children":45,"short_label":"Agriculture"},{"label":"Treasury","total":519490000,"num_children":15,"short_label":"Treasury"},{"label":"Other Defense Civil Programs","total":57416000,"num_children":9,"short_label":"Defense Civil Programs"},{"label":"Appalachian Regional Commission","total":64000,"num_children":2,"short_label":"Appalachian Commission"},{"label":"Legislative Branch","total":4789000,"num_children":20,"short_label":"Legislative Branch"},{"label":"Veterans Affairs","total":137381000,"num_children":9,"short_label":"Veterans Affairs"},{"label":"Justice","total":30023000,"num_children":18,"short_label":"Justice"},{"label":"Interior","total":11357000,"num_children":31,"short_label":"Interior"},{"label":"Commerce","total":9239000,"num_children":21,"short_label":"Commerce"},{"label":"Labor","total":88993000,"num_children":15,"short_label":"Labor"},{"label":"Homeland Security","total":45109000,"num_children":23,"short_label":"Homeland Security"},{"label":"Housing and Urban Development","total":44010000,"num_children":14,"short_label":"Housing"},{"label":"Corps of Engineers--Civil Works","total":4668000,"num_children":3,"short_label":"Corps of Engineers"},{"label":"Executive Office of the President","total":392000,"num_children":12,"short_label":"Office of the President"},{"label":"Energy","total":32300000,"num_children":10,"short_label":"Energy"},{"label":"Transportation","total":74280000,"num_children":22,"short_label":"Transportation"},{"label":"Education","total":55685000,"num_children":15,"short_label":"Education"},{"label":"Federal Deposit Insurance Corporation","total":1515000,"num_children":5,"short_label":"F.D.I.C."},{"label":"District of Columbia","total":902000,"num_children":5,"short_label":"District of Columbia"},{"label":"Environmental Protection Agency","total":8138000,"num_children":2,"short_label":"E.P.A."},{"label":"Defense - Military","total":620259000,"num_children":13,"short_label":"Defense"},{"label":"Institute of Museum and Library Services","total":231000,"num_children":2,"short_label":"Museum and Library Services"},{"label":"National Aeronautics and Space Administration","total":17693000,"num_children":2,"short_label":"NASA"},{"label":"National Archives and Records Administration","total":370000,"num_children":3,"short_label":"National Archives"},{"label":"National Science Foundation","total":7470000,"num_children":2,"short_label":"N.S.F."},{"label":"Nuclear Regulatory Commission","total":127000,"num_children":2,"short_label":"Nuclear Regulation"},{"label":"Office of Personnel Management","total":94857000,"num_children":3,"short_label":"Personnel Management"},{"label":"Postal Service","total":78000,"num_children":2,"short_label":"Postal Service"},{"label":"Public Company Accounting Oversight Board","total":237000,"num_children":2,"short_label":"Accounting Oversight"},{"label":"Railroad Retirement Board","total":7202000,"num_children":3,"short_label":"Railroad Retirement"},{"label":"Small Business Administration","total":1111000,"num_children":2,"short_label":"Small Business"},{"label":"Social Security Administration","total":885315000,"num_children":2,"short_label":"Social Security"},{"label":"Federal Communications Commission","total":9633000,"num_children":2,"short_label":"F.C.C."},{"label":"Securities Investor Protection Corporation","total":259000,"num_children":2,"short_label":"S.I.P.C."},{"label":"Other","total":-512596000,"num_children":97,"short_label":"Other"}];
-
-
-
-
 
 // BEGIN nytg Additions
 jQuery.noConflict();
@@ -112,12 +125,51 @@ nytg.formatNumber = function(n) {
     categorizeChange: function(c){
 
       var time = parseInt(c['hours'])*3600 + parseInt(c['minutes'])*60 + parseInt(c['secondes']);
+      var nbSecondesMax = parseInt(maxTime['hours'])*3600 + parseInt(maxTime['minutes'])*60 + parseInt(maxTime['secondes']);
+      var nbSecondesMin = parseInt(minTime['hours'])*3600 + parseInt(minTime['minutes'])*60 + parseInt(minTime['secondes']);
+      var divisionTime = (nbSecondesMax - nbSecondesMin)/6;
 
-      if (time < 10) { return -2;
-      } else if ( time < 60) { return -1;
-      } else if ( time < 300){ return 0;
-      } else if ( time < 600){ return 1;
-      } else if ( time < 900){ return 2;
+      var multiplyTime = 1;
+        var hours =0;
+        var minutes =0;
+        var secondes =0;
+      for (var i = 0; i < $j(".nytg-colorLabels")[0].children.length; i++) {
+        console.log($j(".nytg-colorLabels")[0].children[i]);
+        var convertTime = Math.round(divisionTime*multiplyTime);
+        var print = "";
+        if (hours > 0) {
+          print += "Between "+ hours+"h "+minutes+"min "+secondes+"sec and ";
+        }
+        else if(minutes > 0) {
+          print += "Between "+minutes+"min "+secondes+"sec and ";
+        }
+        else {
+          print += "Between "+secondes+"sec and ";
+        }
+        
+        if(convertTime > 3600){
+          hours = Math.floor(convertTime / 3600);
+          convertTime -= hours*3600
+          print += hours+"h "
+        }
+        if(convertTime > 60){
+          minutes = Math.floor(convertTime / 60);
+          convertTime -= minutes*60
+          print += minutes+"min "
+        }
+        secondes = Math.floor(convertTime)
+        print += secondes+"sec "
+
+
+        $j(".nytg-colorLabels")[0].children[i].textContent = print;
+        multiplyTime++;
+      }
+
+      if (time < divisionTime) { return -2;
+      } else if ( time < divisionTime*2) { return -1;
+      } else if ( time < divisionTime*3){ return 0;
+      } else if ( time < divisionTime*4){ return 1;
+      } else if ( time < divisionTime*5){ return 2;
       } else { return 3; }
     },
     fillColor       : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#d84b2a", "#ee9586","#e4b7b2",/*"#AAA","#beccae"*/"#BECCAE", "#9caf84", "#7aa25c"]),
@@ -288,8 +340,6 @@ nytg.formatNumber = function(n) {
       .style("top", this.changeScale(-100)+'px')
       .classed('nytg-discretionaryTickLabel', true)
 
-
-      
       // total circle
       // this.svg.append("circle")
       //   .attr('r', this.radiusScale(this.totalValue))
@@ -367,10 +417,20 @@ nytg.formatNumber = function(n) {
         d3.select("#nytg-tooltip").style('top',ypos+"px").style('left',xpos+"px").style('display','block')
         .classed('nytg-plus', (d.changeCategory > 0))
         .classed('nytg-minus', (d.changeCategory < 0));
+        
+        var $j = jQuery;
 
-        d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url))
+        d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
         d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
+        var url = new URL(d.url)
+
+        $j("#nytg-tooltip .nytg-domain").html('<img id="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
+        if(errorImg){
+          console.log("aSome")
+          $j("#icon").src = "dhzahazcha";
+        }
+
         d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views') })
 
       .on("mouseout",function(d,i) { 
@@ -389,13 +449,7 @@ nytg.formatNumber = function(n) {
       this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
       
     },
-    
-    
-    
-    
-    // 
-    // 
-    // 
+
     getCirclePositions: function(){
       var that = this
       var circlePositions = {};
@@ -410,12 +464,7 @@ nytg.formatNumber = function(n) {
       })
       return JSON.stringify(circlePositions)
     },
-    
-    
-    
-    // 
-    // 
-    // 
+
     start: function() {
       var that = this;
 
@@ -431,12 +480,6 @@ nytg.formatNumber = function(n) {
       
     },
     
-    
-
-    
-    // 
-    // 
-    // 
     totalLayout: function() {
       var that = this;
       this.force
@@ -453,10 +496,7 @@ nytg.formatNumber = function(n) {
       .start();
       
     },
-    
-    // 
-    // 
-    // 
+
     mandatoryLayout: function() {
       var that = this;
       this.force
@@ -473,10 +513,7 @@ nytg.formatNumber = function(n) {
       .start();
       
     },
-    
-    // 
-    // 
-    // 
+
     discretionaryLayout: function() {
       var that = this;
       this.force
@@ -491,11 +528,7 @@ nytg.formatNumber = function(n) {
       })
       .start();
     },
-    
-    
-    // 
-    // 
-    // 
+
     departmentLayout: function() {
       var that = this;
       this.force
@@ -512,11 +545,7 @@ nytg.formatNumber = function(n) {
           })
       .start();
     },
-    
-    
-    // 
-    // 
-    // 
+     
     comparisonLayout: function() {
       var that = this;
       this.force
@@ -533,15 +562,10 @@ nytg.formatNumber = function(n) {
       
     },
     
-    
     // ----------------------------------------------------------------------------------------
     // FORCES
     // ----------------------------------------------------------------------------------------
-    
-    
-    // 
-    // 
-    // 
+
     totalSort: function(alpha) {
       var that = this;
       return function(d){
@@ -588,17 +612,9 @@ nytg.formatNumber = function(n) {
           
           var targetY = that.centerY - (d.changeCategory / 3) * that.boundingRadius
           d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * alpha * alpha * 100
-          
-          
-          
         };
       },
 
-
-
-    // 
-    // 
-    // 
     mandatorySort: function(alpha) {
       var that = this;
       return function(d){
@@ -622,19 +638,12 @@ nytg.formatNumber = function(n) {
         } else {
           targetX = 900
         };
-        
-        
-        
-        
+
         d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * 1.1
         d.x = d.x + (targetX - d.x) * (that.defaultGravity) * alpha * 1.1
       };
     },
     
-    
-    // 
-    // 
-    // 
     discretionarySort: function(alpha) {
       var that = this;
       return function(d){
@@ -669,11 +678,7 @@ nytg.formatNumber = function(n) {
         d.x = d.x + (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.1
       };
     },
-    
-    
-    // 
-    // 
-    // 
+        
     departmentSort: function(alpha){
       var that = this;
       return function(d){
@@ -693,13 +698,7 @@ nytg.formatNumber = function(n) {
         
       };
     },
-    
-    
-    
-    
-    // 
-    // 
-    // 
+
     staticDepartment: function(alpha) {
       var that = this;
       return function(d){
@@ -715,10 +714,7 @@ nytg.formatNumber = function(n) {
         d.x += (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.4
       };
     },
-    
-    // 
-    // 
-    // 
+
     comparisonSort: function(alpha) {
       var that = this;
       return function(d){
@@ -731,11 +727,6 @@ nytg.formatNumber = function(n) {
       };
     },
     
-    
-    
-    // 
-    // 
-    // 
     collide: function(alpha){
       var that = this;
       var padding = 6;
@@ -771,12 +762,6 @@ nytg.formatNumber = function(n) {
     
   }
 };
-
-
-
-
-
-
 
 /********************************
  ** FILE: ChooseList.js
@@ -820,8 +805,6 @@ nytg.ChooseList.prototype.selectByElement = function(el) {
   this.onChange(this);
 };
 
-
-
 /********************************
  ** FILE: base.js
  ********************************/
@@ -848,8 +831,6 @@ $j("#save").click(function(){
   
 })
 
-
-
 nytg.ready = function() {
   var that = this;
   nytg.c = new nytg.Chart();
@@ -872,9 +853,6 @@ nytg.ready = function() {
   //   };
   //   
   // }
-
-  
-  
 
   var currentOverlay = undefined;
   nytg.mainNav = new nytg.ChooseList($j(".nytg-navigation"), onMainChange);

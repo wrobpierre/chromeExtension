@@ -4,6 +4,9 @@
  * found in the LICENSE file.
  */
 
+iframe {
+  overflow: hidden;
+}
 
 body {
   margin: 5px 10px 10px;

@@ -1,9 +1,23 @@
-var id = $('input[type="hidden"]');
+function getUrlParameter(sParam) {
+  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+  sURLVariables = sPageURL.split('&'),
+  sParameterName,
+  i;
 
-if (id.val() !== undefined) {
-  console.log(id.val());
+  for (i = 0; i < sURLVariables.length; i++) {
+    sParameterName = sURLVariables[i].split('=');
+
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : sParameterName[1];
+    }
+  }
+};
+var id = getUrlParameter('id');
+
+if (id !== undefined) {
+  console.log(id);
   // var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load", id:id.val() });
-  var post = $.post('http://163.172.59.102/dataBase.php', { key:"load", id:id.val() });  
+  var post = $.post('http://163.172.59.102/dataBase.php', { key:"load", id:id });  
 }
 else {
   console.log('pas d\'url');

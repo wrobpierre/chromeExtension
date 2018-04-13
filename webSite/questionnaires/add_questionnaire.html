@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Add a questionnaire</title>
+	<style type="text/css">
+	.all_questions {
+		margin: 0 0 30px 0;
+	}
+
+	.error {
+		color:red;
+	}
+
+	select {
+		display: block;
+		margin: 20px 0 20px 0;
+	}
+
+	div.selector + p {
+		display: inline;
+	}
+</style>
+</head>
+<body>
+	<h1>Add a questionnaire</h1>
+	<form action="management_questionnaire.php" method="post">
+		<input type="hidden" name="action" value="add">
+		<label>Enter the title of your questionnaire&nbsp;:&nbsp;</label><input type="text" name="title"><span class="error"></span>
+		<select name="type">
+			<option value="article">Article</option>
+			<option value="image">Image</option>
+		</select>
+		<div class="selector">
+			<label>Link to your Article&nbsp;:&nbsp;</label><input type="text" name="data"><span class="error"></span>
+		</div>
+		<p>Your questions&nbsp;:</p><span class="error"></span>
+		<input type="button" value="add question"><br>
+		<div class="all_questions">
+			
+		</div>
+		<input type="submit" value="send">
+	</form>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('select').change(function(){
+				if( $('select option:selected').text() == "Article" ) {
+					$('.selector').find('label').text('Link to your Article : ');
+				}
+				else if ( $('select option:selected').text() == "Image" ) {
+					$('.selector').find('label').text('Link to your Image : ');
+				}
+			});
+
+			$('input[value="add question"]').click(function(){
+				var div = $('<div></div>').attr('class','question');
+				var lq = $('<label>Question&nbsp;:&nbsp;</label>');
+				var iq = $('<input type="text" name="q[]">');
+				var la = $('<label>Answer&nbsp;(put a list of words separated by a comma without spaces, eg: apple,pear,banana,...):&nbsp;</label>');
+				var ia = $('<input type="text" name="a[]">');
+				var button = $('<input type="button" value="delete question">');
+				button.click(function(){
+					$(this).parent().remove();
+				});
+				var error = $('<span class="error"></span>');
+				div.append(lq,iq,la,ia,button,error,'<hr>');
+				$('.all_questions').append(div);
+			})
+
+			$('form').submit(function(){
+				var valid = true;
+
+				if ($('input[name="title"]').val() == "") {
+					valid = false;
+					$('input[name="title"] + span.error').text(' Missing title');
+				}
+
+				if ($('input[name="data"]').val() == "") {
+					valid = false;
+					$('div.selector span.error').text(' Missing link');
+				}
+
+				if($('input[name="q[]"]').length == 0) {
+					valid = false;
+					$('p + span.error').text(' Please add at least one question');	
+				}
+
+				$('input[name="q[]"]').each(function(){
+					if ($(this).val() == "") {
+						valid = false;
+						$(this).parent().find('span.error').text(" Missing question or missing answer");
+					}
+				});
+
+				$('input[name="a[]"]').each(function(){
+					if ($(this).val() == "") {
+						valid = false;
+						$(this).parent().find('span.error').text(" Missing question or missing answer");
+					}
+				});
+
+				if (!valid) {
+					return false;
+				}
+			})
+		});
+	</script>
+</body>
+</html>

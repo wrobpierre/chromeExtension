@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<h1></h1>
+	<div id="content">
+		
+	</div>
+	
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script type="text/javascript">
+		function getUrlParameter(sParam) {
+			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
+
+			for (i = 0; i < sURLVariables.length; i++) {
+				sParameterName = sURLVariables[i].split('=');
+
+				if (sParameterName[0] === sParam) {
+					return sParameterName[1] === undefined ? true : sParameterName[1];
+				}
+			}
+		};
+		var param = getUrlParameter('id');
+		
+		if (param == undefined) {
+			//var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { key:"all" });
+			var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"all" });
+
+			post.done(function(data){
+				var dataParse = JSON.parse(data);
+				document.title = 'Questionnaires';
+				$('h1').text('List of questionnaires');
+				var ul = $('<ul></ul>');
+				$.each(dataParse, function(index, value){
+					var li = $('<li></li>');
+					var a = $('<a></a>').attr('href', value['url']).text(value['title']);
+					li.append(a);
+					ul.append(li);
+				})
+				var add = $('<a href="http://163.172.59.102/webSite/questionnaires/add_questionnaire.html">Add a questionnaire</a>');
+				$('#content').append(ul,add);
+			});
+		}
+		else {
+			//var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { key:"get_questions", id:param });
+			var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
+
+			post.done(function(data){
+				var dataParse = JSON.parse(data);
+				console.log(dataParse);
+				document.title = dataParse[0]['title'];
+				$('h1').text(dataParse[0]['title']);
+				var link;
+				if (dataParse[0]['type'] == 0) {
+					link = $('<a target="_blank"></a>').attr('href', dataParse[0]['link']).text(dataParse[0]['link']);
+				}
+				else {
+					link = $('<img>').attr('src', dataParse[0]['link']).attr('alt', dataParse[0]['link']);	
+				}
+				var form = $('<form method="post" action="checkAnswers.php"></form>');
+				
+				for (var i = 0; i < dataParse.length; i++) {
+					var div = $('<div class="question" id="'+(i+1)+'"></div>');
+					var p = $('<p>'+dataParse[i]['question']+'</p>');
+					var input = $('<input type="text" name="q['+dataParse[i]['id']+']">');
+					var valid = $('<input type="button" value="valid">');
+
+					div.append(p,input,valid);
+					form.append(div);
+				}
+
+
+				var lastDiv = $('<div></div>')
+				var p = $('<p>Don\'t forget to send your questionnaire and to press the button "stop"</p>');
+				var submit = $('<input type="submit" value="send">');
+
+				lastDiv.append(p,submit);
+				form.append(lastDiv);
+
+				$('#content').append(link,form);
+
+				$(document).ready(function(){
+
+					$('div.question[id!=1]').css('display','none');
+					$('form div:last-child').css('display','none');
+
+					alert("Don't forget to press the button \"start\" when you become your research !");
+
+					$('input[type="button"]').click(function(){
+						$(this).parent().css('display','none');
+						$(this).parent().next().css('display','block');
+					})
+
+					$('form').submit(function(){
+						alert('Thanks for your participation !')
+						//return false;
+					});
+				});
+			});
+		}
+	</script>
+</body>
+</html>

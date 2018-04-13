@@ -219,15 +219,15 @@ document.addEventListener('DOMContentLoaded', function () {
             var a = document.createElement('a');
             a.target = "_blank";
             if (dataParse.length == 0) {
-              a.href = "http://163.172.59.102/webSite/index.php";
-              a.textContent = "http://163.172.59.102/webSite/index.php";
+              a.href = "http://163.172.59.102/webSite/index.html";
+              a.textContent = "http://163.172.59.102/webSite/index.html";
               // a.href = "http://localhost/chromeExtension/webSite/index.php";
               // a.textContent = "http://localhost/chromeExtension/webSite/index.php";
 
             }
             else {
-              a.href = "http://163.172.59.102/webSite/index.php?id="+dataParse[0].id;
-              a.textContent = "http://163.172.59.102/webSite/index.php?id="+dataParse[0].id;
+              a.href = "http://163.172.59.102/webSite/index.html?id="+dataParse[0].id;
+              a.textContent = "http://163.172.59.102/webSite/index.html?id="+dataParse[0].id;
               // a.href = "http://localhost/chromeExtension/webSite/index.php?id="+dataParse[0].id;
               // a.textContent = "http://localhost/chromeExtension/webSite/index.php?id="+dataParse[0].id;
 

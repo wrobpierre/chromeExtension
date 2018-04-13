@@ -86,25 +86,25 @@ $val = $_GET['q'];
 
 			echo "<div class=\"question\" id=\"1\">";
 			echo "<p>Find the name of this painting ?</p>";
-			echo "<input type=\"text\" name=\"q[]\">";
+			echo "<input type=\"text\" name=\"q[1]\">";
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
 			echo "<div class=\"question\" id=\"2\">";
 			echo "<p>How many people have worked to paint this wall ?</p>";
-			echo "<input type=\"number\" step=\"any\" name=\"q[]\"><span> peoples</span>";
+			echo "<input type=\"number\" step=\"any\" name=\"q[2]\"><span> peoples</span>";
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
 			echo "<div class=\"question\" id=\"3\">";
 			echo "<p>A Cuban actor played in one of \"The Godfather\". What is the name of the other movie released in 1987 in which he played ?</p>";
-			echo "<input type=\"text\" name=\"q[]\">";
+			echo "<input type=\"text\" name=\"q[3]\">";
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
 			echo "<div class=\"question\" id=\"4\">";
 			echo "<p>A Cuban cigar is named after a famous theatrical play, what is the name of this cigar in its original language (spanish)?</p>";
-			echo "<input type=\"text\" name=\"q[]\">";
+			echo "<input type=\"text\" name=\"q[4]\">";
 			echo "<input type=\"button\" value=\"valid\">";
 			echo "</div>";
 
@@ -125,7 +125,7 @@ $val = $_GET['q'];
 			$('div.question[id!=1]').css('display','none');
 			$('form div:last-child').css('display','none');
 
-			alert("Don't forget to press the button \"start\" when you become your research !");
+			//alert("Don't forget to press the button \"start\" when you become your research !");
 			
 			$('input[type="button"]').click(function(){
 				$(this).parent().css('display','none');
@@ -133,7 +133,7 @@ $val = $_GET['q'];
 			})
 
 			$('form').submit(function(){
-				alert('Thanks for your participation !')
+				//alert('Thanks for your participation !')
 				//return false;
 			})
 		})	

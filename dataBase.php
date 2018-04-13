@@ -36,7 +36,7 @@ if (isset($_POST['key'])) {
 				$stmt->bindParam(':keywords', $keywords);
 				$stmt->bindParam(':view', $view);
 				$stmt->bindParam(':timer', $timer);
-				$stmt->bindParam(':first_url', $first_url);
+				// $stmt->bindParam(':host_name', $hostName);
 
 				$first_url = $_POST['url']['firstUrl'];
 
@@ -51,6 +51,7 @@ if (isset($_POST['key'])) {
 					}
 					$view = $value['views'];
 					$timer = json_encode($value['timeOnPage']);
+					// $hostName = $value['hostName'];
 
 					$stmt->execute();
 				}

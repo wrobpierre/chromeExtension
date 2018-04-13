@@ -112,7 +112,7 @@ function resetList() {
 function sendData(key) {
   var storage = chrome.storage.local;
   storage.get('data', function(result){
-
+    console.log(result);
     if (key == "load") {
       var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
       // var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
@@ -213,6 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
           // var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"get_id_firstUrl" });
           post.done(function(data){
             console.log('envoie');
+            console.log(data);
             dataParse = JSON.parse(data);
             //alert(dataParse[0].id);
             var a = document.createElement('a');

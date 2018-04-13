@@ -189,7 +189,7 @@ nytg.formatNumber = function(n) {
       } else {return d}
     },  
     
-    rScale          : d3.scale.pow().exponent(0.15).domain([0,1000000000]).range([1,100]),
+    rScale          : d3.scale.pow().exponent(0.15).domain([0,10000000000]).range([1,100]),
     radiusScale     : null,
     changeScale     : d3.scale.linear().domain([-0.28,0.28]).range([620,180]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
@@ -282,23 +282,23 @@ nytg.formatNumber = function(n) {
 
       var maxView = null;
       var minView = null;
+      var percent = 0;
 
       for (var i=0; i < this.data.length; i++) {
-        if (maxView == null || maxView < this.data[i].view) {
+        if (maxView == null || maxView < parseInt(this.data[i].view)) {
           maxView = this.data[i].view;
         }
-        if (minView == null || minView > this.data[i].view) {
+        if (minView == null || minView > parseInt(this.data[i].view)) {
           minView = this.data[i].view;
         }
       }
-      console.log(maxView);
-      console.log(minView);
+
+      percent = maxView/100;
       // Builds the nodes data array from the original data
       for (var i=0; i < this.data.length; i++) {
         var n = this.data[i];
 
-        //Mettre un max et un min
-        var res = Math.exp(this.data[i].view);
+        var res = Math.exp((this.data[i].view/5)/percent);
         
         var out = {
           sid: n['id'],

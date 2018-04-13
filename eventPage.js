@@ -31,6 +31,7 @@ function getCurrentTabUrl(eventUrl) {
     var tab = tabs.find(val => val.url == eventUrl);
     var url;
     var title;
+    var hostName;
     if(tab != undefined){
       url = tab.url;
     }
@@ -41,15 +42,15 @@ function getCurrentTabUrl(eventUrl) {
       if(result.firstUrl != undefined && result.firstUrl != url){
         var keywords;
         var dateBegin = new Date();
+        hostName = (new URL(url).hostname).toString();
         dateBegin = dateBegin.toJSON();
-
         chrome.tabs.executeScript({
           file:
           "./scripts/requestMeta.js", runAt: "document_end"
         }, function(results){
           keywords = results[0];
           title = keywords[keywords.length-1];
-          var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'scrollPercent': 0}
+          var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'scrollPercent': 0}
           saveList(values);
         });
       }

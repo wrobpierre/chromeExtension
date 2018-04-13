@@ -39,7 +39,7 @@ post.done(function(data) {
   dataParse = JSON.parse(data);
   dataParse.forEach(function(element){
     element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
-    element["domain"] = "Health and Human Services";
+    //element["domain"] = "Health and Human Services";
     element["timer"] = JSON.parse(element["timer"]);
     if(minTime == null || minTime.hours >= parseInt(element.timer.hours)) {
       if (minTime == null || minTime.hours > parseInt(element.timer.hours) || minTime.minutes >= parseInt(element.timer.minutes)) {
@@ -312,11 +312,11 @@ nytg.formatNumber = function(n) {
         var n = this.data[i];
 
         var res = Math.exp((this.data[i].view/5)/percent);
-        
+        console.log(n['host_name']);
         var out = {
           sid: n['id'],
           radius: this.radiusScale(res),
-          group: n['domain'],
+          group: n['host_name'],
           change: n['timer'],
           changeCategory: this.categorizeChange(n['timer']),
           value: n[/*this.currentYearDataColumn*/'view'],
@@ -451,12 +451,12 @@ nytg.formatNumber = function(n) {
         d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
         d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
-        var url = new URL(d.url)
+        /*var url = new URL(d.url)
 
         $j("#nytg-tooltip .nytg-domain").html('<img id="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
         if(errorImg){
           $j("#icon").src = "dhzahazcha";
-        }
+        }*/
 
         d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views') })
 

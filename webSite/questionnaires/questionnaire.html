@@ -39,8 +39,18 @@
 				var ul = $('<ul></ul>');
 				$.each(dataParse, function(index, value){
 					var li = $('<li></li>');
-					var a = $('<a></a>').attr('href', value['url']).text(value['title']);
-					li.append(a);
+					var a = $('<a></a>').attr('href', value['url']).text(value['title']).css('margin','0 15px 0 0');
+					var edit = $('<a></a>').attr('href', 'http://163.172.59.102/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]).text('edit');
+					var del = $('<button>Delete</button>').click(function(){
+						var r = confirm("Are you sure to delete this questionnaire ?");
+						if (r == true) {
+							var postDel = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
+							postDel.done(function(data){
+								alert(data);
+							});
+						}
+					});
+					li.append(a,edit,del);
 					ul.append(li);
 				})
 				var add = $('<a href="http://163.172.59.102/webSite/questionnaires/add_questionnaire.html">Add a questionnaire</a>');

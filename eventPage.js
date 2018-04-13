@@ -44,6 +44,7 @@ function getCurrentTabUrl(eventUrl) {
         var dateBegin = new Date();
         hostName = (new URL(url).hostname).toString();
         dateBegin = dateBegin.toJSON();
+
         chrome.tabs.executeScript({
           file:
           "./scripts/requestMeta.js", runAt: "document_end"

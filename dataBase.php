@@ -29,14 +29,14 @@ if (isset($_POST['key'])) {
 			if (isset($_POST['d']) && isset($_POST['url'])) {
 				// $stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, key_first_url)
 				// 	VALUES (:url, :title, :keywords, :view, :timer, :key_first_url)");
-				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, key_first_url) SELECT :url ,:title ,:keywords,:view,:timer, id FROM firsturl WHERE url like :first_url");
+				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, host_name, key_first_url) SELECT :url ,:title ,:keywords,:view,:timer, :host_name, id FROM firsturl WHERE url like :first_url");
 				//$reponse = $conn->query('SELECT id FROM firsturl WHERE key_first_url = '+$key_first_url);
 				$stmt->bindParam(':url', $url);
 				$stmt->bindParam(':title', $title);
 				$stmt->bindParam(':keywords', $keywords);
 				$stmt->bindParam(':view', $view);
 				$stmt->bindParam(':timer', $timer);
-				// $stmt->bindParam(':host_name', $hostName);
+				$stmt->bindParam(':host_name', $hostName);
 
 				$first_url = $_POST['url']['firstUrl'];
 
@@ -51,7 +51,7 @@ if (isset($_POST['key'])) {
 					}
 					$view = $value['views'];
 					$timer = json_encode($value['timeOnPage']);
-					// $hostName = $value['hostName'];
+					$hostName = $value['hostName'];
 
 					$stmt->execute();
 				}

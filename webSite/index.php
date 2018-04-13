@@ -79,6 +79,7 @@
 															<svg id="nytg-scaleKey"></svg>
 														</div>
 														<p>Color shows the time spent on a web site.</p>
+
 														<ul class="nytg-colorSwatches">
 															<li class="change-decrease3"></li>
 															<li class="change-decrease2"></li>
@@ -87,22 +88,22 @@
 															<li class="change-increase2"></li>
 															<li class="change-increase3"></li>
 														</ul>
-														<ul class="nytg-colorTicks">
+														<!-- <ul class="nytg-colorTicks">
 															<li></li>
 															<li></li>
 															<li></li>
 															<li></li>
 															<li></li>
 															<li></li>
-														</ul>
+														</ul> -->
 														<ul class="nytg-colorLabels">
-															<li>0s</li>
-															<li>10s</li>
-															<li>1mn</li>
-															<li>5mn</li>
-															<li>10mn</li>
-															<li>15mn</li>
-															<li>+de 20mn</li>
+															<li></li>
+															<li></li>
+															<li></li>
+															<li></li>
+															<li></li>
+															<li></li>
+															
 														</ul>
 													</div>
 												</div>

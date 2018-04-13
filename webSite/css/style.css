@@ -351,7 +351,7 @@ div.storyHeader h1 {
   position: absolute;
   top: 210px;
   left: 10px;
-  width: 200px;
+  width: 300px;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -391,20 +391,20 @@ div.storyHeader h1 {
   fill:none;
 }
 
-#nytg-colorKey ul {
+/*#nytg-colorKey ul {
   margin: 0;
   padding: 0;
-}
+}*/
 #nytg-colorKey p {
   margin-bottom: 8px;
 }
 
 #nytg-colorKey li{
   background-image: none;
-  padding: 0;
-  margin: 0;
-  float: left;
-  display: block;
+  /*padding: 0;*/
+  margin: 10px;
+  /*float: left;*/
+  /*display: block;*/
   height: 100%;
 }
 
@@ -414,7 +414,7 @@ div.storyHeader h1 {
 }
 
 .nytg-colorSwatches li {
-  width: 16%;
+  width: 12%;
   border-right: solid white 1px;
 }
 
@@ -435,20 +435,22 @@ div.storyHeader h1 {
 }
 
 .nytg-colorLabels {
-  margin-top: 3px;
-  height: 20px;
+  /*margin-top: 3px;*/
+  /*height: 20px;*/
   /*position: relative;*/
+  width: 200px;
+    margin-left: 50px;
+  margin-top: -27px;
   left: 8%;
-
 }
 
 .nytg-colorLabels li {
-  width: 16%;
+  width: 100%;
   /*text-align: center;*/
   font-size: 10px;
   line-height: 1em;
-  padding: 4px 0 0 0!important;
-  margin: 0;
+  /*padding: 4px 0 0 0!important;*/
+  margin-top: 6px;
 }
 
 

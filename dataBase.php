@@ -17,8 +17,8 @@ if (isset($_POST['key'])) {
 	$servername = "localhost";
 	// $servername = "163.172.59.102";
 	$username = "root";
-	$password = "stageOsaka";
 	// $password = "stageOsaka";
+	$password = "";
 	$dbname = "chrome_extension";
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -26,11 +26,20 @@ if (isset($_POST['key'])) {
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		if ($_POST['key'] == 'add') {
-			if (isset($_POST['d']) && isset($_POST['url'])) {
-				// $stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, key_first_url)
-				// 	VALUES (:url, :title, :keywords, :view, :timer, :key_first_url)");
-				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, host_name, key_first_url) SELECT :url ,:title ,:keywords,:view,:timer, :host_name, id FROM firsturl WHERE url like :first_url");
-				//$reponse = $conn->query('SELECT id FROM firsturl WHERE key_first_url = '+$key_first_url);
+			if (isset($_POST['d']) && isset($_POST['url']) && isset($_POST['uniqId']) ) {
+
+				$stmtId = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
+				$stmtId->bindParam(':createId', $createId);
+				$createId = $_POST['uniqId'];
+				$stmtId->execute();
+
+				$stmtCheck = $conn->prepare("SELECT id FROM users WHERE check_id like '".$_POST['uniqId']."'");
+				$stmtCheck->execute();
+				
+				$uniqId = $stmtCheck->fetchAll();
+
+				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, host_name, key_user, key_first_url) SELECT :url ,:title ,:keywords,:view,:timer, :host_name, :key_user, id FROM firsturl WHERE url like :first_url ");
+					//$reponse = $conn->query('SELECT id FROM firsturl WHERE key_first_url = '+$key_first_url);
 				$stmt->bindParam(':url', $url);
 				$stmt->bindParam(':title', $title);
 				$stmt->bindParam(':keywords', $keywords);
@@ -38,6 +47,7 @@ if (isset($_POST['key'])) {
 				$stmt->bindParam(':timer', $timer);
 				$stmt->bindParam(':first_url', $first_url);
 				$stmt->bindParam(':host_name', $hostName);
+				$stmt->bindParam(':key_user', $uniqId[0]['id']);
 
 				$first_url = $_POST['url']['firstUrl'];
 
@@ -56,8 +66,9 @@ if (isset($_POST['key'])) {
 
 					$stmt->execute();
 				}
-
+				
 			}
+			
 				//echo "New records created successfully";
 		}
 		elseif ($_POST['key'] == 'load') {

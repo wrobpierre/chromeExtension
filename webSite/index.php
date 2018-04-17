@@ -47,6 +47,7 @@
 											<div id="nytg-tooltip">
 												<div id="nytg-tooltipContainer">
 													<div class="nytg-domain"></div>
+													<div class="nytg-logo"></div>
 													<div class="nytg-rule"></div>
 													<div class="nytg-url"></div>
 													<div class="nytg-discretion"></div>

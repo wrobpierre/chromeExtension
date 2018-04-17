@@ -157,6 +157,7 @@ function compareDate(dateBegin, dateEnd, element){
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type === 'start') {
+    createUniqId();
     listen = true;
     sendResponse({url: sendFirstUrl(), result: listen});
   }
@@ -184,6 +185,24 @@ function sendSecondUrl(){
     storage.set(obj);
     result.firstUrl = firstUrl;
     return result.firstUrl;
+  });
+}
+
+function createUniqId(){
+  storage.get('uniqId', function(result) {
+    var id = (new Date().getTime().toString() + Math.floor((Math.random()*10000)+1).toString(16));
+    if (result.uniqId == undefined) {
+      var obj = {}
+      obj['uniqId'] = id;
+      storage.set(obj);
+      result.uniqId = id;
+    }
+    else{
+      var obj = {}
+      obj['uniqId'] = id;
+      storage.set(obj);
+      result.uniqId = id;
+    }
   });
 }
 

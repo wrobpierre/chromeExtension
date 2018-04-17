@@ -27,6 +27,54 @@ if (isset($_POST['key'])) {
 
 		if ($_POST['key'] == 'add') {
 			if (isset($_POST['d']) && isset($_POST['url']) && isset($_POST['uniqId']) ) {
+				/*$stmt = $conn->prepare("SELECT s.id, s.url, view, timer FROM sites s INNER JOIN firsturl fu ON s.key_first_url = fu.id WHERE fu.url like :url");
+				$stmt->bindParam(':url', $url);
+				$url = $_POST['url'];
+				$stmt->execute();
+
+				$compare = $stmt->fetchAll(PDO::FETCH_CLASS, "site");
+				$url_compare = array_column($compare, 'url');
+
+				$insert = [];
+				$update = [];
+
+				foreach ($_POST['d']['data'] as $key => $value) {
+					$c = array_search($value['url'], $url_compare); 
+					if ($c !== false) {
+						$value['views'] += $compare[$c]['view'];
+						$value['timeOnPage']['secondes'] += json_decode($compare[$c]['timer'])['secondes'];
+						if ($value['timeOnPage']['secondes'] >= 60) {
+							$value['timeOnPage']['secondes'] = $value['timeOnPage']['secondes']%60;
+							$value['timeOnPage']['minutes'] += 1;
+						}
+						$value['timeOnPage']['minutes'] += json_decode($compare[$c]['timer'])['minutes'];
+						if ($value['timeOnPage']['minutes'] >= 60) {
+							$value['timeOnPage']['minutes'] = $value['timeOnPage']['minutes']%60;
+							$value['timeOnPage']['hours'] += 1;
+						}
+						$value['timeOnPage']['hours'] += json_decode($compare[$c]['timer'])['hours'];
+						$value['id'] = $compare[$c]['id'];
+						array_push($update, $value);
+					}
+					else {
+						array_push($insert, $value);
+					}
+				}
+
+				$stmt = $conn->prepare("UPDATE sites
+					SET view = :view, timer = :timer
+					WHERE id = :id");
+				$stmt->bindParam(':view', $view);
+				$stmt->bindParam(':timer', $timer);
+				$stmt->bindParam(':id', $id);
+
+				foreach ($update as $key => $value) {
+					$view = $value['views'];
+					$timer = json_encode($value['timeOnPage']);
+					$id = $value['id'];
+
+					$stmt->execute();
+				}*/
 
 				$stmtId = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
 				$stmtId->bindParam(':createId', $createId);
@@ -37,7 +85,7 @@ if (isset($_POST['key'])) {
 				$stmtCheck->execute();
 				
 				$uniqId = $stmtCheck->fetchAll();
-
+				
 				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, host_name, key_user, key_first_url) SELECT :url ,:title ,:keywords,:view,:timer, :host_name, :key_user, id FROM firsturl WHERE url like :first_url ");
 					//$reponse = $conn->query('SELECT id FROM firsturl WHERE key_first_url = '+$key_first_url);
 				$stmt->bindParam(':url', $url);
@@ -76,8 +124,8 @@ if (isset($_POST['key'])) {
 			if (isset($_POST['id'])) {
 				$requete = "SELECT s.* 
 				FROM sites s
-				INNER JOIN firsturl fu on s.key_first_url = fu.id
-				WHERE fu.id = ".$_POST['id']."";
+				INNER JOIN firsturl fu ON s.key_first_url = fu.id
+				WHERE fu.id = ".$_POST['id'];
 			}
 			else {
 				$requete = "SELECT * FROM sites";

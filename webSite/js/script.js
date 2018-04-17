@@ -312,7 +312,6 @@ nytg.formatNumber = function(n) {
         var n = this.data[i];
 
         var res = Math.exp((this.data[i].view/5)/percent);
-        console.log(n['host_name']);
         var out = {
           sid: n['id'],
           radius: this.radiusScale(res),
@@ -454,7 +453,6 @@ nytg.formatNumber = function(n) {
         var url = new URL(d.url)
 
         $j("#nytg-tooltip .nytg-logo").html('<img id="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
-
 
         d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views') })
 

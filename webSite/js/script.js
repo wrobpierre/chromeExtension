@@ -19,13 +19,13 @@ var id = getUrlParameter('id');
 
 if (id !== undefined) {
   console.log(id);
-  var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load", id:id });
-  // var post = $.post('http://163.172.59.102/dataBase.php', { key:"load", id:id });  
+  // var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load", id:id });
+  var post = $.post('http://163.172.59.102/dataBase.php', { key:"load", id:id });  
 }
 else {
   console.log('pas d\'url');
-  var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
-  // var post = $.post('http://163.172.59.102/dataBase.php', { key:"load" });
+  // var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
+  var post = $.post('http://163.172.59.102/dataBase.php', { key:"load" });
 }
 
 //var post = $.post('http://163.172.59.102/dataBase.php', { key:"load" });

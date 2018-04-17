@@ -114,15 +114,15 @@ function sendData(key) {
   storage.get('data', function(result){
     console.log(result);
     if (key == "load") {
-      // var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
-      var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
+      var post = $.post('http://163.172.59.102/dataBase.php', { d:example, key:"add" });
+      // var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:example, key:"add" });
 
     }
     else{
       storage.get('uniqId', function(resultId){
         storage.get('firstUrl', function(resultUrl){
-          // var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:resultUrl, key:key });
-          var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:resultUrl, uniqId: resultId.uniqId, key:key });
+          var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:resultUrl, uniqId: resultId.uniqId, key:key });
+          // var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:resultUrl, uniqId: resultId.uniqId, key:key });
         });
       });
     }
@@ -194,8 +194,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if(response.result){
         var storage = chrome.storage.local;
         storage.get('firstUrl', function(result) {
-          // var post = $.post('http://163.172.59.102/dataBase.php', { url:result.firstUrl, key:"first" });
-          var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"first" });
+          var post = $.post('http://163.172.59.102/dataBase.php', { url:result.firstUrl, key:"first" });
+          // var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"first" });
         });
       }
     });
@@ -210,9 +210,9 @@ document.addEventListener('DOMContentLoaded', function () {
         sendData("add");
         var storage = chrome.storage.local;
         storage.get('firstUrl', function(result) {
-          // var post = $.post('http://163.172.59.102/dataBase.php', { url:result.firstUrl, key:"get_id_firstUrl" });
+          var post = $.post('http://163.172.59.102/dataBase.php', { url:result.firstUrl, key:"get_id_firstUrl" });
           //alert(result.firstUrl);
-          var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"get_id_firstUrl" });
+          // var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"get_id_firstUrl" });
           post.done(function(data){
             console.log('envoie');
             console.log(data);
@@ -221,17 +221,17 @@ document.addEventListener('DOMContentLoaded', function () {
             var a = document.createElement('a');
             a.target = "_blank";
             if (dataParse.length == 0) {
-              // a.href = "http://163.172.59.102/webSite/index.html";
-              // a.textContent = "http://163.172.59.102/webSite/index.html";
-              a.href = "http://localhost/chromeExtension/webSite/index.html";
-              a.textContent = "http://localhost/chromeExtension/webSite/index.html";
+              a.href = "http://163.172.59.102/webSite/index.html";
+              a.textContent = "http://163.172.59.102/webSite/index.html";
+              // a.href = "http://localhost/chromeExtension/webSite/index.html";
+              // a.textContent = "http://localhost/chromeExtension/webSite/index.html";
 
             }
             else {
-              // a.href = "http://163.172.59.102/webSite/index.html?id="+dataParse[0].id;
-              // a.textContent = "http://163.172.59.102/webSite/index.html?id="+dataParse[0].id;
-              a.href = "http://localhost/chromeExtension/webSite/index.html?id="+dataParse[0].id;
-              a.textContent = "http://localhost/chromeExtension/webSite/index.html?id="+dataParse[0].id;
+              a.href = "http://163.172.59.102/webSite/index.html?id="+dataParse[0].id;
+              a.textContent = "http://163.172.59.102/webSite/index.html?id="+dataParse[0].id;
+              // a.href = "http://localhost/chromeExtension/webSite/index.html?id="+dataParse[0].id;
+              // a.textContent = "http://localhost/chromeExtension/webSite/index.html?id="+dataParse[0].id;
 
             }
             document.getElementById('data-overlay').appendChild(a);

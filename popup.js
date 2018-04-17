@@ -173,12 +173,10 @@ document.addEventListener('DOMContentLoaded', function () {
   chrome.runtime.sendMessage({type: 'get'}, function get(response){
     console.log(response.result);
     if (response.result) {
-      console.log("1");
       document.getElementById('start').disabled = response.result;   
       document.getElementById('stop').disabled = !response.result;
     }
     else{
-      console.log("2");
       document.getElementById('start').disabled = response.result;   
       document.getElementById('stop').disabled = !response.result; 
     }
@@ -212,8 +210,6 @@ document.addEventListener('DOMContentLoaded', function () {
           //alert(result.firstUrl);
           // var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:result.firstUrl, key:"get_id_firstUrl" });
           post.done(function(data){
-            console.log('envoie');
-            console.log(data);
             dataParse = JSON.parse(data);
             //alert(dataParse[0].id);
             var a = document.createElement('a');

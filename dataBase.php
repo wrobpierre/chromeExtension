@@ -121,7 +121,14 @@ if (isset($_POST['key'])) {
 		}
 		elseif ($_POST['key'] == 'load') {
 			$requete = "";
-			if (isset($_POST['id'])) {
+			if (isset($_POST['id']) && isset($_POST['user'])) {
+				$requete = "SELECT s.*
+				FROM users u
+				INNER JOIN sites s ON u.id = s.key_user
+				INNER JOIN firsturl fu ON s.key_first_url = fu.id
+				WHERE u.id = ".$_POST['user'];
+			}
+			elseif (isset($_POST['id'])) {
 				$requete = "SELECT s.* 
 				FROM sites s
 				INNER JOIN firsturl fu ON s.key_first_url = fu.id
@@ -159,6 +166,38 @@ if (isset($_POST['key'])) {
 
 				echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "firsturl"));
 			}
+		}
+		elseif ($_POST['key'] == 'get_graphs') {
+			$stmt = $conn->prepare("SELECT fu.id, fu.url , ('')title
+				FROM firsturl fu
+				WHERE NOT EXISTS (SELECT * FROM questionnaires q WHERE q.key_first_url = fu.id)
+
+				UNION
+
+				SELECT fu.*, q.title
+				FROM firsturl fu
+				INNER JOIN questionnaires q ON fu.id = q.key_first_url");
+			$stmt->execute();
+
+			echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "firsturl"));
+		}
+		elseif ($_POST['key'] == 'get_data_users') {
+			$stmt = $conn->prepare("SELECT distinct (u.id)user_id, fu.*, q.title
+				FROM users u
+				INNER JOIN sites s ON u.id = s.key_user
+				INNER JOIN firsturl fu ON s.key_first_url = fu.id
+				INNER JOIN questionnaires q ON fu.id = q.key_first_url
+
+				UNION
+
+				SELECT distinct (u.id)user_id, fu.*, ('')title
+				FROM users u
+				INNER JOIN sites s ON u.id = s.key_user
+				INNER JOIN firsturl fu ON s.key_first_url = fu.id
+				WHERE NOT EXISTS (SELECT * FROM questionnaires q where q.key_first_url = fu.id)");
+			$stmt->execute();
+
+			echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "firsturl"));
 		}
 	}
 	catch(PDOException $e)

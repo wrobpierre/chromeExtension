@@ -16,11 +16,17 @@ function getUrlParameter(sParam) {
   }
 };
 var id = getUrlParameter('id');
+var user = getUrlParameter('user');
 
-if (id !== undefined) {
+if (id !== undefined && user !== undefined) {
   console.log(id);
+  console.log(user);
   // var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load", id:id });
-  var post = $.post('http://163.172.59.102/dataBase.php', { key:"load", id:id });  
+  var post = $.post('http://163.172.59.102/dataBase.php', { key:"load", id:id, user:user });  
+}
+else if (id !== undefined) {
+  console.log(id);
+  var post = $.post('http://163.172.59.102/dataBase.php', { key:"load", id:id }); 
 }
 else {
   console.log('pas d\'url');
@@ -61,9 +67,11 @@ post.done(function(data) {
 
   var question = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:'get_title_question', id:id });
   question.done(function(data){
-    var dataParse = JSON.parse(data);
-    console.log(dataParse[0]);
-    document.getElementById('question_title').textContent = dataParse[0];
+    if (data != "") {  
+      var dataParse = JSON.parse(data);
+      console.log(dataParse[0]);
+      document.getElementById('question_title').textContent = dataParse[0];
+    }
   })
 
 // BEGIN nytg Additions

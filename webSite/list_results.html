@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Results</title>
+</head>
+<body>
+	<h1>List of results</h1>
+	<div id="questionnaires">
+		<h2>Questionnaires :</h2>
+		<ul>
+
+		</ul>
+	</div>
+	
+	<div id="others">
+		<h2>Others :</h2>
+		<ul>
+
+		</ul>
+	</div>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script type="text/javascript">
+		var post = $.post('http://163.172.59.102/dataBase.php', { key:"get_graphs" });
+
+		post.done(function(data){
+			var dataParse = JSON.parse(data);
+			console.log(dataParse);
+
+			$.each(dataParse, function(index,value){
+				var li = $('<li></li>');
+				var link = 'http://163.172.59.102/webSite/index.html?id='+value['id'];
+				if (value['title'] == "") {
+					var a = $('<a href="'+link+'">'+link+'</a>');
+					li.append(a);
+					$('div#others > ul').append(li);
+				}
+				else {
+					var a = $('<a href="'+link+'">'+value['title']+'</a>');
+					li.append(a);
+					$('div#questionnaires > ul').append(li);
+				}
+
+			});
+		});
+	</script>
+</body>
+</html>

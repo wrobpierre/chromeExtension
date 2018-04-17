@@ -19,7 +19,7 @@ var id = getUrlParameter('id');
 
 if (id !== undefined) {
   console.log(id);
-  // var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load", id:id.val() });
+  // var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load", id:id });
   var post = $.post('http://163.172.59.102/dataBase.php', { key:"load", id:id });  
 }
 else {
@@ -457,12 +457,10 @@ nytg.formatNumber = function(n) {
         d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
         d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
-        /*var url = new URL(d.url)
+        var url = new URL(d.url)
 
-        $j("#nytg-tooltip .nytg-domain").html('<img id="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
-        if(errorImg){
-          $j("#icon").src = "dhzahazcha";
-        }*/
+        $j("#nytg-tooltip .nytg-logo").html('<img id="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
+
 
         d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views') })
 

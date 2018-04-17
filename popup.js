@@ -119,10 +119,12 @@ function sendData(key) {
 
     }
     else{
-      storage.get('firstUrl', function(resultUrl){
-      var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:resultUrl, key:key });
-      // var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:resultUrl, key:key });
-    });
+      storage.get('uniqId', function(resultId){
+        storage.get('firstUrl', function(resultUrl){
+          var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:resultUrl, uniqId: resultId.uniqId, key:key });
+          // var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:resultUrl, uniqId: resultId.uniqId, key:key });
+        });
+      });
     }
     post.done(function(data) {
       // var test = $.parseJSON(data);
@@ -217,15 +219,15 @@ document.addEventListener('DOMContentLoaded', function () {
             if (dataParse.length == 0) {
               a.href = "http://163.172.59.102/webSite/index.html";
               a.textContent = "http://163.172.59.102/webSite/index.html";
-              // a.href = "http://localhost/chromeExtension/webSite/index.php";
-              // a.textContent = "http://localhost/chromeExtension/webSite/index.php";
+              // a.href = "http://localhost/chromeExtension/webSite/index.html";
+              // a.textContent = "http://localhost/chromeExtension/webSite/index.html";
 
             }
             else {
               a.href = "http://163.172.59.102/webSite/index.html?id="+dataParse[0].id;
               a.textContent = "http://163.172.59.102/webSite/index.html?id="+dataParse[0].id;
-              // a.href = "http://localhost/chromeExtension/webSite/index.php?id="+dataParse[0].id;
-              // a.textContent = "http://localhost/chromeExtension/webSite/index.php?id="+dataParse[0].id;
+              // a.href = "http://localhost/chromeExtension/webSite/index.html?id="+dataParse[0].id;
+              // a.textContent = "http://localhost/chromeExtension/webSite/index.html?id="+dataParse[0].id;
 
             }
             document.getElementById('data-overlay').appendChild(a);

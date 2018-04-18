@@ -140,3 +140,40 @@ h1{
 	}
 
 }
+
+.button_link{
+	margin: 10px;
+	width: 150px;
+	background-color: #008CBA;
+	color: white;
+	border-radius: 5px;
+
+	padding-top: 10px;
+	display: inline-block;
+	height: 30px;
+	border-width: 2px;
+	border-style: outset;
+	border-color: buttonface;
+	border-image: initial;
+	text-align: center;
+}
+
+.button_link:hover{
+	animation:pulsation_bouton_link .8s ease-out
+}
+
+@keyframes pulsation_bouton_link {
+
+	from{
+		box-shadow:0 0 0 -3px #008CBA 
+	}
+	to{
+		box-shadow:0 0 0 7px 
+	}
+
+}
+
+.link{
+	color: white;
+	text-decoration: none;
+}

@@ -1,0 +1,142 @@
+body{
+	margin: 0;
+	padding: 0;
+}
+
+html{
+	font-family: Arial;
+	background-color: #ECF0F1;
+}
+
+header{
+	height: 400px;
+}
+
+form{
+	border: solid #DADFE1 1px;
+	background-color: white;
+	text-align: initial;
+	width: 50%;
+	min-width: 250px;
+	margin: auto;
+	margin-top: -50px;
+}
+
+#questionnaire{
+	margin: 5%;
+}
+
+.input_question{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10%;
+	width: 80%;
+	height: 30px;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+}
+
+.select_question{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10%;
+	width: 80%;
+	height: 30px;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	background-color: #EEEEEE;
+
+}
+
+.input_question:focus{
+	outline: none;
+	border-bottom: solid #5C97BF 2px;
+}
+
+.select_question:focus{
+	outline: none;
+	border-bottom: solid #5C97BF 2px;
+}
+
+h1{
+	text-align: center;
+}
+
+.button{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 150px;
+	height: 40px;
+	background-color: #008CBA;
+	color: white;
+	border-radius: 5px;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	text-align: center;
+}
+.button:hover{
+	animation:pulsation_bouton .8s ease-out
+}
+
+@keyframes pulsation_bouton {
+
+	from{
+		box-shadow:0 0 0 -3px #008CBA 
+	}
+	to{
+		box-shadow:0 0 0 7px 
+	}
+
+}
+
+.button_delete{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 150px;
+	height: 40px;
+	background-color: #f44336;
+	color: white;
+	border-radius: 5px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.button_delete:hover{
+	animation:pulsation_bouton_delete .8s ease-out
+}
+
+@keyframes pulsation_bouton_delete {
+	from{
+		box-shadow:0 0 0 -3px #f44336 
+	}
+	to{
+		box-shadow:0 0 0 7px 
+	}
+}
+
+.button_valid{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 150px;
+	height: 40px;
+	background-color: #00B16A;
+	color: white;
+	border-radius: 5px;
+}
+
+.button_valid:hover{
+	animation:pulsation_bouton_valid .8s ease-out
+}
+
+@keyframes pulsation_bouton_valid {
+
+	from{
+		box-shadow:0 0 0 -3px #00B16A 
+	}
+	to{
+		box-shadow:0 0 0 7px 
+	}
+
+}

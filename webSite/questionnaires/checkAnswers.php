@@ -53,9 +53,9 @@ if (isset($_POST['user_id'])) {
 		$stmt = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
 		$stmt->bindParam(':createId', $createId);
 		$createId = $_POST['user_id'];
-		
+
 		if($stmt->execute()){
-			  header("Location: http://163.172.59.102/webSite/questionnaires/result.html");			
+			//header("Location: http://163.172.59.102/webSite/questionnaires/result.html");			
 		}
 		
 		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)

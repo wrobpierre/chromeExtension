@@ -466,7 +466,7 @@ nytg.formatNumber = function(n) {
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
 
-        $j("#nytg-tooltip .nytg-logo").html('<img id="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
+        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
 
         d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views') })
 

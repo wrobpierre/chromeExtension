@@ -3,14 +3,41 @@ body {
 	padding-top: 0px;
 	margin-bottom: 0px;
 	padding-bottom: 0px;
-	font-family: 'Lobster', cursive;
+	font-family: 'Lobster';
 	font-size: large;
 
 }
 
 header{
-	height: 100px;
+	height: 50px;
 	width: 100%;
+	background-color: #e74c3c;
+	position: fixed;
+	top:0;
+	z-index: 200;
+}
+
+#statsLink{
+	text-decoration:none;
+	color: white;
+	margin-top: 10px;
+}
+.headerButton{
+	float: right;
+	width: 150px;
+	text-align: center;
+	height: 100%;
+	transition-property: transform;
+    transition-duration: 0.5s;
+    /*transition-timing-function: ease;*/
+}
+
+.headerButton:hover{
+	background-color: #e53935 ;
+	border-bottom: solid 4px #e57373; 
+	border-right: solid 4px #e57373;
+	transform: translate(-3px, 3px);
+	/*transform: translateY(30px);*/
 }
 
 #header{
@@ -28,7 +55,7 @@ header{
 	border: solid 10px #E7E7E7;
 	text-align: center;
 	z-index: 104;
-	}
+}
 
 #header p {
 	width: 200px;

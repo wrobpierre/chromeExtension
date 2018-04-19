@@ -2,8 +2,9 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../css/questionnaire.css">
 	<title>Add a questionnaire</title>
-	<style type="text/css">
+<!-- 	<style type="text/css">
 	.all_questions {
 		margin: 0 0 30px 0;
 	}
@@ -20,26 +21,33 @@
 	div.selector + p {
 		display: inline;
 	}
-</style>
+</style> -->
 </head>
 <body>
-	<h1>Add a questionnaire</h1>
+	<header class="parallax-window" data-parallax="scroll" data-image-src="../img/header_question.jpg"></header>
 	<form action="management_questionnaire.php" method="post">
-		<input type="hidden" name="action" value="add">
-		<label>Enter the title of your questionnaire&nbsp;:&nbsp;</label><input type="text" name="title"><span class="error"></span>
-		<select name="type">
-			<option value="article">Article</option>
-			<option value="image">Image</option>
-		</select>
-		<div class="selector">
-			<label>Link to your Article&nbsp;:&nbsp;</label><input type="text" name="data"><span class="error"></span>
-		</div>
-		<p>Your questions&nbsp;:</p><span class="error"></span>
-		<input type="button" value="add question"><br>
-		<div class="all_questions">
+		<div id="questionnaire">
+			<h1>Add a questionnaire</h1>
+			<hr>
+			<input type="hidden" name="action" value="add"><br>
+			<label>Enter the title of your questionnaire&nbsp;:&nbsp;</label><br><input class="input_question" type="text" name="title"><br><span class="error"></span><br>
+			<label>Choose the type of your questionnaire&nbsp;:&nbsp;</label><br>
+			<select class="select_question" name="type">
+				<option value="article">Article</option>
+				<option value="image">Image</option>
+			</select>
+			<div class="selector">
+				<label>Link to your Article&nbsp;:&nbsp;</label><br>
+				<input class="input_question" type="text" name="data"><span class="error"></span>
+			</div>
+			<p>Your questions&nbsp;:</p><span class="error"></span>
+			<input class="button" type="button" value="add question"><br>
+			<div class="all_questions">
+
+			</div>
+			<input class="button_valid" type="submit" value="send">
 			
 		</div>
-		<input type="submit" value="send">
 	</form>
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -56,11 +64,11 @@
 
 			$('input[value="add question"]').click(function(){
 				var div = $('<div></div>').attr('class','question');
-				var lq = $('<label>Question&nbsp;:&nbsp;</label>');
-				var iq = $('<input type="text" name="q[]">');
-				var la = $('<label>Answer&nbsp;(put a list of words separated by a comma without spaces, eg: apple,pear,banana,...):&nbsp;</label>');
-				var ia = $('<input type="text" name="a[]">');
-				var button = $('<input type="button" value="delete question">');
+				var lq = $('<label>Question&nbsp;:&nbsp;</label><br>');
+				var iq = $('<input class="input_question" type="text" name="q[]"><br>');
+				var la = $('<label>Answer&nbsp;(put a list of words separated by a comma without spaces, eg: apple,pear,banana,...):&nbsp;</label><br>');
+				var ia = $('<input class="input_question" type="text" name="a[]"><br>');
+				var button = $('<input class="button_delete" type="button" value="delete question"><br>');
 				button.click(function(){
 					$(this).parent().remove();
 				});
@@ -107,5 +115,6 @@
 			})
 		});
 	</script>
+	<script src="../js/parallax.js-1.5.0/parallax.js"></script>
 </body>
 </html>

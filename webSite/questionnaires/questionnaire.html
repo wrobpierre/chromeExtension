@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="../css/questionnaire.css">
 	<meta charset="utf-8">
 	<title></title>
 </head>
 <body>
-	<h1></h1>
-	<div id="content">
-		
-	</div>
+	<header class="parallax-window" data-parallax="scroll" data-image-src="../img/select_question.jpg"></header>
+	<form id="form-questionnaire">
+		<div id="questionnaire">
+			<div id="content">
+				
+				<h1></h1>
+
+
+			</div>
+		</div>
+	</form>
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
@@ -37,11 +45,15 @@
 				document.title = 'Questionnaires';
 				$('h1').text('List of questionnaires');
 				var ul = $('<ul></ul>');
+				ul.css("list-style", "none")
 				$.each(dataParse, function(index, value){
-					var li = $('<li></li>');
-					var a = $('<a></a>').attr('href', value['url']).text(value['title']).css('margin','0 15px 0 0');
-					var edit = $('<a></a>').attr('href', 'http://163.172.59.102/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]).text('edit');
-					var del = $('<button>Delete</button>').click(function(){
+					var li = $('<li class="list_question"></li>');
+					var divEdit = $('<div class="button_link"></div>');
+					var divA = $('<div class="button_link"></div>');
+					var a = $('<a class="link"></a>').attr('href', value['url']).text(value['title']).css('margin','0 15px 0 0');
+					var edit = $('<a class="link"></a>').attr('href', 'http://163.172.59.102/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]).text('edit');
+
+					var del = $('<button class="button_delete">Delete</button>').click(function(){
 						var r = confirm("Are you sure to delete this questionnaire ?");
 						if (r == true) {
 							var postDel = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
@@ -50,11 +62,21 @@
 							});
 						}
 					});
-					li.append(a,edit,del);
+					divA.append(a);
+					divEdit.append(edit);
+					li.append(divA,divEdit,del);
 					ul.append(li);
 				})
-				var add = $('<a href="http://163.172.59.102/webSite/questionnaires/add_questionnaire.html">Add a questionnaire</a>');
-				$('#content').append(ul,add);
+
+				var div = $('<div class="button_link"></div>');
+
+				var add = $('<a class="link" href="http://163.172.59.102/webSite/questionnaires/add_questionnaire.html">Add a questionnaire</a>');
+
+				div.css("background-color", "#00B16A");
+				div.css("height", "40px");
+
+				div.append(add);
+				$('#content').append(ul,div);
 			});
 		}
 		else {
@@ -80,9 +102,10 @@
 				for (var i = 0; i < dataParse.length; i++) {
 					var div = $('<div class="question" id="'+(i+1)+'"></div>');
 					var p = $('<p>'+dataParse[i]['question']+'</p>');
-					var input = $('<input type="text" name="q['+dataParse[i]['id']+']">');
-					var valid = $('<input type="button" value="valid">');
+					var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+']">');
+					var valid = $('<input class="button" type="button" value="valid">');
 
+					div.css("margin", "5%");
 					div.append(p,input,valid);
 					form.append(div);
 				}
@@ -90,17 +113,21 @@
 
 				var lastDiv = $('<div></div>')
 				var p = $('<p>Don\'t forget to send your questionnaire and to press the button "stop"</p>');
-				var submit = $('<input type="submit" value="send">');
+				var submit = $('<input class="button_valid" type="submit" value="send">');
+				lastDiv.css("margin", "5%")
 
 				lastDiv.append(p,submit);
 				form.append(lastDiv);
-
-				$('#content').append(link,form);
+				$('form').css("width","100%");
+				$('#content').css("text-align", "center")
+				form.css("margin-top","0px");
+				$('#content').append(link);
+				$('#content').append(form);
 
 				$(document).ready(function(){
 
 					$('div.question[id!=1]').css('display','none');
-					$('form div:last-child').css('display','none');
+					// $('form div:last-child').css('display','none');
 
 					alert("Don't forget to press the button \"start\" when you become your research !");
 
@@ -117,5 +144,6 @@
 			});
 		}
 	</script>
+	<script src="../js/parallax.js-1.5.0/parallax.js"></script>
 </body>
 </html>

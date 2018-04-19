@@ -75,7 +75,7 @@ if (isset($_POST['key'])) {
 					$stmt->execute();
 				}*/
 
-				$stmtCheck = $conn->prepare("SELECT id FROM users WHERE check_id like ".$_POST['uniqId']);
+				$stmtCheck = $conn->prepare("SELECT id FROM users WHERE check_id like '".$_POST['uniqId']."'");
 				$stmtCheck->execute();
 				
 				$uniqId = $stmtCheck->fetchAll();

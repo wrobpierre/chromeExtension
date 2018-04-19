@@ -50,35 +50,34 @@ if (isset($_POST['user_id'])) {
 
 		$answers = $stmt->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
 
-		$stmt = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
-		$stmt->bindParam(':createId', $createId);
+		$stmid = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
+		$stmid->bindParam(':createId', $createId);
 		$createId = $_POST['user_id'];
 
-		if($stmt->execute()){
-			//header("Location: http://163.172.59.102/webSite/questionnaires/result.html");			
-		}
-		
-		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
-			SELECT :key_question, :answer, :result, id FROM users WHERE check_id like ".$_POST['user_id']);
-		$stmt->bindParam(':key_question', $key_question);
-		$stmt->bindParam(':answer', $answer);
-		$stmt->bindParam(':result', $result);
+		if($stmid->execute()){
+			header("Location: http://163.172.59.102/webSite/questionnaires/result.html");			
+			$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
+				SELECT :key_question, :answer, :result, id FROM users WHERE check_id like '".$_POST['user_id']."'");
+			$stmt->bindParam(':key_question', $key_question);
+			$stmt->bindParam(':answer', $answer);
+			$stmt->bindParam(':result', $result);
 
-		foreach ($_POST['q'] as $key => $value) {
-			$key_question = $key;
-			$answer = $value;
-			$result = true;
+			foreach ($_POST['q'] as $key => $value) {
+				$key_question = $key;
+				$answer = $value;
+				$result = true;
 
-			$tmp = strtoupper(stripVN($value));
-			$tmp = explode(" ", $tmp);
-			$a = explode(",", $answers[$key][0]);
-			foreach ($a as $k => $v) {
-				if (array_search($v, $tmp) === false) {
-					$result = false;
+				$tmp = strtoupper(stripVN($value));
+				$tmp = explode(" ", $tmp);
+				$a = explode(",", $answers[$key][0]);
+				foreach ($a as $k => $v) {
+					if (array_search($v, $tmp) === false) {
+						$result = false;
+					}
 				}
+				$stmt->execute();
 			}
-			$stmt->execute();
-		}
+		}		
 	}
 	catch(PDOException $e)
 	{

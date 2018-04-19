@@ -112,7 +112,7 @@
 
 
 				var lastDiv = $('<div></div>')
-				var p = $('<p>Don\'t forget to send your questionnaire and to press the button "stop"</p>');
+				var p = $('<p>Don\'t forget to send your questionnaire</p>');
 				var submit = $('<input class="button_valid" type="submit" value="send">');
 				lastDiv.css("margin", "5%")
 
@@ -129,7 +129,7 @@
 					$('div.question[id!=1]').css('display','none');
 					$('form div:last-child').css('display','none');
 
-					alert("Don't forget to press the button \"start\" when you become your research !");
+					//alert("Don't forget to press the button \"start\" when you become your research !");
 
 					$('input[type="button"]').click(function(){
 						$(this).parent().css('display','none');
@@ -137,7 +137,7 @@
 					})
 
 					$('form').submit(function(){
-						alert('Thanks for your participation !')
+						//alert('Thanks for your participation !')
 						//return false;
 					});
 				});

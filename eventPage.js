@@ -43,7 +43,6 @@ function getCurrentTabUrl(eventUrl) {
       autoStart(url);
       storage.get('uniqId', function(resultId){
         var id = resultId.uniqId;
-        alert(id);
         chrome.tabs.executeScript({
           code: "document.getElementsByName('user_id')[0].value = '"+id+"'"
         });
@@ -246,33 +245,29 @@ function sendFirstUrl(){
 
 function autoStart(url){
   if (!listen) {
-    alert('start');
     createUniqId();
     sendFirstUrl();
     listen = true;
     firstUrl = url;
-    alert(firstUrl);
 
-    //var post = $.post('http://163.172.59.102/dataBase.php', { url:firstUrl, key:"first" });
-    var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:firstUrl, key:"first" });
-    post.done(function(data){
+    var post = $.post('http://163.172.59.102/dataBase.php', { url:firstUrl, key:"first" });
+    //var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:firstUrl, key:"first" });
+    /*post.done(function(data){
       alert(data);
-    });
+    });*/
   }
 }
 
 function autoStop(){
   if (listen) {
-    alert('stop');
     listen = false;
-    alert(firstUrl);
 
     storage.get('data', function(result){
       storage.get('uniqId', function(resultId){
-        //var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:url, uniqId: resultId.uniqId, key:'add' });
-        var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
+        var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
+        //var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
         post.done(function(data){
-          alert(data);
+          //alert(data);
           firstUrl = undefined;
           storage.clear();
         });

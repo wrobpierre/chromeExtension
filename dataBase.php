@@ -12,12 +12,14 @@ class site {
 
 class firsturl {}
 
+var_dump($_POST);
+
 if (isset($_POST['key'])) {
 
 	$servername = "localhost";
 	// $servername = "163.172.59.102";
 	$username = "root";
-	$password = "stageOsaka";
+	$password = "";
 	// $password = "";
 	$dbname = "chrome_extension";
 	try {
@@ -114,9 +116,16 @@ if (isset($_POST['key'])) {
 
 					$stmt->execute();
 				}
-				
 			}
-			
+			if (!isset($_POST['d'])) {
+				echo "missing d";
+			}
+			if (!isset($_POST['url'])) {
+				echo "missing url";
+			}
+			if (!isset($_POST['uniqId'])) {
+				echo "missing uniqId";
+			}
 				//echo "New records created successfully";
 		}
 		elseif ($_POST['key'] == 'load') {
@@ -126,7 +135,7 @@ if (isset($_POST['key'])) {
 				FROM users u
 				INNER JOIN sites s ON u.id = s.key_user
 				INNER JOIN firsturl fu ON s.key_first_url = fu.id
-				WHERE u.id = ".$_POST['user'];
+				WHERE u.id = ".$_POST['user']." AND fu.id = ".$_POST['id'];
 			}
 			elseif (isset($_POST['id'])) {
 				$requete = "SELECT s.* 
@@ -156,7 +165,6 @@ if (isset($_POST['key'])) {
 				$stmt->bindParam(':url', $url);
 				$url = $_POST['url'];
 				$stmt->execute();
-
 			}
 		}
 		elseif ($_POST['key'] == 'get_id_firstUrl') {

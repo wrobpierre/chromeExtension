@@ -6,7 +6,7 @@
   "version": "1.0",
 
   "background": {
-    "scripts": ["eventPage.js"],
+    "scripts": ["jquery.js", "eventPage.js"],
     "persistant": false
   },
 

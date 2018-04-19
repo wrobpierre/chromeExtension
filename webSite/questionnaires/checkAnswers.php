@@ -1,6 +1,6 @@
 <?php 
 header('Access-Control-Allow-Origin: *');
-header("Location: http://163.172.59.102/webSite/questionnaires/questionnaire.html");
+//header("Location: http://163.172.59.102/webSite/questionnaires/questionnaire.html");
 
 class answer{}
 
@@ -30,54 +30,63 @@ $username = "root";
 $password = "stageOsaka";
 $dbname = "chrome_extension";
 
-try {
-	$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+if (isset($_POST['user_id'])) {
+	try {
+		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     	// set the PDO error mode to exception
-	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	$first = true;
-	$requete = "SELECT id, answer FROM questions WHERE id=";
-	foreach ($_POST['q'] as $key => $value) {
-		if ($first) {
-			$requete = $requete.$key;
-			$first = false;
-		}
-		else {
-			$requete = $requete.' OR id='.$key;
-		}
-	}
-
-	$stmt = $conn->prepare($requete);
-	$stmt->execute();
-
-	$answers = $stmt->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
-
-	$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result)
-		VALUES (:key_question, :answer, :result)");
-	$stmt->bindParam(':key_question', $key_question);
-	$stmt->bindParam(':answer', $answer);
-	$stmt->bindParam(':result', $result);
-
-	foreach ($_POST['q'] as $key => $value) {
-		$key_question = $key;
-		$answer = $value;
-		$result = true;
-		
-		$tmp = strtoupper(stripVN($value));
-		$tmp = explode(" ", $tmp);
-		$a = explode(",", $answers[$key][0]);
-		foreach ($a as $k => $v) {
-			if (array_search($v, $tmp) === false) {
-				$result = false;
+		$first = true;
+		$requete = "SELECT id, answer FROM questions WHERE id=";
+		foreach ($_POST['q'] as $key => $value) {
+			if ($first) {
+				$requete = $requete.$key;
+				$first = false;
+			}
+			else {
+				$requete = $requete.' OR id='.$key;
 			}
 		}
+
+		$stmt = $conn->prepare($requete);
 		$stmt->execute();
+
+		$answers = $stmt->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
+
+		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
+			VALUES (:key_question, :answer, :result, :key_user)");
+		$stmt->bindParam(':key_question', $key_question);
+		$stmt->bindParam(':answer', $answer);
+		$stmt->bindParam(':result', $result);
+		$stmt->bindParam(':key_user', $key_user);
+		$key_user = $_POST['user_id'];
+
+		foreach ($_POST['q'] as $key => $value) {
+			$key_question = $key;
+			$answer = $value;
+			$result = true;
+
+			$tmp = strtoupper(stripVN($value));
+			$tmp = explode(" ", $tmp);
+			$a = explode(",", $answers[$key][0]);
+			foreach ($a as $k => $v) {
+				if (array_search($v, $tmp) === false) {
+					$result = false;
+				}
+			}
+			$stmt->execute();
+		}
 	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+	}
+	$conn = null;
 }
-catch(PDOException $e)
-{
-	echo "Error: " . $e->getMessage();
+else {
+	echo "missing user_id";
 }
-$conn = null;
+
+
 
 ?>

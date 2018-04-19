@@ -38,6 +38,22 @@ function getCurrentTabUrl(eventUrl) {
     else{
       url = eventUrl;
     }
+
+    if (url.indexOf('http://163.172.59.102/webSite/questionnaires/questionnaire.html?id=') != -1) {
+      autoStart(url);
+      storage.get('uniqId', function(resultId){
+        var id = resultId.uniqId;
+        alert(id);
+        chrome.tabs.executeScript(null, {
+          code: "document.getElementsByName('user_id')[0].value = "+id,
+          runAt: "document_end"
+        });
+      });
+    }
+    if (url.indexOf('http://163.172.59.102/webSite/questionnaires/checkAnswers.php') != -1) {
+      autoStop();
+    }
+
     storage.get('firstUrl', function(result) {
       if(result.firstUrl != undefined && result.firstUrl != url){
         var keywords;
@@ -227,6 +243,43 @@ function sendFirstUrl(){
     });
     return result.firstUrl;
   });
+}
+
+function autoStart(url){
+  if (!listen) {
+    alert('start');
+    createUniqId();
+    sendFirstUrl();
+    listen = true;
+    firstUrl = url;
+    alert(firstUrl);
+
+    //var post = $.post('http://163.172.59.102/dataBase.php', { url:firstUrl, key:"first" });
+    var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:firstUrl, key:"first" });
+    post.done(function(data){
+      alert(data);
+    });
+  }
+}
+
+function autoStop(){
+  if (listen) {
+    alert('stop');
+    listen = false;
+    alert(firstUrl);
+
+    storage.get('data', function(result){
+      storage.get('uniqId', function(resultId){
+        //var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:url, uniqId: resultId.uniqId, key:'add' });
+        var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
+        post.done(function(data){
+          alert(data);
+          firstUrl = undefined;
+          storage.clear();
+        });
+      });
+    });
+  }
 }
 
   /*chrome.webNavigation.onDOMContentLoaded.addListener(function() {

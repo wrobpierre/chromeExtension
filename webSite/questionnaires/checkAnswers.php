@@ -1,6 +1,5 @@
 <?php 
 header('Access-Control-Allow-Origin: *');
-//header("Location: http://163.172.59.102/webSite/questionnaires/result.html");
 
 class answer{}
 
@@ -22,8 +21,6 @@ function stripVN($str) {
 	$str = preg_replace("/(Đ)/", 'D', $str);
 	return $str;
 }
-
-//var_dump($_POST);
 
 $servername = "localhost";
 $username = "root";
@@ -53,11 +50,14 @@ if (isset($_POST['user_id'])) {
 
 		$answers = $stmt->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
 
-		$stmtId = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
-		$stmtId->bindParam(':createId', $createId);
+		$stmt = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
+		$stmt->bindParam(':createId', $createId);
 		$createId = $_POST['user_id'];
-		$stmtId->execute();
-
+		
+		if($stmt->execute()){
+			  header("Location: http://163.172.59.102/webSite/questionnaires/result.html");			
+		}
+		
 		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
 			SELECT :key_question, :answer, :result, id FROM users WHERE check_id like ".$_POST['user_id']);
 		$stmt->bindParam(':key_question', $key_question);
@@ -89,7 +89,5 @@ if (isset($_POST['user_id'])) {
 else {
 	echo "missing user_id";
 }
-
-
 
 ?>

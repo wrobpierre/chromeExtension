@@ -1,6 +1,5 @@
 <?php 
 header('Access-Control-Allow-Origin: *');
-//var_dump($_POST['d']['data']);
 
 class site {
 	/*public $url;
@@ -12,14 +11,12 @@ class site {
 
 class firsturl {}
 
-var_dump($_POST);
-
 if (isset($_POST['key'])) {
 
 	$servername = "localhost";
 	// $servername = "163.172.59.102";
 	$username = "root";
-	$password = "";
+	$password = "stageOsaka";
 	// $password = "";
 	$dbname = "chrome_extension";
 	try {
@@ -111,15 +108,6 @@ if (isset($_POST['key'])) {
 
 					$stmt->execute();
 				}
-			}
-			if (!isset($_POST['d'])) {
-				echo "missing d";
-			}
-			if (!isset($_POST['url'])) {
-				echo "missing url";
-			}
-			if (!isset($_POST['uniqId'])) {
-				echo "missing uniqId";
 			}
 				//echo "New records created successfully";
 		}

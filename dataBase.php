@@ -78,12 +78,7 @@ if (isset($_POST['key'])) {
 					$stmt->execute();
 				}*/
 
-				$stmtId = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
-				$stmtId->bindParam(':createId', $createId);
-				$createId = $_POST['uniqId'];
-				$stmtId->execute();
-
-				$stmtCheck = $conn->prepare("SELECT id FROM users WHERE check_id like '".$_POST['uniqId']."'");
+				$stmtCheck = $conn->prepare("SELECT id FROM users WHERE check_id like ".$_POST['uniqId']);
 				$stmtCheck->execute();
 				
 				$uniqId = $stmtCheck->fetchAll();

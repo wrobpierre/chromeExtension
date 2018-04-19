@@ -1,6 +1,6 @@
 <?php 
 header('Access-Control-Allow-Origin: *');
-//header("Location: http://163.172.59.102/webSite/questionnaires/questionnaire.html");
+//header("Location: http://163.172.59.102/webSite/questionnaires/result.html");
 
 class answer{}
 
@@ -53,13 +53,16 @@ if (isset($_POST['user_id'])) {
 
 		$answers = $stmt->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
 
+		$stmtId = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
+		$stmtId->bindParam(':createId', $createId);
+		$createId = $_POST['user_id'];
+		$stmtId->execute();
+
 		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
-			VALUES (:key_question, :answer, :result, :key_user)");
+			SELECT :key_question, :answer, :result, id FROM users WHERE check_id like ".$_POST['user_id']);
 		$stmt->bindParam(':key_question', $key_question);
 		$stmt->bindParam(':answer', $answer);
 		$stmt->bindParam(':result', $result);
-		$stmt->bindParam(':key_user', $key_user);
-		$key_user = $_POST['user_id'];
 
 		foreach ($_POST['q'] as $key => $value) {
 			$key_question = $key;

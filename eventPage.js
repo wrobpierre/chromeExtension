@@ -44,13 +44,12 @@ function getCurrentTabUrl(eventUrl) {
       storage.get('uniqId', function(resultId){
         var id = resultId.uniqId;
         alert(id);
-        chrome.tabs.executeScript(null, {
-          code: "document.getElementsByName('user_id')[0].value = "+id,
-          runAt: "document_end"
+        chrome.tabs.executeScript({
+          code: "document.getElementsByName('user_id')[0].value = '"+id+"'"
         });
       });
     }
-    if (url.indexOf('http://163.172.59.102/webSite/questionnaires/checkAnswers.php') != -1) {
+    if (url.indexOf('http://163.172.59.102/webSite/questionnaires/result.html') != -1) {
       autoStop();
     }
 

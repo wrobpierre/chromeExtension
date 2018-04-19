@@ -185,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.getElementById('start').addEventListener('click', function(){
-    //resetList();
     document.getElementById('start').disabled = true; 
     document.getElementById('stop').disabled = false;
     chrome.runtime.sendMessage({type: 'start'}, function start(response){

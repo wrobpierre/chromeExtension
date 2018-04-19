@@ -97,6 +97,8 @@
 					link = $('<img>').attr('src', dataParse[0]['link']).attr('alt', dataParse[0]['link']);	
 				}
 				var form = $('<form method="post" action="checkAnswers.php"></form>');
+				var user_id = $('<input type="hidden" name="user_id">');
+				form.append(user_id);	
 				
 				for (var i = 0; i < dataParse.length; i++) {
 					var div = $('<div class="question" id="'+(i+1)+'"></div>');

@@ -7,7 +7,7 @@
 </head>
 <body>
 	<header class="parallax-window" data-parallax="scroll" data-image-src="../img/select_question.jpg"></header>
-	<form id="form-questionnaire">
+	<div id="form-questionnaire">
 		<div id="questionnaire">
 			<div id="content">
 				
@@ -16,11 +16,10 @@
 
 			</div>
 		</div>
-	</form>
+	</div>
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
-		var count = 0;
 		function getUrlParameter(sParam) {
 			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
@@ -111,13 +110,15 @@
 					form.append(div);
 				}
 
-				var lastDiv = $('<div class="send"></div>')
-				var p = $('<p class="send">Don\'t forget to send your questionnaire and to press the button "stop"</p>');
-				var submit = $('<input class="button_valid send" type="submit" value="send">');
+
+				var lastDiv = $('<div></div>')
+				var p = $('<p>Don\'t forget to send your questionnaire and to press the button "stop"</p>');
+				var submit = $('<input class="button_valid" type="submit" value="send">');
 				lastDiv.css("margin", "5%")
+
 				lastDiv.append(p,submit);
 				form.append(lastDiv);
-				$('form').css("width","100%");
+				$('#form-questionnaire').css("width","100%");
 				$('#content').css("text-align", "center")
 				form.css("margin-top","0px");
 				$('#content').append(link);
@@ -126,17 +127,13 @@
 				$(document).ready(function(){
 
 					$('div.question[id!=1]').css('display','none');
-					$('.send').css('display','none');
+					$('form div:last-child').css('display','none');
 
 					alert("Don't forget to press the button \"start\" when you become your research !");
 
 					$('input[type="button"]').click(function(){
 						$(this).parent().css('display','none');
 						$(this).parent().next().css('display','block');
-						count++;
-						if(count == dataParse.length){
-							$('.send').css('display','block');
-						}
 					})
 
 					$('form').submit(function(){

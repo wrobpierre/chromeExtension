@@ -3,12 +3,17 @@
 <head>
 	<meta charset="utf-8">
 	<title>Users</title>
+	<link rel="stylesheet" type="text/css" href="css/questionnaire.css">
 </head>
 <body>
-	<h1>List of users</h1>
-	<ul id="users">
+	<header class="parallax-window" data-parallax="scroll" data-image-src="img/list_user.jpg"></header>
+	<div id="form-questionnaire">
+		<h1>List of users</h1>
+		<ul id="users">
 
-	</ul>
+		</ul>
+		
+	</div>
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
@@ -17,6 +22,9 @@
 		post.done(function(data){
 			var dataParse = JSON.parse(data);
 			console.log(dataParse);
+			var ul = $('ul');
+			ul.css("list-style", "none");
+
 			$.each(dataParse, function(index,value){
 				console.log($('ul#users > li#'+value['user_id']));
 				if ($('ul#users > li#'+value['user_id']).length) {
@@ -35,17 +43,20 @@
 					var ul = $('<ul></ul>');
 					var link = 'http://163.172.59.102/webSite/index.html?id='+value['id']+'&user='+value['user_id'];
 					if (value['title'] == "") {
-						var li_questionnaire = $('<li><a href="'+link+'">'+link+'</a></li>');
+						var li_questionnaire = $('<li><div class="button_link"><a class="link" href="'+link+'">'+link+'</a></div></li>');
 					}
 					else {	
-						var li_questionnaire = $('<li><a href="'+link+'">'+value['title']+'</a></li>');
+						var li_questionnaire = $('<li><div class="button_link"><a class="link" href="'+link+'">'+value['title']+'</a></div></li>');
 					}
+					li_questionnaire.css("list-style", "none");
 					ul.append(li_questionnaire);
 					li.append(p,ul);
 					$('ul#users').append(li);
+					$('.button_link').css("width", "80%")
 				}
 			});
 		});
 	</script>
+	<script src="js/parallax.js-1.5.0/parallax.js"></script>
 </body>
 </html>

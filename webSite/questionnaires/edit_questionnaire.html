@@ -26,34 +26,36 @@
 <body>
 	<header class="parallax-window" data-parallax="scroll" data-image-src="../img/edit_question.jpg"></header>
 	<form action="management_questionnaire.php" method="post">
-		<div id="questionnaire">
-			<h1>Edit questionnaire</h1>
-			<input class="input_question" type="hidden" name="action" value="edit">
-			<input class="input_question" type="hidden" name="id_questionnaire">
-			<label>Enter the title of your questionnaire&nbsp;:&nbsp;</label><br>
-			<input class="input_question" type="text" name="title"><span class="error"></span>
-			<select class="select_question" name="type">
-				<option value="article">Article</option>
-				<option value="image">Image</option>
-			</select>
-			<div class="selector">
-				<label></label><input class="input_question" type="text" name="data"><span class="error"></span>
-			</div>
-			<h2>Current questions :</h2>
-			<div id="current">
-				<div class="all_questions">
+		<div id="form-questionnaire">
+			<div id="questionnaire">
+				<h1>Edit questionnaire</h1>
+				<input class="input_question" type="hidden" name="action" value="edit">
+				<input class="input_question" type="hidden" name="id_questionnaire">
+				<label>Enter the title of your questionnaire&nbsp;:&nbsp;</label><br>
+				<input class="input_question" type="text" name="title"><span class="error"></span>
+				<select class="select_question" name="type">
+					<option value="article">Article</option>
+					<option value="image">Image</option>
+				</select>
+				<div class="selector">
+					<label></label><input class="input_question" type="text" name="data"><span class="error"></span>
+				</div>
+				<h2>Current questions :</h2>
+				<div id="current">
+					<div class="all_questions">
 
-				</div>	
-			</div>
+					</div>	
+				</div>
 
-			<h2>Add questions :</h2><span class="error"></span>
-			<div id="new">
-				<input class="button" type="button" value="add question"><br>
-				<div class="all_questions">
+				<h2>Add questions :</h2><span class="error"></span>
+				<div id="new">
+					<input class="button" type="button" value="add question"><br>
+					<div class="all_questions">
 
-				</div>	
+					</div>	
+				</div>
+				<input class="button_valid" type="submit" value="send">
 			</div>
-			<input class="button_valid" type="submit" value="send">
 		</div>
 	</form>
 
@@ -142,7 +144,7 @@
 					$('div#new > div.all_questions').append(div);
 				})
 
-				$('form').submit(function(){
+				$('#form-questionnaire').submit(function(){
 					var valid = true;
 
 					if ($('input[name="title"]').val() == "") {

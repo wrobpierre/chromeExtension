@@ -148,9 +148,8 @@ h1{
 	color: white;
 	border-radius: 5px;
 
-	padding-top: 10px;
 	display: inline-block;
-	height: 30px;
+	height: 40px;
 	border-width: 2px;
 	border-style: outset;
 	border-color: buttonface;
@@ -171,9 +170,4 @@ h1{
 		box-shadow:0 0 0 7px 
 	}
 
-}
-
-.link{
-	color: white;
-	text-decoration: none;
 }

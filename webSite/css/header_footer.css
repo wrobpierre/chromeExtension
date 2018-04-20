@@ -18,10 +18,12 @@ header{
 }
 
 #statsLink{
-	text-decoration:none;
 	color: white;
-	margin-top: 10px;
+	border: none;
+	background-color: #e74c3c;
+	height: 100%;
 }
+
 .headerButton{
 	float: right;
 	width: 150px;
@@ -38,6 +40,10 @@ header{
 	border-right: solid 4px #e57373;
 	transform: translate(-3px, 3px);
 	/*transform: translateY(30px);*/
+}
+
+.headerButton:hover #statsLink{
+	background-color: #e53935;
 }
 
 #header{

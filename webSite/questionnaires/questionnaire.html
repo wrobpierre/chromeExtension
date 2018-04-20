@@ -48,11 +48,8 @@
 				ul.css("list-style", "none")
 				$.each(dataParse, function(index, value){
 					var li = $('<li class="list_question"></li>');
-					var divEdit = $('<div class="button_link"></div>');
-					var divA = $('<div class="button_link"></div>');
-					var a = $('<a class="link"></a>').attr('href', value['url']).text(value['title']).css('margin','0 15px 0 0');
-					var edit = $('<a class="link"></a>').attr('href', 'http://163.172.59.102/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]).text('edit');
-
+					var a = $('<input type="button" class="button_link" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', value['title']);
+					var edit = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
 					var del = $('<button class="button_delete">Delete</button>').click(function(){
 						var r = confirm("Are you sure to delete this questionnaire ?");
 						if (r == true) {
@@ -62,21 +59,17 @@
 							});
 						}
 					});
-					divA.append(a);
-					divEdit.append(edit);
-					li.append(divA,divEdit,del);
+					li.append(a,edit,del);
 					ul.append(li);
 				})
 
-				var div = $('<div class="button_link"></div>');
 
-				var add = $('<a class="link" href="http://163.172.59.102/webSite/questionnaires/add_questionnaire.html">Add a questionnaire</a>');
+				var add = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/add_questionnaire.html\'"></input>').attr('value', 'Add a questionnaire');
 
-				div.css("background-color", "#00B16A");
-				div.css("height", "40px");
+				add.css("background-color", "#00B16A");
+				add.css("height", "40px");
 
-				div.append(add);
-				$('#content').append(ul,div);
+				$('#content').append(ul,add);
 			});
 		}
 		else {

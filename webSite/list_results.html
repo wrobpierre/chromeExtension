@@ -41,12 +41,12 @@
 				var li = $('<li></li>');
 				var link = 'http://163.172.59.102/webSite/index.html?id='+value['id'];
 				if (value['title'] == "") {
-					var a = $('<div class="button_link"><a class="link" href="'+link+'">'+link+'</a></div>');
+					var a = $('<input type="button" value="'+link+'" class="button_link" onclick="window:location.href=\''+link+'\'"></input>');
 					li.append(a);
 					$('div#others > ul').append(li);
 				}
 				else {
-					var a = $('<div class="button_link"><a class="link" href="'+link+'">'+value['title']+'</a></div>');
+					var a = $(' <input type="button" value="'+value['title']+'" class="button_link" onclick="window:location.href=\''+link+'\'"></input>');
 					li.append(a);
 					$('div#questionnaires > ul').append(li);
 				}

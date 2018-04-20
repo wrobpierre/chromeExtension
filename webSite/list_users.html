@@ -30,10 +30,10 @@
 				if ($('ul#users > li#'+value['user_id']).length) {
 					var link = 'http://163.172.59.102/webSite/index.html?id='+value['id']+'&user='+value['user_id'];
 					if (value['title'] == "") {
-						var li_questionnaire = $('<li><a href="'+link+'">'+link+'</a></li>');
+						var li_questionnaire = $('<li><input type="button" value="'+link+'" class="button_link" onclick="window:location.href=\''+link+'\'"></input></li>');
 					}
 					else {	
-						var li_questionnaire = $('<li><a href="'+link+'">'+value['title']+'</a></li>');
+						var li_questionnaire = $('<li><input type="button" value="'+value['title']+'" class="button_link" onclick="window:location.href=\''+link+'\'"></input></li>');
 					}
 					$('li#'+value['user_id']+'>ul').append(li_questionnaire);
 				}
@@ -43,10 +43,10 @@
 					var ul = $('<ul></ul>');
 					var link = 'http://163.172.59.102/webSite/index.html?id='+value['id']+'&user='+value['user_id'];
 					if (value['title'] == "") {
-						var li_questionnaire = $('<li><div class="button_link"><a class="link" href="'+link+'">'+link+'</a></div></li>');
+						var li_questionnaire = $('<li><input type="button" value="'+link+'" class="button_link" onclick="window:location.href=\''+link+'\'"></input></li>');
 					}
 					else {	
-						var li_questionnaire = $('<li><div class="button_link"><a class="link" href="'+link+'">'+value['title']+'</a></div></li>');
+						var li_questionnaire = $('<li><input type="button" value="'+value['title']+'" class="button_link" onclick="window:location.href=\''+link+'\'"></input></li>');
 					}
 					li_questionnaire.css("list-style", "none");
 					ul.append(li_questionnaire);

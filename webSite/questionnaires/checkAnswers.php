@@ -22,6 +22,8 @@ function stripVN($str) {
 	return $str;
 }
 
+var_dump($_POST);
+
 $servername = "localhost";
 $username = "root";
 $password = "stageOsaka";
@@ -46,21 +48,55 @@ if (isset($_POST['user_id'])) {
 		}
 
 		$stmt = $conn->prepare($requete);
-		$stmt->execute();
+		//$stmt->execute();
 
 		$answers = $stmt->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
 
-		$stmid = $conn->prepare("INSERT INTO users (check_id) VALUES (:createId)");
-		$stmid->bindParam(':createId', $createId);
-		$createId = $_POST['user_id'];
+		if ($_POST['method'] == 'sign_up') {
+			$stmid = $conn->prepare("INSERT INTO users (check_id,name,email,job) VALUES (:createId, :name, :email, :job)");
+			$stmid->bindParam(':createId', $createId);
+			$stmid->bindParam(':name', $name);
+			$stmid->bindParam(':email', $email);
+			$stmid->bindParam(':job', $job);
+			$createId = $_POST['user_id'];
+			$name = $_POST['name'];
+			$email = $_POST['login'];
+			$job = $_POST['job'];
 
-		if($stmid->execute()){
+			if($stmid->execute()){
+				header("Location: http://163.172.59.102/webSite/questionnaires/result.html");			
+				$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
+					SELECT :key_question, :answer, :result, id FROM users WHERE check_id like '".$_POST['user_id']."'");
+				$stmt->bindParam(':key_question', $key_question);
+				$stmt->bindParam(':answer', $answer);
+				$stmt->bindParam(':result', $result);
+
+				foreach ($_POST['q'] as $key => $value) {
+					$key_question = $key;
+					$answer = $value;
+					$result = true;
+
+					$tmp = strtoupper(stripVN($value));
+					$tmp = explode(" ", $tmp);
+					$a = explode(",", $answers[$key][0]);
+					foreach ($a as $k => $v) {
+						if (array_search($v, $tmp) === false) {
+							$result = false;
+						}
+					}
+					$stmt->execute();
+				}
+			}
+		}
+		elseif ($_POST['method'] == 'sign_in') {
 			header("Location: http://163.172.59.102/webSite/questionnaires/result.html");			
 			$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
-				SELECT :key_question, :answer, :result, id FROM users WHERE check_id like '".$_POST['user_id']."'");
+				SELECT :key_question, :answer, :result, id FROM users WHERE email like :email");
 			$stmt->bindParam(':key_question', $key_question);
 			$stmt->bindParam(':answer', $answer);
 			$stmt->bindParam(':result', $result);
+			$stmt->bindParam(':email', $email);
+			$email = $_POST['register'];
 
 			foreach ($_POST['q'] as $key => $value) {
 				$key_question = $key;
@@ -77,7 +113,7 @@ if (isset($_POST['user_id'])) {
 				}
 				$stmt->execute();
 			}
-		}		
+		}
 	}
 	catch(PDOException $e)
 	{

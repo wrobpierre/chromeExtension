@@ -110,6 +110,104 @@
 					form.append(div);
 				}
 
+				var dataUser = $('<div id="dataUser"></div>');
+				var method = $('<input type="hidden" name="method">');
+
+				var button_sign_up = $('<button class="sign_up">Sign up</button>');
+				button_sign_up.prop('disabled',true);
+				button_sign_up.click(function(){
+					$('div.sign_up').css('display', 'block');
+					$('div.sign_in').css('display', 'none');
+					$(this).prop('disabled',true);
+					$('button.sign_in').prop("disabled",false);
+				});
+
+				var button_sign_in = $('<button class="sign_in">Sign in</button>');
+				button_sign_in.click(function(){
+					$('div.sign_in').css('display', 'block');
+					$('div.sign_up').css('display', 'none');
+					$(this).prop('disabled',true);
+					$('button.sign_up').prop('disabled',false);
+				});
+
+				var sign_up = $('<div class="sign_up"></div>');
+				var name = $('<div> <label>Your name :</label> <input type="text" name="name"> <span class="error"></span> </div>');
+				var job = $('<div> <label>Your job/domain :</label> <input type="text" name="job"> <span class="error"></span> </div>');
+				var login = $('<div> <label>Your email :</label> <input type="email" name="login"> <span class="error"></span> </div>');
+				var valid = $('<input class="button" type="button" value="valid">');
+				valid.click(function(){
+					var valid = true;
+
+					if ($('input[name="name"]').val() == "") {
+						valid = false;
+						$('input[name="name"] + span.error').text('missing name');
+					}
+
+					if ($('input[name="job"]').val() == "") {
+						valid = false;
+						$('input[name="job"] + span.error').text('missing job');
+					}
+
+					if ($('input[name="login"]').val() == "") {
+						valid = false;
+						$('input[name="login"] + span.error').text('missing email');
+					}
+					else {
+						var email = $('input[name="login"]').val();
+						var post = $.post('http://163.172.59.102/dataBase.php', { key:'check_user_email', email:email });
+						post.done(function(data){
+							if (data != 0) {
+								valid = false;
+								$('input[name="login"] + span.error').text('Already exist');
+							} 
+							else {
+								$('input[name="login"] + span.error').text('');	
+							}
+						});
+					}
+
+					if (valid) {
+						$('input[name="method"]').val('sign_up');
+						$(this).parent().parent().css('display','none');
+						$(this).parent().parent().next().css('display','block');
+					}
+				});
+				sign_up.append(name,job,login,valid);
+
+				var sign_in = $('<div class="sign_in"></div>');
+				var register = $('<div> <label>Your email :</label> <input type="email" name="register"> </div>');
+				var valid = $('<input class="button" type="button" value="valid">');
+				valid.click(function(){
+					var valid = true;
+
+					if ($('input[name="register"]').val() == "") {
+						valid = false;
+						$('input[name="register"] + span.error').text('missing email');
+					}
+					else {
+						var email = $('input[name="register"]').val();
+						var post = $.post('http://163.172.59.102/dataBase.php', { key:'check_user_email', email:email });
+						post.done(function(data){
+							if (data == 0) {
+								valid = false;
+								$('input[name="register"] + span.error').text('Doesn\'t exist');
+							} 
+							else {
+								$('input[name="register"] + span.error').text('');	
+							}
+						});
+					}
+
+					if (valid) {
+						$('input[name="method"]').val('sign_in');
+						$(this).parent().parent().css('display','none');
+						$(this).parent().parent().next().css('display','block');
+					}
+				});
+				sign_in.css('display', 'none');
+				sign_in.append(register,valid);
+
+				dataUser.append(method,button_sign_up,button_sign_in,sign_up,sign_in);
 
 				var lastDiv = $('<div></div>')
 				var p = $('<p>Don\'t forget to send your questionnaire</p>');
@@ -117,7 +215,7 @@
 				lastDiv.css("margin", "5%")
 
 				lastDiv.append(p,submit);
-				form.append(lastDiv);
+				form.append(dataUser,lastDiv);
 				$('#form-questionnaire').css("width","100%");
 				$('#content').css("text-align", "center")
 				form.css("margin-top","0px");
@@ -127,11 +225,12 @@
 				$(document).ready(function(){
 
 					$('div.question[id!=1]').css('display','none');
+					$('div#dataUser').css('display','none');
 					$('form div:last-child').css('display','none');
 
 					//alert("Don't forget to press the button \"start\" when you become your research !");
 
-					$('input[type="button"]').click(function(){
+					$('div.question > input[type="button"]').click(function(){
 						$(this).parent().css('display','none');
 						$(this).parent().next().css('display','block');
 					})

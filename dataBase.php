@@ -190,6 +190,16 @@ if (isset($_POST['key'])) {
 
 			echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "firsturl"));
 		}
+		elseif ($_POST['key'] == 'check_user_email') {
+			if (isset($_POST['email'])) {
+				$stmt = $conn->prepare("SELECT * FROM users WHERE email like :email");
+				$stmt->bindParam(':email', $email);
+				$email = $_POST['email'];
+				$stmt->execute();
+
+				echo count($stmt->fetchAll());
+			}
+		}
 	}
 	catch(PDOException $e)
 	{

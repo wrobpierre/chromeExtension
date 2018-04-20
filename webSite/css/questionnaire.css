@@ -12,6 +12,10 @@ header{
 	height: 400px;
 }
 
+.error{
+	color: red;
+}
+
 #form-questionnaire{
 	border: solid #DADFE1 1px;
 	background-color: white;

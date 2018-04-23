@@ -95,7 +95,7 @@
 				var dataUser = $('<div id="dataUser"></div>');
 				var method = $('<input type="hidden" name="method">');
 
-				var button_sign_up = $('<button class="sign_up">Sign up</button>');
+				var button_sign_up = $('<button class="sign_up button">Sign up</button>');
 				button_sign_up.prop('disabled',true);
 				button_sign_up.click(function(){
 					$('div.sign_up').css('display', 'block');
@@ -104,7 +104,7 @@
 					$('button.sign_in').prop("disabled",false);
 				});
 
-				var button_sign_in = $('<button class="sign_in">Sign in</button>');
+				var button_sign_in = $('<button class="sign_in button">Sign in</button>');
 				button_sign_in.click(function(){
 					$('div.sign_in').css('display', 'block');
 					$('div.sign_up').css('display', 'none');
@@ -113,9 +113,9 @@
 				});
 
 				var sign_up = $('<div class="sign_up"></div>');
-				var name = $('<div> <label>Your name :</label> <input type="text" name="name"> <span class="error"></span> </div>');
-				var job = $('<div> <label>Your job/domain :</label> <input type="text" name="job"> <span class="error"></span> </div>');
-				var login = $('<div> <label>Your email :</label> <input type="email" name="login"> <span class="error"></span> </div>');
+				var name = $('<div> <label>Your name :</label> <input class="input_question" type="text" name="name" style="margin:0"> <span class="error"></span> </div>');
+				var job = $('<div> <label>Your job/domain :</label> <input class="input_question" type="text" name="job" style="margin:0"> <span class="error"></span> </div>');
+				var login = $('<div> <label>Your email :</label> <input class="input_question" type="email" name="login" style="margin:0"> <span class="error"></span> </div>');
 				var valid = $('<input class="button" type="button" value="valid">');
 				valid.click(function(){
 					var valid = true;
@@ -157,7 +157,7 @@
 				sign_up.append(name,job,login,valid);
 
 				var sign_in = $('<div class="sign_in"></div>');
-				var register = $('<div> <label>Your email :</label> <input type="email" name="register"> <span class="error"></span> </div>');
+				var register = $('<div> <label>Your email :</label> <input class="input_question" type="email" name="register" style="margin:0"> <span class="error"></span> </div>');
 				var valid = $('<input class="button" type="button" value="valid">');
 				valid.click(function(){
 					if ($('input[name="register"]').val() == "") {

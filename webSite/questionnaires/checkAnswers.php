@@ -22,8 +22,6 @@ function stripVN($str) {
 	return $str;
 }
 
-var_dump($_POST);
-
 $servername = "localhost";
 $username = "root";
 $password = "stageOsaka";
@@ -48,7 +46,7 @@ if (isset($_POST['user_id'])) {
 		}
 
 		$stmt = $conn->prepare($requete);
-		//$stmt->execute();
+		$stmt->execute();
 
 		$answers = $stmt->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
 

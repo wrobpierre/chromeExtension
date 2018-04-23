@@ -43,10 +43,21 @@ function getCurrentTabUrl(eventUrl) {
       autoStart(url);
       storage.get('uniqId', function(resultId){
         var id = resultId.uniqId;
-        alert(id)
         chrome.tabs.executeScript({
-          code: "document.getElementsByName('user_id')[0].value = '"+id+"'",
+          code: "if (document.readyState === 'complete') {"
+          +"var id;"
+          +"if( document.querySelector('input[name=\"method\"]').value == 'sign_up' ) {"
+          +"document.getElementsByName('user_id')[0].value = '"+id+"';"
+          +"}"
+          +"else if ( document.querySelector('input[name=\"method\"]').value == 'sign_in' ) {"
+          +"id = document.getElementsByName('user_id')[0].value;"
+          +"}"
+          +"} id",
           runAt: "document_end"
+        }, function(results){
+          if (results[0] != undefined) {
+            storage.set({'uniqId':results[0]});
+          }
         });
       });
     }
@@ -247,7 +258,7 @@ function sendFirstUrl(){
 
 function autoStart(url){
   if (!listen) {
-    alert('start');
+    //alert('start');
     createUniqId();
     sendFirstUrl();
     listen = true;
@@ -256,14 +267,14 @@ function autoStart(url){
     var post = $.post('http://163.172.59.102/dataBase.php', { url:firstUrl, key:"first" });
     //var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:firstUrl, key:"first" });
     post.done(function(data){
-      alert(data);
+      //alert(data);
     });
   }
 }
 
 function autoStop(){
   if (listen) {
-    alert('stop');
+    //alert('stop');
     listen = false;
 
     storage.get('data', function(result){
@@ -271,7 +282,7 @@ function autoStop(){
         var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
         //var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
         post.done(function(data){
-          alert(data);
+          //alert(data);
           firstUrl = undefined;
           storage.clear();
         });

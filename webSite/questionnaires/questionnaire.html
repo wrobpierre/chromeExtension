@@ -92,17 +92,6 @@
 				var user_id = $('<input type="hidden" name="user_id">');
 				form.append(user_id);	
 				
-				for (var i = 0; i < dataParse.length; i++) {
-					var div = $('<div class="question" id="'+(i+1)+'"></div>');
-					var p = $('<p>'+dataParse[i]['question']+'</p>');
-					var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+']">');
-					var valid = $('<input class="button" type="button" value="valid">');
-
-					div.css("margin", "5%");
-					div.append(p,input,valid);
-					form.append(div);
-				}
-
 				var dataUser = $('<div id="dataUser"></div>');
 				var method = $('<input type="hidden" name="method">');
 
@@ -155,52 +144,61 @@
 							} 
 							else {
 								$('input[name="login"] + span.error').text('');	
+								if (valid) {
+									$('input[name="method"]').val('sign_up');
+									$(this).parent().parent().css('display','none');
+									$(this).parent().parent().next().css('display','block');
+								}
 							}
 						});
 					}
 
-					if (valid) {
-						$('input[name="method"]').val('sign_up');
-						$(this).parent().parent().css('display','none');
-						$(this).parent().parent().next().css('display','block');
-					}
 				});
 				sign_up.append(name,job,login,valid);
 
 				var sign_in = $('<div class="sign_in"></div>');
-				var register = $('<div> <label>Your email :</label> <input type="email" name="register"> </div>');
+				var register = $('<div> <label>Your email :</label> <input type="email" name="register"> <span class="error"></span> </div>');
 				var valid = $('<input class="button" type="button" value="valid">');
 				valid.click(function(){
-					var valid = true;
-
 					if ($('input[name="register"]').val() == "") {
-						valid = false;
 						$('input[name="register"] + span.error').text('missing email');
 					}
 					else {
 						var email = $('input[name="register"]').val();
-						var post = $.post('http://163.172.59.102/dataBase.php', { key:'check_user_email', email:email });
+						var post = $.post('http://163.172.59.102/dataBase.php', { key:'check_user_email', email:email, method:'sign_in' });
 						post.done(function(data){
-							if (data == 0) {
-								valid = false;
+							var dp = JSON.parse(data);
+							if (dp.length == 0) {
 								$('input[name="register"] + span.error').text('Doesn\'t exist');
 							} 
 							else {
-								$('input[name="register"] + span.error').text('');	
+								$('input[name="register"] + span.error').text('');
+								$('input[name="user_id"]').val(dp[0]['check_id']);
+
+								$('input[name="method"]').val('sign_in');
+								$('div.sign_in > input.button').parent().parent().css('display','none');
+								$('div.sign_in > input.button').parent().parent().next().css('display','block');
 							}
 						});
-					}
-
-					if (valid) {
-						$('input[name="method"]').val('sign_in');
-						$(this).parent().parent().css('display','none');
-						$(this).parent().parent().next().css('display','block');
 					}
 				});
 				sign_in.css('display', 'none');
 				sign_in.append(register,valid);
 
 				dataUser.append(method,button_sign_up,button_sign_in,sign_up,sign_in);
+				form.append(dataUser);
+				
+				for (var i = 0; i < dataParse.length; i++) {
+					var div = $('<div class="question" id="'+(i+1)+'"></div>');
+					var p = $('<p>'+dataParse[i]['question']+'</p>');
+					var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+']">');
+					var valid = $('<input class="button" type="button" value="valid">');
+
+					div.css("margin", "5%");
+					div.append(p,input,valid);
+					form.append(div);
+				}
+
 
 				var lastDiv = $('<div></div>')
 				var p = $('<p>Don\'t forget to send your questionnaire</p>');
@@ -208,7 +206,7 @@
 				lastDiv.css("margin", "5%")
 
 				lastDiv.append(p,submit);
-				form.append(dataUser,lastDiv);
+				form.append(lastDiv);
 				$('#form-questionnaire').css("width","100%");
 				$('#content').css("text-align", "center")
 				form.css("margin-top","0px");
@@ -217,8 +215,8 @@
 
 				$(document).ready(function(){
 
-					$('div.question[id!=1]').css('display','none');
-					$('div#dataUser').css('display','none');
+					$('div.question').css('display','none');
+					//$('div#dataUser').css('display','none');
 					$('form div:last-child').css('display','none');
 
 					//alert("Don't forget to press the button \"start\" when you become your research !");
@@ -229,13 +227,14 @@
 					})
 
 					$('form').submit(function(){
+						//alert($('input[name="user_id"]').val());
 						//alert('Thanks for your participation !')
 						//return false;
 					});
 				});
 			});
-		}
-	</script>
-	<script src="../js/parallax.js-1.5.0/parallax.js"></script>
+}
+</script>
+<script src="../js/parallax.js-1.5.0/parallax.js"></script>
 </body>
 </html>

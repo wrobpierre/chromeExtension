@@ -197,7 +197,12 @@ if (isset($_POST['key'])) {
 				$email = $_POST['email'];
 				$stmt->execute();
 
-				echo count($stmt->fetchAll());
+				if (!isset($_POST['method'])) {
+					echo count($stmt->fetchAll());
+				}
+				else {
+					echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "firsturl"));
+				}
 			}
 		}
 	}

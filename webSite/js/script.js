@@ -463,6 +463,7 @@ nytg.formatNumber = function(n) {
 
         d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
         d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
+        console.log(d.group);
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
 

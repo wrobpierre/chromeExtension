@@ -29,9 +29,10 @@ footer{
 
 }
 
-.logo{
-	border: solid 2px black;
+#logo{
+	border: solid 2px red;
 	border-radius: 100%;
+	background-color: #FAFAFA;
 }
 
 .title{
@@ -74,4 +75,16 @@ footer{
 	width:100%;
 	height:100%;
 
+}
+
+.icons{
+	width: 20%;
+}
+
+.image{
+	text-align: center;
+}
+.image img {
+	width:50%;
+	opacity: 0;
 }

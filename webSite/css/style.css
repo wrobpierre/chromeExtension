@@ -20,6 +20,10 @@
   margin-bottom: 0px;
 }
 
+#question_title{
+  text-align: center;
+}
+
 #nytg-chartFrame{
   width: 970px;
   height: 550px;

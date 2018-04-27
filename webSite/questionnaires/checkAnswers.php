@@ -1,5 +1,7 @@
 <?php 
 header('Access-Control-Allow-Origin: *');
+$adress = "http://163.172.59.102";
+// $adress = "http://localhost/chromeExtension";
 
 class answer{}
 
@@ -24,6 +26,7 @@ function stripVN($str) {
 
 $servername = "localhost";
 $username = "root";
+//$password = "stageOsaka";
 $password = "";
 $dbname = "chrome_extension";
 
@@ -66,7 +69,7 @@ if (isset($_POST['user_id'])) {
 			$job = $_POST['job'];
 
 			if($stmid->execute()){
-				header("Location: http://163.172.59.102/webSite/questionnaires/result.html");			
+				header("Location: ".$adress."/webSite/questionnaires/result.html");			
 				$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
 					SELECT :key_question, :answer, :result, id FROM users WHERE check_id like '".$_POST['user_id']."'");
 				$stmt->bindParam(':key_question', $key_question);
@@ -104,7 +107,7 @@ if (isset($_POST['user_id'])) {
 			}
 		}
 		elseif ($_POST['method'] == 'sign_in') {
-			header("Location: http://163.172.59.102/webSite/questionnaires/result.html");			
+			header("Location: ".$adress."/webSite/questionnaires/result.html");			
 			$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
 				SELECT :key_question, :answer, :result, id FROM users WHERE email like :email");
 			$stmt->bindParam(':key_question', $key_question);

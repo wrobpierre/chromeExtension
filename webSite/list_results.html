@@ -29,7 +29,10 @@
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
-		var post = $.post('http://163.172.59.102/dataBase.php', { key:"get_graphs" });
+		var adress = "http://163.172.59.102"
+		// var adress = "http://localhost/chromeExtension"
+
+		var post = $.post(adress+'/dataBase.php', { key:"get_graphs" });
 
 		post.done(function(data){
 			var dataParse = JSON.parse(data);
@@ -39,7 +42,7 @@
 
 			$.each(dataParse, function(index,value){
 				var li = $('<li></li>');
-				var link = 'http://163.172.59.102/webSite/index.html?id='+value['id'];
+				var link = adress+'/webSite/index.html?id='+value['id'];
 				if (value['title'] == "") {
 					var a = $('<input type="button" value="'+link+'" class="button_link" onclick="window:location.href=\''+link+'\'"></input>');
 					li.append(a);

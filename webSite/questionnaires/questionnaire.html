@@ -20,6 +20,9 @@
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
+		var adress = "http://163.172.59.102"
+		// var adress = "http://localhost/chromeExtension"
+
 		function getUrlParameter(sParam) {
 			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
@@ -37,8 +40,8 @@
 		var param = getUrlParameter('id');
 		
 		if (param == undefined) {
-			var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { action:"all" });
-			//var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"all" });
+			<<<<<<< HEAD
+			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"all" });
 
 			post.done(function(data){
 				console.log(data);
@@ -51,11 +54,11 @@
 					$.each(dataParse, function(index, value){
 						var li = $('<li class="list_question"></li>');
 						var a = $('<input type="button" class="button_link" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', value['title']);
-						var edit = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
+						var edit = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
 						var del = $('<button class="button_delete">Delete</button>').click(function(){
 							var r = confirm("Are you sure to delete this questionnaire ?");
 							if (r == true) {
-								var postDel = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
+								var postDel = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
 								postDel.done(function(data){
 									alert(data);
 								});
@@ -65,9 +68,7 @@
 						ul.append(li);
 					})
 
-
-					var add = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/add_questionnaire.html\'"></input>').attr('value', 'Add a questionnaire');
-
+					var add = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire.html\'"></input>').attr('value', 'Add a questionnaire');
 					add.css("background-color", "#00B16A");
 					add.css("height", "40px");
 
@@ -76,12 +77,11 @@
 			});
 		}
 		else {
-			var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
-			//var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
+			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
 
 			post.done(function(data){
+				console.log(data);
 				var dataParse = JSON.parse(data);
-				console.log(dataParse);
 				document.title = dataParse[0]['title'];
 				$('h1').text(dataParse[0]['title']);
 				var link;
@@ -94,11 +94,11 @@
 				var form = $('<form method="post" action="checkAnswers.php"></form>');
 				var user_id = $('<input type="hidden" name="user_id">');
 				form.append(user_id);	
-				
+
 				var dataUser = $('<div id="dataUser"></div>');
 				var method = $('<input type="hidden" name="method">');
 
-				var button_sign_up = $('<button class="sign_up">Sign up</button>');
+				var button_sign_up = $('<button class="sign_up button">Sign up</button>');
 				button_sign_up.prop('disabled',true);
 				button_sign_up.click(function(){
 					$('div.sign_up').css('display', 'block');
@@ -107,7 +107,7 @@
 					$('button.sign_in').prop("disabled",false);
 				});
 
-				var button_sign_in = $('<button class="sign_in">Sign in</button>');
+				var button_sign_in = $('<button class="sign_in button">Sign in</button>');
 				button_sign_in.click(function(){
 					$('div.sign_in').css('display', 'block');
 					$('div.sign_up').css('display', 'none');
@@ -116,9 +116,9 @@
 				});
 
 				var sign_up = $('<div class="sign_up"></div>');
-				var name = $('<div> <label>Your name :</label> <input type="text" name="name"> <span class="error"></span> </div>');
-				var job = $('<div> <label>Your job/domain :</label> <input type="text" name="job"> <span class="error"></span> </div>');
-				var login = $('<div> <label>Your email :</label> <input type="email" name="login"> <span class="error"></span> </div>');
+				var name = $('<div> <label>Your name :</label> <input class="input_question" type="text" name="name" style="margin:0"> <span class="error"></span> </div>');
+				var job = $('<div> <label>Your job/domain :</label> <input class="input_question" type="text" name="job" style="margin:0"> <span class="error"></span> </div>');
+				var login = $('<div> <label>Your email :</label> <input class="input_question" type="email" name="login" style="margin:0"> <span class="error"></span> </div>');
 				var valid = $('<input class="button" type="button" value="valid">');
 				valid.click(function(){
 					$('span.error').text('');
@@ -140,7 +140,7 @@
 					}
 					else {
 						var email = $('input[name="login"]').val();
-						var post = $.post('http://163.172.59.102/dataBase.php', { key:'check_user_email', email:email });
+						var post = $.post(adress+'/dataBase.php', { key:'check_user_email', email:email });
 						post.done(function(data){
 							if (data != 0) {
 								valid = false;
@@ -160,7 +160,7 @@
 				sign_up.append(name,job,login,valid);
 
 				var sign_in = $('<div class="sign_in"></div>');
-				var register = $('<div> <label>Your email :</label> <input type="email" name="register"> <span class="error"></span> </div>');
+				var register = $('<div> <label>Your email :</label> <input class="input_question" type="email" name="register" style="margin:0"> <span class="error"></span> </div>');
 				var valid = $('<input class="button" type="button" value="valid">');
 				valid.click(function(){
 					if ($('input[name="register"]').val() == "") {
@@ -168,7 +168,7 @@
 					}
 					else {
 						var email = $('input[name="register"]').val();
-						var post = $.post('http://163.172.59.102/dataBase.php', { key:'check_user_email', email:email, method:'sign_in' });
+						var post = $.post(adress+'/dataBase.php', { key:'check_user_email', email:email, method:'sign_in' });
 						post.done(function(data){
 							var dp = JSON.parse(data);
 							if (dp.length == 0) {
@@ -190,7 +190,7 @@
 
 				dataUser.append(method,button_sign_up,button_sign_in,sign_up,sign_in);
 				form.append(dataUser);
-				
+
 				for (var i = 0; i < dataParse.length; i++) {
 					var div = $('<div class="question" id="'+(i+1)+'"></div>');
 					var p = $('<p>'+dataParse[i]['question']+'</p>');
@@ -243,7 +243,7 @@
 					})
 
 					$('form').submit(function(){
-					
+
 					});
 				});
 			});

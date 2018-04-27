@@ -20,6 +20,9 @@
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
+		var adress = "http://163.172.59.102"
+		// var adress = "http://localhost/chromeExtension"
+
 		function getUrlParameter(sParam) {
 			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
@@ -37,8 +40,8 @@
 		var param = getUrlParameter('id');
 		
 		if (param == undefined) {
-			//var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { key:"all" });
-			var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"all" });
+			console.log(adress);
+			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"all" });
 
 			post.done(function(data){
 				var dataParse = JSON.parse(data);
@@ -49,11 +52,11 @@
 				$.each(dataParse, function(index, value){
 					var li = $('<li class="list_question"></li>');
 					var a = $('<input type="button" class="button_link" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', value['title']);
-					var edit = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
+					var edit = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
 					var del = $('<button class="button_delete">Delete</button>').click(function(){
 						var r = confirm("Are you sure to delete this questionnaire ?");
 						if (r == true) {
-							var postDel = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
+							var postDel = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
 							postDel.done(function(data){
 								alert(data);
 							});
@@ -64,7 +67,7 @@
 				})
 
 
-				var add = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/add_questionnaire.html\'"></input>').attr('value', 'Add a questionnaire');
+				var add = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire.html\'"></input>').attr('value', 'Add a questionnaire');
 
 				add.css("background-color", "#00B16A");
 				add.css("height", "40px");
@@ -73,12 +76,11 @@
 			});
 		}
 		else {
-			//var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { key:"get_questions", id:param });
-			var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
+			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
 
 			post.done(function(data){
+				console.log(data);
 				var dataParse = JSON.parse(data);
-				console.log(dataParse);
 				document.title = dataParse[0]['title'];
 				$('h1').text(dataParse[0]['title']);
 				var link;
@@ -136,7 +138,7 @@
 					}
 					else {
 						var email = $('input[name="login"]').val();
-						var post = $.post('http://163.172.59.102/dataBase.php', { key:'check_user_email', email:email });
+						var post = $.post(adress+'/dataBase.php', { key:'check_user_email', email:email });
 						post.done(function(data){
 							if (data != 0) {
 								valid = false;
@@ -165,7 +167,7 @@
 					}
 					else {
 						var email = $('input[name="register"]').val();
-						var post = $.post('http://163.172.59.102/dataBase.php', { key:'check_user_email', email:email, method:'sign_in' });
+						var post = $.post(adress+'/dataBase.php', { key:'check_user_email', email:email, method:'sign_in' });
 						post.done(function(data){
 							var dp = JSON.parse(data);
 							if (dp.length == 0) {

@@ -3,6 +3,8 @@ var onUpdatedUrl;
 var storage = chrome.storage.local;
 var listen = false;
 var firstUrl;
+var adress = "http://163.172.59.102"
+// var adress = "http://localhost/chromeExtension"
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
@@ -39,7 +41,7 @@ function getCurrentTabUrl(eventUrl) {
       url = eventUrl;
     }
 
-    if (url.indexOf('http://163.172.59.102/webSite/questionnaires/questionnaire.html?id=') != -1) {
+    if (url.indexOf(adress+'/webSite/questionnaires/questionnaire.html?id=') != -1) {
       autoStart(url);
       storage.get('uniqId', function(resultId){
         var id = resultId.uniqId;
@@ -61,7 +63,7 @@ function getCurrentTabUrl(eventUrl) {
         });
       });
     }
-    if (url.indexOf('http://163.172.59.102/webSite/questionnaires/result.html') != -1) {
+    if (url.indexOf(adress+'/webSite/questionnaires/result.html') != -1) {
       autoStop();
     }
 
@@ -264,8 +266,7 @@ function autoStart(url){
     listen = true;
     firstUrl = url;
 
-    var post = $.post('http://163.172.59.102/dataBase.php', { url:firstUrl, key:"first" });
-    //var post = $.post('http://localhost/chromeExtension/dataBase.php', { url:firstUrl, key:"first" });
+    var post = $.post(adress+'/dataBase.php', { url:firstUrl, key:"first" });
     post.done(function(data){
       //alert(data);
     });
@@ -279,8 +280,7 @@ function autoStop(){
 
     storage.get('data', function(result){
       storage.get('uniqId', function(resultId){
-        var post = $.post('http://163.172.59.102/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
-        //var post = $.post('http://localhost/chromeExtension/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
+        var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
         post.done(function(data){
           //alert(data);
           firstUrl = undefined;

@@ -1,6 +1,9 @@
 <?php 
 header('Access-Control-Allow-Origin: *');
 
+$adress = "http://163.172.59.102";
+// $adress = "http://localhost/chromeExtension";
+
 class all{}
 
 class questionnaire{}
@@ -29,6 +32,7 @@ if (isset($_POST['action'])) {
 	$servername = "localhost";
 	$username = "root";
 	$password = "stageOsaka";
+	// $password = "";
 	$dbname = "chrome_extension";
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -36,14 +40,14 @@ if (isset($_POST['action'])) {
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		if ($_POST['action'] == 'add') {
-			header("Location: http://163.172.59.102/webSite/questionnaires/questionnaire.html");
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
 			
 			$id = uniqid();
 
 			$stmt = $conn->prepare("INSERT INTO firsturl (url)
 				VALUES (:url)");
 			$stmt->bindParam(':url', $url);
-			$url = "http://163.172.59.102/webSite/questionnaires/questionnaire.html?id=".$id;
+			$url = $adress."/webSite/questionnaires/questionnaire.html?id=".$id;
 			$stmt->execute();
 
 			$stmt = $conn->prepare("INSERT INTO questionnaires (title, type, link, key_first_url)
@@ -80,7 +84,7 @@ if (isset($_POST['action'])) {
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");
 				$stmt->bindParam(':url', $url);
-				$url = 'http://163.172.59.102/webSite/questionnaires/questionnaire.html?id='.$_POST['id'];
+				$url = $adress.'/webSite/questionnaires/questionnaire.html?id='.$_POST['id'];
 				$stmt->execute();
 
 				echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "questionnaire"));
@@ -88,7 +92,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'edit') {
 			if (isset($_POST['id_questionnaire'])) {
-				header("Location: http://163.172.59.102/webSite/questionnaires/questionnaire.html");
+				header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
 
 				$stmt = $conn->prepare("UPDATE questionnaires 
 					SET title = :title, type = :type, link = :link 
@@ -168,7 +172,7 @@ if (isset($_POST['action'])) {
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");
 				$stmt->bindParam(':url', $url);
-				$url = 'http://163.172.59.102/webSite/questionnaires/questionnaire.html?id='.$_POST['id'];
+				$url = $adress.'/webSite/questionnaires/questionnaire.html?id='.$_POST['id'];
 				$stmt->execute();
 
 				echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "questionnaire"));

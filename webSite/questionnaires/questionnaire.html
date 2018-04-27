@@ -37,44 +37,47 @@
 		var param = getUrlParameter('id');
 		
 		if (param == undefined) {
-			//var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { key:"all" });
-			var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"all" });
+			var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { action:"all" });
+			//var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"all" });
 
 			post.done(function(data){
-				var dataParse = JSON.parse(data);
-				document.title = 'Questionnaires';
-				$('h1').text('List of questionnaires');
-				var ul = $('<ul></ul>');
-				ul.css("list-style", "none")
-				$.each(dataParse, function(index, value){
-					var li = $('<li class="list_question"></li>');
-					var a = $('<input type="button" class="button_link" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', value['title']);
-					var edit = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
-					var del = $('<button class="button_delete">Delete</button>').click(function(){
-						var r = confirm("Are you sure to delete this questionnaire ?");
-						if (r == true) {
-							var postDel = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
-							postDel.done(function(data){
-								alert(data);
-							});
-						}
-					});
-					li.append(a,edit,del);
-					ul.append(li);
-				})
+				console.log(data);
+				if (data != '') {
+					var dataParse = JSON.parse(data);
+					document.title = 'Questionnaires';
+					$('h1').text('List of questionnaires');
+					var ul = $('<ul></ul>');
+					ul.css("list-style", "none")
+					$.each(dataParse, function(index, value){
+						var li = $('<li class="list_question"></li>');
+						var a = $('<input type="button" class="button_link" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', value['title']);
+						var edit = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
+						var del = $('<button class="button_delete">Delete</button>').click(function(){
+							var r = confirm("Are you sure to delete this questionnaire ?");
+							if (r == true) {
+								var postDel = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
+								postDel.done(function(data){
+									alert(data);
+								});
+							}
+						});
+						li.append(a,edit,del);
+						ul.append(li);
+					})
 
 
-				var add = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/add_questionnaire.html\'"></input>').attr('value', 'Add a questionnaire');
+					var add = $('<input type="button" class="button_link" onclick="window:location.href=\'http://163.172.59.102/webSite/questionnaires/add_questionnaire.html\'"></input>').attr('value', 'Add a questionnaire');
 
-				add.css("background-color", "#00B16A");
-				add.css("height", "40px");
+					add.css("background-color", "#00B16A");
+					add.css("height", "40px");
 
-				$('#content').append(ul,add);
+					$('#content').append(ul,add);
+				}
 			});
 		}
 		else {
-			//var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { key:"get_questions", id:param });
-			var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
+			var post = $.post('http://localhost/chromeExtension/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
+			//var post = $.post('http://163.172.59.102/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
 
 			post.done(function(data){
 				var dataParse = JSON.parse(data);
@@ -118,7 +121,8 @@
 				var login = $('<div> <label>Your email :</label> <input type="email" name="login"> <span class="error"></span> </div>');
 				var valid = $('<input class="button" type="button" value="valid">');
 				valid.click(function(){
-					var valid = true;
+					$('span.error').text('');
+					valid = true;
 
 					if ($('input[name="name"]').val() == "") {
 						valid = false;
@@ -146,13 +150,12 @@
 								$('input[name="login"] + span.error').text('');	
 								if (valid) {
 									$('input[name="method"]').val('sign_up');
-									$(this).parent().parent().css('display','none');
-									$(this).parent().parent().next().css('display','block');
+									$('div.sign_up > input.button').parent().parent().css('display','none');
+									$('div.sign_up > input.button').parent().parent().next().css('display','block');
 								}
 							}
 						});
 					}
-
 				});
 				sign_up.append(name,job,login,valid);
 
@@ -191,11 +194,26 @@
 				for (var i = 0; i < dataParse.length; i++) {
 					var div = $('<div class="question" id="'+(i+1)+'"></div>');
 					var p = $('<p>'+dataParse[i]['question']+'</p>');
-					var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+']">');
-					var valid = $('<input class="button" type="button" value="valid">');
+					if (dataParse[i]['type_ques'] == 'text') {
+						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+']">');
+						var valid = $('<input class="button" type="button" value="valid">');
+						div.append(p,input,valid);
+					}
+					else if (dataParse[i]['type_ques'] == 'number') {
+						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+']">');
+						if (dataParse[i]['particule'] != '') {
+							var particule = $('<label>'+dataParse[i]['particule']+'</label>')
+						}
+						var valid = $('<input class="button" type="button" value="valid">');
+						div.append(p,input,particule,valid);
+					}
+					else if (dataParse[i]['type_ques'] == 'interval') {
+						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+']">');
+						var valid = $('<input class="button" type="button" value="valid">');
+						div.append(p,input,valid);
+					}
 
 					div.css("margin", "5%");
-					div.append(p,input,valid);
 					form.append(div);
 				}
 
@@ -219,17 +237,13 @@
 					//$('div#dataUser').css('display','none');
 					$('form div:last-child').css('display','none');
 
-					//alert("Don't forget to press the button \"start\" when you become your research !");
-
 					$('div.question > input[type="button"]').click(function(){
 						$(this).parent().css('display','none');
 						$(this).parent().next().css('display','block');
 					})
 
 					$('form').submit(function(){
-						//alert($('input[name="user_id"]').val());
-						//alert('Thanks for your participation !')
-						//return false;
+					
 					});
 				});
 			});

@@ -28,7 +28,7 @@ if (isset($_POST['action'])) {
 
 	$servername = "localhost";
 	$username = "root";
-	$password = "stageOsaka";
+	$password = "";
 	$dbname = "chrome_extension";
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -36,7 +36,7 @@ if (isset($_POST['action'])) {
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		if ($_POST['action'] == 'add') {
-			header("Location: http://163.172.59.102/webSite/questionnaires/questionnaire.html");
+			//header("Location: http://163.172.59.102/webSite/questionnaires/questionnaire.html");
 			
 			$id = uniqid();
 
@@ -53,29 +53,40 @@ if (isset($_POST['action'])) {
 			$stmt->bindParam(':link', $link);
 			$stmt->bindParam(':url', $url);
 			$title = $_POST['title'];
-			$type = ($_POST['title'] == 'article') ? 0 : 1;
+			$type = ($_POST['type'] == 'article') ? 0 : 1;
 			$link = $_POST['data'];
 			$stmt->execute();
 
-			$stmt = $conn->prepare("INSERT INTO questions (question, answer, key_questionnaires)
-				SELECT :question, :answer, q.id 
+			$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, key_questionnaires)
+				SELECT :question, :type_ques, :answer, q.id 
 				FROM questionnaires q 
 				INNER JOIN firsturl fu ON q.key_first_url = fu.id 
 				WHERE url like :url");
 			$stmt->bindParam(':url', $url);
 			$stmt->bindParam(':question', $question);
+			$stmt->bindParam(':type_ques', $type_ques);
 			$stmt->bindParam(':answer', $answer);
 
 			foreach ($_POST['q'] as $key => $value) {
-				$question = $value;
-				$answer = strtoupper(stripVN($_POST['a'][$key]));
+				$type_ques = $value['type_ques'];
+				$question = $value['question'];
+
+				if ($type_ques == 'text') {
+					$answer = strtoupper(stripVN($value['answer']));
+				}
+				elseif ($type_ques == 'number') {
+					$answer = $value['answer']."/".$value['particule'];
+				}
+				elseif ($type_ques == 'interval') {
+					$answer = $value['min']."/".$value['max'];
+				}
 
 				$stmt->execute();
 			}
 		}
 		elseif ($_POST['action'] == 'get_questions_to_edit') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT qtn.title, qtn.type, qtn.link, q.question, q.answer, q.id, q.key_questionnaires
+				$stmt = $conn->prepare("SELECT qtn.title, qtn.type, qtn.link, q.question, q.type_ques, q.answer, q.id, q.key_questionnaires
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");
@@ -88,7 +99,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'edit') {
 			if (isset($_POST['id_questionnaire'])) {
-				header("Location: http://163.172.59.102/webSite/questionnaires/questionnaire.html");
+				//header("Location: http://163.172.59.102/webSite/questionnaires/questionnaire.html");
 
 				$stmt = $conn->prepare("UPDATE questionnaires 
 					SET title = :title, type = :type, link = :link 
@@ -104,32 +115,56 @@ if (isset($_POST['action'])) {
 				$stmt->execute();
 
 				$stmt = $conn->prepare("UPDATE questions 
-					SET question = :question, answer = :answer
+					SET question = :question, type_ques = :type_ques ,answer = :answer
 					WHERE id = :id");
 				$stmt->bindParam(':id', $id);
 				$stmt->bindParam(':question', $question);
+				$stmt->bindParam(':type_ques', $type_ques);
 				$stmt->bindParam(':answer', $answer);
 
 				foreach ($_POST['q'] as $key => $value) {
 					$id = $key;
-					$question = $value;
-					$answer = strtoupper(stripVN($_POST['a'][$key]));
+					$type_ques = $value['type_ques'];
+					$question = $value['question'];
+
+					if ($type_ques == 'text') {
+						$answer = strtoupper(stripVN($value['answer']));
+					}
+					elseif ($type_ques == 'number') {
+						$answer = $value['answer']."/".$value['particule'];
+					}
+					elseif ($type_ques == 'interval') {
+						$answer = $value['min']."/".$value['max'];
+					}
 
 					$stmt->execute();
 				}
 
-				$stmt = $conn->prepare("INSERT INTO questions (question, answer, key_questionnaires)
-					VALUES(:question, :answer, :id)");
-				$stmt->bindParam(':question', $question);
-				$stmt->bindParam(':answer', $answer);
-				$stmt->bindParam(':id', $id);
-				$id = $_POST['id_questionnaire'];
+				if (isset($_POST['nq'])) {
+					$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, key_questionnaires)
+						VALUES(:question, :type_ques, :answer, :id)");
+					$stmt->bindParam(':question', $question);
+					$stmt->bindParam(':type_ques', $type_ques);
+					$stmt->bindParam(':answer', $answer);
+					$stmt->bindParam(':id', $id);
+					$id = $_POST['id_questionnaire'];
 
-				foreach ($_POST['nq'] as $key => $value) {
-					$question = $value;
-					$answer = strtoupper(stripVN($_POST['na'][$key]));
+					foreach ($_POST['nq'] as $key => $value) {
+						$type_ques = $value['type_ques'];
+						$question = $value['question'];
 
-					$stmt->execute();
+						if ($type_ques == 'text') {
+							$answer = strtoupper(stripVN($value['answer']));
+						}
+						elseif ($type_ques == 'number') {
+							$answer = $value['answer']."/".$value['particule'];
+						}
+						elseif ($type_ques == 'interval') {
+							$answer = $value['min']."/".$value['max'];
+						}
+
+						$stmt->execute();
+					}
 				}
 			}
 		}
@@ -163,7 +198,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_questions') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT qtn.title, qtn.type, qtn.link, q.question, q.id
+				$stmt = $conn->prepare("SELECT qtn.title, qtn.type, qtn.link, q.question, q.type_ques, q.id, SPLIT_STRING(q.answer, '/', 2)particule
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");

@@ -24,7 +24,7 @@ function stripVN($str) {
 
 $servername = "localhost";
 $username = "root";
-$password = "stageOsaka";
+$password = "";
 $dbname = "chrome_extension";
 
 if (isset($_POST['user_id'])) {
@@ -34,7 +34,7 @@ if (isset($_POST['user_id'])) {
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$first = true;
-		$requete = "SELECT id, answer FROM questions WHERE id=";
+		$requete = "SELECT id, type_ques, answer FROM questions WHERE id=";
 		foreach ($_POST['q'] as $key => $value) {
 			if ($first) {
 				$requete = $requete.$key;
@@ -47,8 +47,12 @@ if (isset($_POST['user_id'])) {
 
 		$stmt = $conn->prepare($requete);
 		$stmt->execute();
+		
+		$answers = array();
 
-		$answers = $stmt->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
+		foreach ($stmt->fetchAll() as $key => $value) {
+			$answers[$value['id']] = array("type" => $value['type_ques'], "answer" => $value['answer']);
+		}
 
 		if ($_POST['method'] == 'sign_up') {
 			$stmid = $conn->prepare("INSERT INTO users (check_id,name,email,job) VALUES (:createId, :name, :email, :job)");
@@ -73,12 +77,25 @@ if (isset($_POST['user_id'])) {
 					$key_question = $key;
 					$answer = $value;
 					$result = true;
-
-					$tmp = strtoupper(stripVN($value));
-					$tmp = explode(" ", $tmp);
-					$a = explode(",", $answers[$key][0]);
-					foreach ($a as $k => $v) {
-						if (array_search($v, $tmp) === false) {
+					if ($answers[$key]['type'] == "text") {
+						$tmp = strtoupper(stripVN($value));
+						$tmp = explode(" ", $tmp);
+						$a = explode(",", $answers[$key]['answer']);
+						foreach ($a as $k => $v) {
+							if (array_search($v, $tmp) === false) {
+								$result = false;
+							}
+						}
+					}
+					elseif ($answers[$key]['type'] == "number") {
+						if ($value != explode('/', $answers[$key]['answer'])[0]) {
+							$result = false;
+						}
+					}
+					elseif ($answers[$key]['type'] == "interval") {
+						$min = explode('/', $answers[$key]['answer'])[0];
+						$max = explode('/', $answers[$key]['answer'])[1];
+						if ($value < $min || $value > $max) {
 							$result = false;
 						}
 					}
@@ -100,12 +117,25 @@ if (isset($_POST['user_id'])) {
 				$key_question = $key;
 				$answer = $value;
 				$result = true;
-
-				$tmp = strtoupper(stripVN($value));
-				$tmp = explode(" ", $tmp);
-				$a = explode(",", $answers[$key][0]);
-				foreach ($a as $k => $v) {
-					if (array_search($v, $tmp) === false) {
+				if ($answers[$key]['type'] == "text") {
+					$tmp = strtoupper(stripVN($value));
+					$tmp = explode(" ", $tmp);
+					$a = explode(",", $answers[$key]['answer']);
+					foreach ($a as $k => $v) {
+						if (array_search($v, $tmp) === false) {
+							$result = false;
+						}
+					}
+				}
+				elseif ($answers[$key]['type'] == "number") {
+					if ($value != $answers[$key]['answer']) {
+						$result = false;
+					}
+				}
+				elseif ($answers[$key]['type'] == "interval") {
+					$min = explode('/', $answers[$key]['answer'])[0];
+					$max = explode('/', $answers[$key]['answer'])[1];
+					if ($value < $min || $value > $max) {
 						$result = false;
 					}
 				}

@@ -126,7 +126,7 @@ function sendData(key) {
           post.done(function(data) {
             // var test = $.parseJSON(data);
             // $.each($.parseJSON(test[0]['timer']), function(i, element){
-              console.log(data);
+            console.log(data);
             // });
           });
         });

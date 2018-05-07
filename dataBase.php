@@ -14,11 +14,11 @@ class firsturl {}
 if (isset($_POST['key'])) {
 
 	$servername = "localhost";
-	// $servername = "163.172.59.102";
 	$username = "root";
 	$password = "stageOsaka";
-	 // $password = "";
+	//$password = "";
 	$dbname = "chrome_extension";
+
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     // set the PDO error mode to exception
@@ -94,19 +94,27 @@ if (isset($_POST['key'])) {
 				$first_url = $_POST['url']['firstUrl'];
 
 				foreach ($_POST['d']['data'] as $key => $value) {
-					$url = $value['url'];
-					$title = $value['title'];
-					if (isset($value['keywords'])) {
-						$keywords = implode(", ", $value['keywords']);
-					}
-					else {
-						$keywords = "nothing...";	
-					}
-					$view = $value['views'];
-					$timer = json_encode($value['timeOnPage']);
-					$hostName = $value['hostName'];
+					if ($value['hostName'] != '163.172.59.102') {
+						$url = $value['url'];
+						$title = $value['title'];
+						if (isset($value['keywords'])) {
+							$keywords = implode(", ", $value['keywords']);
+						}
+						else {
+							$keywords = "nothing...";	
+						}
+						$view = $value['views'];
+						$hostName = $value['hostName'];
 
-					$stmt->execute();
+						if ( $value['timeOnPage']['hours'] > 0 || $value['timeOnPage']['minutes'] > 0 || $value['timeOnPage']['secondes'] > 2 ) {
+							//echo "pas de bruit";
+							$timer = json_encode($value['timeOnPage']);
+							$stmt->execute();
+						}
+						/*else {
+							echo "bruit";
+						}*/	
+					}
 				}
 			}
 				//echo "New records created successfully";

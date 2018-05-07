@@ -31,8 +31,9 @@ if (isset($_POST['action'])) {
 
 	$servername = "localhost";
 	$username = "root";
-	// $password = "";
+
 	$password = "stageOsaka";
+	//$password = "";
 	$dbname = "chrome_extension";
 	
 	try {
@@ -103,8 +104,8 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'edit') {
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
 			if (isset($_POST['id_questionnaire'])) {
-				header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
 
 				$stmt = $conn->prepare("UPDATE questionnaires 
 					SET title = :title, type = :type, link = :link 

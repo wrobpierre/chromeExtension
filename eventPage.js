@@ -80,8 +80,11 @@ function getCurrentTabUrl(eventUrl) {
         }, function(results){
           keywords = results[0];
           title = keywords[keywords.length-1];
-          var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'scrollPercent': 0}
-          saveList(values);
+          //if (hostName != '163.172.59.102') {
+            //alert(hostName);
+            var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'scrollPercent': 0}
+            saveList(values);
+          //}
         });
       }
     });
@@ -268,7 +271,7 @@ function autoStart(url){
 
     var post = $.post(adress+'/dataBase.php', { url:firstUrl, key:"first" });
     post.done(function(data){
-      //alert(data);
+      alert(data);
     });
   }
 }
@@ -282,7 +285,7 @@ function autoStop(){
       storage.get('uniqId', function(resultId){
         var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
         post.done(function(data){
-          //alert(data);
+          alert(data);
           firstUrl = undefined;
           storage.clear();
         });

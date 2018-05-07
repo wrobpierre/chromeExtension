@@ -21,7 +21,7 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
 		var adress = "http://163.172.59.102"
-		// var adress = "http://localhost/chromeExtension"
+		//var adress = "http://localhost/chromeExtension"
 
 		function getUrlParameter(sParam) {
 			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -40,11 +40,10 @@
 		var param = getUrlParameter('id');
 		
 		if (param == undefined) {
-			<<<<<<< HEAD
 			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"all" });
 
 			post.done(function(data){
-				console.log(data);
+				//console.log(data);
 				if (data != '') {
 					var dataParse = JSON.parse(data);
 					document.title = 'Questionnaires';

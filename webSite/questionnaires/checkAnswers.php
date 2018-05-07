@@ -26,8 +26,8 @@ function stripVN($str) {
 
 $servername = "localhost";
 $username = "root";
-//$password = "stageOsaka";
-$password = "";
+$password = "stageOsaka";
+// $password = "";
 $dbname = "chrome_extension";
 
 if (isset($_POST['user_id'])) {

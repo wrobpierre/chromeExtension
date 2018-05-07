@@ -39,9 +39,31 @@ post.done(function(data) {
   //console.log(data);
   var nytg = nytg || {}; 
   var time = 0;
+  var tabData = [];
+  var alreadySave = false;
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
+
   dataParse.forEach(function(element){
+    tabData.forEach(function(elem){
+      if(element['url'] == elem['url']){
+        elem['timer']['hours'] = parseInt(elem['timer']['hours']) + parseInt(element['timer']['hours']);
+        elem['timer']['minutes'] = parseInt(elem['timer']['minutes']) + parseInt(element['timer']['minutes']);
+        elem['timer']['secondes'] = parseInt(elem['timer']['secondes']) + parseInt(element['timer']['secondes']);
+        elem['view'] = parseInt(elem['view']) + parseInt(element['view']);
+        alreadySave = true;
+        break;
+      }
+    });
+    if(!alreadySave){
+      tabData.push(element);
+    }else{
+      alreadySave = false;
+      
+    }
+  });
+
+  tabData.forEach(function(element){
     element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
     element["timer"] = JSON.parse(element["timer"]);
     if(minTime == null || minTime.hours >= parseInt(element.timer.hours)) {
@@ -66,9 +88,9 @@ post.done(function(data) {
   var question = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'get_title_question', id:id });
   question.done(function(data){
     if (data != "") {  
-      var dataParse = JSON.parse(data);
-      console.log(dataParse[0]);
-      document.getElementById('question_title').textContent = dataParse[0];
+      var tabData = JSON.parse(data);
+      console.log(tabData[0]);
+      document.getElementById('question_title').textContent = tabData[0];
     }
   })
 

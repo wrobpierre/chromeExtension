@@ -122,7 +122,7 @@ function sendData(key) {
     else{
       storage.get('uniqId', function(resultId){
         storage.get('firstUrl', function(resultUrl){
-          var post = $.post(adress+'/dataBase.php', { d:result, url:resultUrl, uniqId: resultId.uniqId, key:key });
+          var post = $.post(adress+'/dataBase.php', { d:result, url:resultUrl, uniqId: resultId.uniqId, key:key, type:"type"});
           post.done(function(data) {
             // var test = $.parseJSON(data);
             // $.each($.parseJSON(test[0]['timer']), function(i, element){

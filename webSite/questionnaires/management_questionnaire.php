@@ -31,6 +31,7 @@ if (isset($_POST['action'])) {
 
 	$servername = "localhost";
 	$username = "root";
+
 	$password = "stageOsaka";
 	//$password = "";
 	$dbname = "chrome_extension";

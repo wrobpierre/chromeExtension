@@ -3,7 +3,7 @@ var onUpdatedUrl;
 var storage = chrome.storage.local;
 var listen = false;
 var firstUrl;
-var adress = "http://163.172.59.102"
+var adress = "http://163.172.59.102";
 // var adress = "http://localhost/chromeExtension"
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
@@ -34,6 +34,8 @@ function getCurrentTabUrl(eventUrl) {
     var url;
     var title;
     var hostName;
+    // alert(lastUrl);
+
     if(tab != undefined){
       url = tab.url;
     }
@@ -83,6 +85,7 @@ function getCurrentTabUrl(eventUrl) {
           //if (hostName != '163.172.59.102') {
             //alert(hostName);
             var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'scrollPercent': 0}
+            alert(values.url+" "+values.timeOnPage.secondes);
             saveList(values);
           //}
         });
@@ -103,19 +106,21 @@ chrome.tabs.onActivated.addListener(function(tabId, removeInfo) {
 function saveTime(){
   storage = chrome.storage.local;
   var dateEnd = new Date();
-
   storage.get('data', function(result) {
     var find = result.data.find(val => val.url == lastUrl);
+    // Va sur undefined la 1er fois
     if (find != undefined) {
       compareDate(result.data[result.data.indexOf(find)].dateBegin, dateEnd.toJSON(), result.data[result.data.indexOf(find)]);
-      storage.set({'data':result.data}); 
+      storage.set({'data':result.data});
     }
     chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
       lastUrl = tabs[0].url;
+      // alert( result.data.find(val => val.url == lastUrl));
       find = result.data.find(val => val.url == lastUrl);
       if (find != undefined) {
+        compareDate(result.data[result.data.indexOf(find)].dateBegin, dateEnd.toJSON(), result.data[result.data.indexOf(find)]);
         result.data[result.data.indexOf(find)].dateBegin = new Date().toJSON();
-        storage.set({'data':result.data}); 
+        storage.set({'data':result.data});
       }
     });
   });
@@ -191,6 +196,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type === 'start') {
     createUniqId();
     listen = true;
+
     sendResponse({url: sendFirstUrl(), result: listen});
   }
   else if (message.type === 'stop') {
@@ -271,7 +277,6 @@ function autoStart(url){
 
     var post = $.post(adress+'/dataBase.php', { url:firstUrl, key:"first" });
     post.done(function(data){
-      alert(data);
     });
   }
 }
@@ -285,7 +290,6 @@ function autoStop(){
       storage.get('uniqId', function(resultId){
         var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
         post.done(function(data){
-          alert(data);
           firstUrl = undefined;
           storage.clear();
         });

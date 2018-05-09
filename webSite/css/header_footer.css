@@ -34,14 +34,6 @@ header{
     /*transition-timing-function: ease;*/
 }
 
-.headerButton:hover{
-	background-color: #e53935 ;
-	border-bottom: solid 4px #e57373; 
-	border-right: solid 4px #e57373;
-	transform: translate(-3px, 3px);
-	/*transform: translateY(30px);*/
-}
-
 .headerButton:hover #statsLink{
 	background-color: #e53935;
 }

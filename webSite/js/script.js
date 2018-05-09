@@ -21,26 +21,26 @@ var id = getUrlParameter('id');
 var user = getUrlParameter('user');
 
 if (id !== undefined && user !== undefined) {
-  console.log(id);
-  console.log(user);
+  //console.log(id);
+  //console.log(user);
   var post = $.post(adress+'/dataBase.php', { key:"load", id:id });
 }
 else if (id !== undefined) {
-  console.log(id);
+  //console.log(id);
   var post = $.post(adress+'/dataBase.php', { key:"load", id:id });
 }
 else {
-  console.log('pas d\'url');
+  //console.log('pas d\'url');
   var post = $.post(adress+'/dataBase.php', { key:"load" });
 }
 
 
 post.done(function(data) {
-  //console.log(data);
   var nytg = nytg || {}; 
   var time = 0;
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
+  console.log(dataParse);
   dataParse.forEach(function(element){
     element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
     element["timer"] = JSON.parse(element["timer"]);
@@ -67,7 +67,7 @@ post.done(function(data) {
   question.done(function(data){
     if (data != "") {  
       var dataParse = JSON.parse(data);
-      console.log(dataParse[0]);
+      //console.log(dataParse[0]);
       document.getElementById('question_title').textContent = dataParse[0];
     }
   })
@@ -467,7 +467,13 @@ nytg.formatNumber = function(n) {
 
         $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
 
-        d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views') })
+        if (d.value == 1) {
+          d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' view') 
+        }
+        else{
+          d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views')
+        }
+      })
 
       .on("mouseout",function(d,i) { 
         d3.select(this)

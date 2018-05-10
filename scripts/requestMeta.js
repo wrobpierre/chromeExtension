@@ -1,13 +1,18 @@
-var tabElem = [] ;
-var metaElem = document.getElementsByName('keywords');
+var tabElem = {keywords: [], title: ""} ;
+var metaElem = document.getElementsByName("keywords");
 var titleElem = document.title;
 var splitElem;
-metaElem.forEach(function(elements) {
-	splitElem = elements.getAttribute('content').split(',');
+if(metaElem[0] != undefined){
+	splitElem = metaElem[0].getAttribute('content').split(',');
 	splitElem.forEach(function(element) {
-		tabElem.push(element);
+		tabElem.keywords.push(element);
 	});
-});
-tabElem.push(titleElem);
+}
+else{
+	tabElem.keywords.push("no keywords");
+}
+if(titleElem != null){
+	tabElem.title = titleElem;
+}
 
 tabElem;

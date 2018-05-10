@@ -129,14 +129,14 @@ if (isset($_POST['key'])) {
 		elseif ($_POST['key'] == 'load') {
 			$requete = "";
 			if (isset($_POST['id']) && isset($_POST['user'])) {
-				$requete = "SELECT s.*
+				$requete = "SELECT s.*, (SELECT SUM(a.result) FROM answers a WHERE a.key_user = ".$_POST['user']." )note
 				FROM users u
 				INNER JOIN sites s ON u.id = s.key_user
 				INNER JOIN firsturl fu ON s.key_first_url = fu.id
 				WHERE u.id = ".$_POST['user']." AND fu.id = ".$_POST['id'];
 			}
 			elseif (isset($_POST['id'])) {
-				$requete = "SELECT s.* 
+				$requete = "SELECT s.*, (SELECT SUM(a.result) FROM answers a WHERE a.key_user = s.key_user)note
 				FROM sites s
 				INNER JOIN firsturl fu ON s.key_first_url = fu.id
 				WHERE fu.id = ".$_POST['id'];

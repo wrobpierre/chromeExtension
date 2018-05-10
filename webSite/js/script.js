@@ -43,29 +43,49 @@ post.done(function(data) {
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
   console.log(dataParse);
-
   dataParse.forEach(function(element){
-    tabData.forEach(function(elem){
-      if(element['url'] == elem['url']){
-        elem['timer']['hours'] = parseInt(elem['timer']['hours']) + parseInt(element['timer']['hours']);
-        elem['timer']['minutes'] = parseInt(elem['timer']['minutes']) + parseInt(element['timer']['minutes']);
-        elem['timer']['secondes'] = parseInt(elem['timer']['secondes']) + parseInt(element['timer']['secondes']);
-        elem['view'] = parseInt(elem['view']) + parseInt(element['view']);
-        alreadySave = true;
-        break;
-      }
-    });
-    if(!alreadySave){
-      tabData.push(element);
-    }else{
-      alreadySave = false;
+
+    if (!tabData.find(function(elem){ return elem.url === element.url; })) {
+      tmp = dataParse.filter(function(obj){ return obj.url == element.url; });
+      note = 0;
+      hours = 0;
+      minutes = 0;
+      secondes = 0;
+      views = 0;
+      tmp.forEach(function(elem){
+        views += parseInt(elem['view']);
+        note += parseInt(elem['note']);
+        
+        timer = JSON.parse(elem['timer']);
+        secondes += parseInt(timer['secondes']);
+        if (secondes >= 60) {
+          secondes = secondes%60;
+          minutes += 1;
+        }
+        minutes += parseInt(timer['minutes']);
+        if (minutes >= 60) {
+          minutes = minutes%60;
+          hours += 1;
+        }
+        hours += parseInt(timer['hours']);
+      });
+      element['view'] = views;
+      element['avg'] = note/tmp.length;
+      delete element['note'];
       
+      element['timer'] = JSON.parse(element['timer']);
+      element['timer']['hours'] = hours;
+      element['timer']['minutes'] = minutes;
+      element['timer']['secondes'] = secondes;
+      tabData.push(element);      
     }
   });
 
+  //console.log(tabData);
+  
   tabData.forEach(function(element){
     element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
-    element["timer"] = JSON.parse(element["timer"]);
+    //element["timer"] = JSON.parse(element["timer"]);
     if(minTime == null || minTime.hours >= parseInt(element.timer.hours)) {
       if (minTime == null || minTime.hours > parseInt(element.timer.hours) || minTime.minutes >= parseInt(element.timer.minutes)) {
         if (minTime == null || minTime.hours > parseInt(element.timer.hours) || minTime.minutes > parseInt(element.timer.minutes) || minTime.secondes >= parseInt(element.timer.secondes)) {

@@ -42,7 +42,7 @@ post.done(function(data) {
   var alreadySave = false;
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
-  console.log(dataParse);
+  //console.log(dataParse);
   dataParse.forEach(function(element){
 
     if (!tabData.find(function(elem){ return elem.url === element.url; })) {

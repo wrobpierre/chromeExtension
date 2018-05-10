@@ -187,7 +187,9 @@
 				sign_in.css('display', 'none');
 				sign_in.append(register,valid);
 
-				dataUser.append(method,button_sign_up,button_sign_in,sign_up,sign_in);
+				var info = $('<p>*if you wish to have your personal data deleted, contact us at this email address: stageosakadawin@gmail.com</p>')
+
+				dataUser.append(method,button_sign_up,button_sign_in,sign_up,sign_in,info);
 				form.append(dataUser);
 
 				for (var i = 0; i < dataParse.length; i++) {

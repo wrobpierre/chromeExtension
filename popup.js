@@ -115,7 +115,6 @@ function resetList() {
 function sendData(key) {
   var storage = chrome.storage.local;
   storage.get('data', function(result){
-    console.log(result);
     if (key == "load") {
       var post = $.post(adress+'/dataBase.php', { d:example, key:"add" });
     }

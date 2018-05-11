@@ -212,7 +212,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
   else if (message.type === 'stop') {
     listen = false;
-    sendResponse({result: listen}, saveTime());
+    saveTime();
+    alert("Your search is save !");
+    // alert("Your search is save !")
+    sendResponse({result: listen});
   }
   else if (message.type === 'get') {
     if(firstUrl === undefined){
@@ -226,10 +229,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     firstUrl = undefined;
   }
 });
-
-function send(){
-
-}
 
 function sendSecondUrl(){
   storage.get('firstUrl', function(result) {

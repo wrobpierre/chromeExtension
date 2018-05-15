@@ -107,11 +107,36 @@ post.done(function(data) {
 
   var question = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'get_title_question', id:id });
   question.done(function(data){
-    if (data != "") {  
+    if (data != "") {
       var dataParse = JSON.parse(data);
       //console.log(dataParse[0]);
       document.getElementById('question_title').textContent = dataParse[0];
     }
+  })
+
+  //Faire un foreach en JS
+  var getGraph =  $.post(adress+'/dataBase.php', { key:"get_graphs" });
+  getGraph.done(function(data){
+    var dataParse = JSON.parse(data);
+      var ul = $('#navQuestionnaires ul');
+      ul.css("list-style", "none");
+
+      console.log(ul);
+      $.each(dataParse, function(index,value){
+        var li = $('<li></li>');
+        var link = adress+'/webSite/index.html?id='+value['id'];
+        if (value['title'] == "") {
+          var a = $('<input value="'+link+'" onclick="window:location.href=\''+link+'\'"></input>');
+          li.append(a);
+          $('#navQuestionnaires > ul').append(li);
+        }
+        else {
+          var a = $(' <input value="'+value['title']+'" onclick="window:location.href=\''+link+'\'"></input>');
+          li.append(a);
+          $('#navQuestionnaires > ul').append(li);
+        }
+
+      });
   })
 
 // BEGIN nytg Additions

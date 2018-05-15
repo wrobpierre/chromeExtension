@@ -3,7 +3,6 @@ body {
 	padding-top: 0px;
 	margin-bottom: 0px;
 	padding-bottom: 0px;
-	font-family: 'Lobster';
 	font-size: large;
 
 }
@@ -17,16 +16,18 @@ header{
 	z-index: 200;
 }
 
-#statsLink{
+.statsLink{
 	color: white;
 	border: none;
 	background-color: #e74c3c;
 	height: 100%;
+	float: right;
+	margin-right: 10px;
 }
 
 .headerButton{
 	float: right;
-	width: 150px;
+	width: 100%;
 	text-align: center;
 	height: 100%;
 	transition-property: transform;
@@ -34,7 +35,7 @@ header{
     /*transition-timing-function: ease;*/
 }
 
-.headerButton:hover #statsLink{
+.headerButton .statsLink:hover{
 	background-color: #e53935;
 }
 
@@ -71,7 +72,7 @@ header{
 	display: none;
 	margin: auto;
 	color: white;
-	margin-top: 10px;
+	margin-top: 20px;
 
 }
 

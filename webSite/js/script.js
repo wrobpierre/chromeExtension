@@ -124,7 +124,7 @@ post.done(function(data) {
       console.log(ul);
       $.each(dataParse, function(index,value){
         var li = $('<li></li>');
-        var link = adress+'/webSite/index.html?id='+value['id'];
+        var link = adress+'/webSite/graph.html?id='+value['id'];
         if (value['title'] == "") {
           var a = $('<input value="'+link+'" onclick="window:location.href=\''+link+'\'"></input>');
           li.append(a);

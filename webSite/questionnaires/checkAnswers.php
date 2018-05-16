@@ -102,6 +102,9 @@ if (isset($_POST['user_id'])) {
 							$result = false;
 						}
 					}
+					elseif ($answers[$key]['type'] == "free") {
+						$result = null;
+					}
 					$stmt->execute();
 				}
 			}
@@ -141,6 +144,9 @@ if (isset($_POST['user_id'])) {
 					if ($value < $min || $value > $max) {
 						$result = false;
 					}
+				}
+				elseif ($answers[$key]['type'] == "free") {
+					$result = null;
 				}
 				$stmt->execute();
 			}

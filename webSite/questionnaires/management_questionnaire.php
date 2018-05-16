@@ -1,8 +1,11 @@
 <?php 
 header('Access-Control-Allow-Origin: *');
 
+/*ini_set('display_errors',1);
+error_reporting(E_ALL);*/
+
 $adress = "http://163.172.59.102";
-// $adress = "http://localhost/chromeExtension";
+//$adress = "http://localhost/chromeExtension";
 
 class all{}
 
@@ -27,6 +30,24 @@ function stripVN($str) {
 	return $str;
 }
 
+function deleteDirectory($dir) {
+	if (!file_exists($dir)) {
+		return true;
+	}
+	if (!is_dir($dir)) {
+		return unlink($dir);
+	}
+	foreach (scandir($dir) as $item) {
+		if ($item == '.' || $item == '..') {
+			continue;
+		}
+		if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+			return false;
+		}
+	}
+	return rmdir($dir);
+}
+
 if (isset($_POST['action'])) {
 
 	$servername = "localhost";
@@ -35,16 +56,28 @@ if (isset($_POST['action'])) {
 	$password = "stageOsaka";
 	//$password = "";
 	$dbname = "chrome_extension";
-	
+
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     	// set the PDO error mode to exception
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		if ($_POST['action'] == 'add') {
-			header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
-			
+			//header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
+
 			$id = uniqid();
+
+			$target_dir = "../img/quest_img/".$id;
+
+			mkdir($target_dir, 0777, true);
+
+			if ($_FILES["image_uploads"]["name"] != "") {
+				$target_file = $target_dir . "/" . basename($_FILES["image_uploads"]["name"]);
+				if (!move_uploaded_file($_FILES["image_uploads"]["tmp_name"], $target_file)) {
+					header('Location: ' . $_SERVER['HTTP_REFERER']);
+					//echo "fail";
+				} 
+			}
 
 			$stmt = $conn->prepare("INSERT INTO firsturl (url)
 				VALUES (:url)");
@@ -52,15 +85,17 @@ if (isset($_POST['action'])) {
 			$url = $adress."/webSite/questionnaires/questionnaire.html?id=".$id;
 			$stmt->execute();
 
-			$stmt = $conn->prepare("INSERT INTO questionnaires (title, type, link, key_first_url)
-				SELECT :title, :type, :link, id FROM firsturl WHERE url like :url");
+			$stmt = $conn->prepare("INSERT INTO questionnaires (title, statement, link_img, auto_correction, key_first_url)
+				SELECT :title, :statement, :link_img, :auto_correction, id FROM firsturl WHERE url like :url");
 			$stmt->bindParam(':title', $title);
-			$stmt->bindParam(':type', $type);
-			$stmt->bindParam(':link', $link);
+			$stmt->bindParam(':statement', $statement);
+			$stmt->bindParam(':link_img', $link_img);
+			$stmt->bindParam(':auto_correction', $auto_correction);
 			$stmt->bindParam(':url', $url);
 			$title = $_POST['title'];
-			$type = ($_POST['type'] == 'article') ? 0 : 1;
-			$link = $_POST['data'];
+			$statement = $_POST['statement'];
+			$link_img = $target_file;
+			$auto_correction = ($_POST['auto_correction'] != 'auto') ? 0 : 1;
 			$stmt->execute();
 
 			$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, key_questionnaires)
@@ -74,17 +109,24 @@ if (isset($_POST['action'])) {
 			$stmt->bindParam(':answer', $answer);
 
 			foreach ($_POST['q'] as $key => $value) {
-				$type_ques = $value['type_ques'];
 				$question = $value['question'];
 
-				if ($type_ques == 'text') {
-					$answer = strtoupper(stripVN($value['answer']));
+				if ($auto_correction == 1) {
+					$type_ques = $value['type_ques'];
+
+					if ($type_ques == 'text') {
+						$answer = strtoupper(stripVN($value['answer']));
+					}
+					elseif ($type_ques == 'number') {
+						$answer = $value['answer']."/".$value['particule'];
+					}
+					elseif ($type_ques == 'interval') {
+						$answer = $value['min']."/".$value['max'];
+					}
 				}
-				elseif ($type_ques == 'number') {
-					$answer = $value['answer']."/".$value['particule'];
-				}
-				elseif ($type_ques == 'interval') {
-					$answer = $value['min']."/".$value['max'];
+				else {
+					$type_ques = "free";
+					$answer = null;							
 				}
 
 				$stmt->execute();
@@ -92,7 +134,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_questions_to_edit') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT qtn.title, qtn.type, qtn.link, q.question, q.type_ques, q.answer, q.id, q.key_questionnaires
+				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, q.question, q.type_ques, q.answer, q.id, q.key_questionnaires
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");
@@ -176,12 +218,18 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'delete') {
 			if (isset($_POST['url'])) {
-				$stmt = $conn->prepare("DELETE FROM firsturl WHERE url like :url");
-				$stmt->bindParam(':url', $url);
-				$url = $_POST['url'];
-				$stmt->execute();
 
-				echo "The questionnaire has been deleted";
+				if (deleteDirectory('../img/quest_img/' . explode('?id=', $_POST['url'])[1] )) {
+					$stmt = $conn->prepare("DELETE FROM firsturl WHERE url like :url");
+					$stmt->bindParam(':url', $url);
+					$url = $_POST['url'];
+					$stmt->execute();
+
+					echo "The questionnaire has been deleted";
+				}
+				else {
+					echo "An error has been detected. Please try later.";
+				}
 			}
 		}
 		elseif ($_POST['action'] == 'delete_question') {
@@ -204,7 +252,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_questions') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT qtn.title, qtn.type, qtn.link, q.question, q.type_ques, q.id, SPLIT_STRING(q.answer, '/', 2)particule
+				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, q.question, q.type_ques, q.id, SPLIT_STRING(q.answer, '/', 2)particule
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");
@@ -224,6 +272,57 @@ if (isset($_POST['action'])) {
 				$stmt->execute();
 
 				echo json_encode($stmt->fetchAll(PDO::FETCH_COLUMN, 0));	
+			}
+		}
+		elseif ($_POST['action'] == 'check_title') {
+			if (isset($_POST['title'])) {
+				$stmt = $conn->prepare("SELECT * FROM questionnaires WHERE title like :title");
+				$stmt->bindParam(':title', $title);
+				$title = $_POST['title'];
+				$stmt->execute();
+
+				echo count($stmt->fetchAll());
+			}
+		}
+		elseif ($_POST['action'] == 'check_file') {
+				# code...
+		}
+		elseif ($_POST['action'] == 'get_user_result') {
+			if (isset($_POST['id'])) {
+				$stmt = $conn->prepare("SELECT a.key_user, a.key_question, q.question, a.answer
+					FROM firsturl fu
+					INNER JOIN questionnaires qtn ON fu.id = qtn.key_first_url
+					INNER JOIN questions q ON qtn.id = q.key_questionnaires
+					INNER JOIN answers a ON q.id = a.key_question
+					WHERE fu.url LIKE :url
+					ORDER BY a.key_user");
+				$stmt->bindParam(':url', $url);
+				$url = $adress.'/webSite/questionnaires/questionnaire.html?id='.$_POST['id'];
+				$stmt->execute();
+
+				echo json_encode($stmt->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_CLASS));
+			}
+		}
+		elseif ($_POST['action'] == 'edit_user_result') {
+			if (isset($_POST['res'])) {
+				header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
+
+				$stmt = $conn->prepare("UPDATE answers
+					SET result = :result
+					WHERE key_user = :user AND key_question = :question");
+				$stmt->bindParam(':result', $result);
+				$stmt->bindParam(':user', $user);
+				$stmt->bindParam(':question', $question);
+
+				foreach ($_POST['res'] as $key => $value) {
+					$user = $key;
+					foreach ($value as $k => $v) {
+						$question = $k;
+						$result = ($v == 'wrong') ? 0 : 1;
+
+						$stmt->execute();
+					}
+				}
 			}
 		}
 	}

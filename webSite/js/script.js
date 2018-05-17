@@ -383,6 +383,7 @@ nytg.formatNumber = function(n) {
         if (minView == null || minView > parseInt(this.data[i].view)) {
           minView = this.data[i].view;
         }
+        console.log(this.data[i]);
       }
 
       percent = maxView/100;

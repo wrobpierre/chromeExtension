@@ -54,6 +54,10 @@
 						var li = $('<li class="list_question"></li>');
 						var title = $('<h2></h2>').text(value['title']);
 						
+						var info = $('<div></div>');
+						var img = $('<img src="'+value['link_img']+'">').css('width', '50px');
+						var statement = $('<p>'+value['statement']+'</p>')
+
 						var always_visible = $('<div></div>');
 						var do_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
 						var graph_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/graph.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
@@ -72,11 +76,24 @@
 							}
 						});
 						var edit_result = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_results.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value','Edit users\' results');
+						
+						if (value['link_img'] != null) {
+							info.append(img,statement);
+						}
+						else {
+							info.append(statement);
+						}
 
 						always_visible.append(do_ques,graph_ques);
-						option.append(edit,del,edit_result);
+						
+						if (value['auto_correction'] == 0) {
+							option.append(edit,del,edit_result);
+						}
+						else {
+							option.append(edit,del);	
+						}
 
-						li.append(title,always_visible,option);
+						li.append(title,info,always_visible,option);
 						ul.append(li);
 					})
 

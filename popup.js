@@ -121,6 +121,7 @@ function sendData(key) {
     else{
       storage.get('uniqId', function(resultId){
         storage.get('firstUrl', function(resultUrl){
+          console.log(result);
           var post = $.post(adress+'/dataBase.php', { d:result, url:resultUrl, uniqId: resultId.uniqId, key:key, type:"type"});
           post.done(function(data) {
             // var test = $.parseJSON(data);

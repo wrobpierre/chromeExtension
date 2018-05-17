@@ -87,13 +87,14 @@ if (isset($_POST['key'])) {
 				
 				$uniqId = $stmtCheck->fetchAll();
 				
-				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, host_name, key_user, key_first_url) SELECT :url ,:title ,:keywords,:view,:timer, :host_name, :key_user, id FROM firsturl WHERE url like :first_url ");
+				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, first_time, host_name, key_user, key_first_url) SELECT :url ,:title ,:keywords,:view,:timer,:first_time,:host_name,:key_user, id FROM firsturl WHERE url like :first_url ");
 					//$reponse = $conn->query('SELECT id FROM firsturl WHERE key_first_url = '+$key_first_url);
 				$stmt->bindParam(':url', $url);
 				$stmt->bindParam(':title', $title);
 				$stmt->bindParam(':keywords', $keywords);
 				$stmt->bindParam(':view', $view);
 				$stmt->bindParam(':timer', $timer);
+				$stmt->bindParam(':first_time', $first_time);
 				$stmt->bindParam(':first_url', $first_url);
 				$stmt->bindParam(':host_name', $hostName);
 				$stmt->bindParam(':key_user', $uniqId[0]['id']);
@@ -112,6 +113,7 @@ if (isset($_POST['key'])) {
 						}
 						$view = $value['views'];
 						$hostName = $value['hostName'];
+						$first_time = $value['firstTime'];
 
 						if ( $value['timeOnPage']['hours'] > 0 || $value['timeOnPage']['minutes'] > 0 || $value['timeOnPage']['secondes'] > 2 ) {
 							//echo "pas de bruit";

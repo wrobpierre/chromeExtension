@@ -36,7 +36,7 @@ For the tutoriel on : https://www.cnet.com/how-to/how-to-install-chrome-extensio
 
 ## How to use it ?
 1) Open the extension
-2)Push the button "start" to start your research. (When you start the page where you are is the first point of research of our application)
+2) Push the button "start" to start your research. (When you start the page where you are is the first point of research of our application)
 3) When you have find your answer push the "stop" button in the extension
 4) You can see others users result with the link.
 

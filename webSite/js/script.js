@@ -77,7 +77,10 @@ post.done(function(data) {
       element['timer']['hours'] = hours;
       element['timer']['minutes'] = minutes;
       element['timer']['secondes'] = secondes;
-      tabData.push(element);      
+
+      if ( element['host_name'].indexOf('www.google.') == -1 ) {
+        tabData.push(element);      
+      }
     }
   });
 
@@ -112,31 +115,6 @@ post.done(function(data) {
       //console.log(dataParse[0]);
       document.getElementById('question_title').textContent = dataParse[0];
     }
-  })
-
-  //Faire un foreach en JS
-  var getGraph =  $.post(adress+'/dataBase.php', { key:"get_graphs" });
-  getGraph.done(function(data){
-    var dataParse = JSON.parse(data);
-      var ul = $('#navQuestionnaires ul');
-      ul.css("list-style", "none");
-
-      console.log(ul);
-      $.each(dataParse, function(index,value){
-        var li = $('<li></li>');
-        var link = adress+'/webSite/graph.html?id='+value['id'];
-        if (value['title'] == "") {
-          var a = $('<input value="'+link+'" onclick="window:location.href=\''+link+'\'"></input>');
-          li.append(a);
-          $('#navQuestionnaires > ul').append(li);
-        }
-        else {
-          var a = $(' <input value="'+value['title']+'" onclick="window:location.href=\''+link+'\'"></input>');
-          li.append(a);
-          $('#navQuestionnaires > ul').append(li);
-        }
-
-      });
   })
 
 // BEGIN nytg Additions
@@ -529,7 +507,7 @@ nytg.formatNumber = function(n) {
 
         d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
         d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
-        console.log(d.group);
+        //console.log(d.group);
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
 

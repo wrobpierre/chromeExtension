@@ -63,7 +63,7 @@ if (isset($_POST['action'])) {
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		if ($_POST['action'] == 'add') {
-			//header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
 
 			$id = uniqid();
 
@@ -243,7 +243,7 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'all') {
-			$stmt = $conn->prepare("SELECT q.title, fu.url
+			$stmt = $conn->prepare("SELECT q.title, q.statement, q.link_img, q.auto_correction, fu.url
 				FROM questionnaires q 
 				INNER JOIN firsturl fu ON q.key_first_url = fu.id");
 			$stmt->execute();
@@ -268,7 +268,7 @@ if (isset($_POST['action'])) {
 				$stmt = $conn->prepare("SELECT q.title 
 					FROM firsturl fu
 					INNER JOIN questionnaires q ON fu.id = q.key_first_url
-					WHERE fu.id =".$_POST['id']);
+					WHERE fu.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.html?id=".$_POST['id']."'");
 				$stmt->execute();
 
 				echo json_encode($stmt->fetchAll(PDO::FETCH_COLUMN, 0));	

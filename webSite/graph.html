@@ -19,7 +19,6 @@
 		</div>
 		<div class="headerButton">
 			<input class="statsLink" type="button" value="Questionnaires" onclick="window:location.href='http://163.172.59.102/webSite/questionnaires/questionnaire.html'" />
-			<input class="statsLink" type="button" value="List of questionnaires" onclick="window:location.href='http://163.172.59.102/webSite/list_results.html'" />
 			<!-- <input id="statsLink" type="button" value="Questionnaires" onclick="window:location.href='http://localhost/chromeExtension/webSite/questionnaires/questionnaire.html'" /> -->
 		</div>
 	</header>
@@ -40,13 +39,13 @@
 										<div id="nytg-chart">
 											<div class="nytg-navBar">
 												<div id="nytg-search" style="display:none;"></div>
-												<ul class="nytg-navigation clearfix">
+												<ul id="navBarGraph" class="nytg-navigation clearfix">
 													<li id="nytg-nav-all">All web site</li>
 													<li id="nytg-nav-mandatory">By domain name</li>
 													<li id="nytg-nav-discretionary">Visit by time</li>
-													<li id="nytg-nav-deparment">Other</li>
 													<!--<li id="nytg-nav-comparison">Historical</li> -->
 												</ul>
+												
 											</div>
 											<div id="nytg-tooltip">
 												<div id="nytg-tooltipContainer">
@@ -286,17 +285,17 @@
 
 
 	<script language="JavaScript"><!--
-	var dcsvid="";
-	var regstatus="non-registered";
-	//--></script>
-	<script src="https://static01.nyt.com/js/app/analytics/trackingTags_v1.1.js" type="text/javascript"></script>
-	<noscript>
-		<div><img alt="DCSIMG" id="DCSIMG" width="1" height="1" src="http://wt.o.nytimes.com/dcsym57yw10000s1s8g0boozt_9t1x/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=1.0.7"/></div>
-	</noscript>
-	<div id="info"><img src="./img/info.svg" id="imgFooter" alt="Information"></div>
-	<footer><div id="footer"></div></footer>
+		var dcsvid="";
+		var regstatus="non-registered";
+		//--></script>
+		<script src="https://static01.nyt.com/js/app/analytics/trackingTags_v1.1.js" type="text/javascript"></script>
+		<noscript>
+			<div><img alt="DCSIMG" id="DCSIMG" width="1" height="1" src="http://wt.o.nytimes.com/dcsym57yw10000s1s8g0boozt_9t1x/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=1.0.7"/></div>
+		</noscript>
+		<div id="info"><img src="./img/info.svg" id="imgFooter" alt="Information"></div>
+		<footer><div id="footer"></div></footer>
 
-</body>
-</html>
+	</body>
+	</html>
 
 

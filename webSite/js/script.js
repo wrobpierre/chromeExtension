@@ -111,9 +111,21 @@ post.done(function(data) {
   var question = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'get_title_question', id:id });
   question.done(function(data){
     if (data != "") {
+      var param = getUrlParameter('id');
+
       var dataParse = JSON.parse(data);
       //console.log(dataParse[0]);
       document.getElementById('question_title').textContent = dataParse[0];
+      var li = document.createElement("li");
+      var a = document.createElement("a");
+      a.style.textDecoration = "none";
+      a.style.color = "#999";
+      a.setAttribute("href" ,  "questionnaires/questionnaire.html?id="+param);
+      console.log(data);
+      a.textContent = "Answer this questionnaire"
+      li.appendChild(a);
+      document.getElementById('navBarGraph').appendChild(li);
+      // document.getElementById('navBarGraph').appendChild() += "<li style='display: none;'><a href='' style='text-decoration: none; color: #999;'>Answer this questionnaire</a></li>";
     }
   })
 
@@ -146,6 +158,20 @@ nytg.formatNumber = function(n) {
   return  s + suffix;
 };
 
+function getUrlParameter(sParam) {
+  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+  sURLVariables = sPageURL.split('&'),
+  sParameterName,
+  i;
+
+  for (i = 0; i < sURLVariables.length; i++) {
+    sParameterName = sURLVariables[i].split('=');
+
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : sParameterName[1];
+    }
+  }
+};
 
 /********************************
  ** FILE: Chart.js
@@ -361,6 +387,7 @@ nytg.formatNumber = function(n) {
         if (minView == null || minView > parseInt(this.data[i].view)) {
           minView = this.data[i].view;
         }
+        console.log(this.data[i]);
       }
 
       percent = maxView/100;

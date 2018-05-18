@@ -225,29 +225,30 @@
 
 				for (var i = 0; i < dataParse.length; i++) {
 					var div = $('<div class="question" id="'+(i+1)+'"></div>');
+					var number = $('<p>'+(i+1)+'/'+dataParse.length+'</p>');
 					var p = $('<p>'+dataParse[i]['question']+'</p>');
 					if (dataParse[i]['type_ques'] == 'text') {
-						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+']">');
+						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+'][answer]">');
 						var valid = $('<input class="button" type="button" value="valid">');
-						div.append(p,input,valid);
+						div.append(number,p,input,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'number') {
-						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+']">');
+						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+'][answer]">');
 						if (dataParse[i]['particule'] != '') {
 							var particule = $('<label>'+dataParse[i]['particule']+'</label>')
 						}
 						var valid = $('<input class="button" type="button" value="valid">');
-						div.append(p,input,particule,valid);
+						div.append(number,p,input,particule,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'interval') {
-						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+']">');
+						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+'][answer]">');
 						var valid = $('<input class="button" type="button" value="valid">');
-						div.append(p,input,valid);
+						div.append(number,p,input,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'free') {
-						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+']">');
+						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+'][answer]">');
 						var valid = $('<input class="button" type="button" value="valid">');
-						div.append(p,input,valid);
+						div.append(number,p,input,valid);
 					}
 
 					div.css("margin", "5%");
@@ -256,11 +257,23 @@
 
 
 				var lastDiv = $('<div></div>')
-				var p = $('<p>Don\'t forget to send your questionnaire</p>');
+				var p = $('<p>Did you have any difficulty answering these questions?</p>');
+				var user_opinion = $('<div></div>');
+				for (var i = 0; i < dataParse.length; i++) {
+					var question = $('<p>'+dataParse[i]['question']+'</p>');
+					var rank = $('<select name="q['+dataParse[i]['id']+'][rank]">'
+					+'<option value=""></option>'
+					+'<option value="easy">EASY</option>'
+					+'<option value="medium">MEDIUM</option>'
+					+'<option value="hard">HARD</option>'
+					+'</select>');
+
+					user_opinion.append(question,rank);
+				}
 				var submit = $('<input class="button_valid" type="submit" value="send">');
 				lastDiv.css("margin", "5%")
 
-				lastDiv.append(p,submit);
+				lastDiv.append(p,user_opinion,submit);
 				form.append(lastDiv);
 				$('#form-questionnaire').css("width","100%");
 				$('#content').css("text-align", "center")
@@ -280,7 +293,15 @@
 					})
 
 					$('form').submit(function(){
+						valid = true;
 
+						$('select').each(function(){
+							if( $(this).find(':selected').val() == "") {
+								valid = false;
+							}
+						})
+
+						return valid;
 					});
 				});
 			});

@@ -95,7 +95,7 @@ function getCurrentTabUrl(eventUrl) {
           
           //if (hostName != '163.172.59.102') {
             //alert(hostName);
-            var values = {'url':url, 'title':title, 'keywords':keywords, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'scrollPercent': 0}
+            var values = {'url':url, 'title':title, 'keywords':keywords, 'firstTime':dateBegin, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'scrollPercent': 0}
             saveList(values);
           //}
         });

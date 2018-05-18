@@ -70,18 +70,20 @@ if (isset($_POST['user_id'])) {
 
 			if($stmid->execute()){
 				header("Location: ".$adress."/webSite/questionnaires/result.html");			
-				$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
-					SELECT :key_question, :answer, :result, id FROM users WHERE check_id like '".$_POST['user_id']."'");
+				$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, key_user)
+					SELECT :key_question, :answer, :result, :rank, id FROM users WHERE check_id like '".$_POST['user_id']."'");
 				$stmt->bindParam(':key_question', $key_question);
 				$stmt->bindParam(':answer', $answer);
 				$stmt->bindParam(':result', $result);
+				$stmt->bindParam(':rank', $rank);
 
 				foreach ($_POST['q'] as $key => $value) {
 					$key_question = $key;
-					$answer = $value;
+					$answer = $value['answer'];
+					$rank = $value['rank'];
 					$result = true;
 					if ($answers[$key]['type'] == "text") {
-						$tmp = strtoupper(stripVN($value));
+						$tmp = strtoupper(stripVN($value['answer']));
 						$tmp = explode(" ", $tmp);
 						$a = explode(",", $answers[$key]['answer']);
 						foreach ($a as $k => $v) {
@@ -91,14 +93,14 @@ if (isset($_POST['user_id'])) {
 						}
 					}
 					elseif ($answers[$key]['type'] == "number") {
-						if ($value != explode('/', $answers[$key]['answer'])[0]) {
+						if ($value['answer'] != explode('/', $answers[$key]['answer'])[0]) {
 							$result = false;
 						}
 					}
 					elseif ($answers[$key]['type'] == "interval") {
 						$min = explode('/', $answers[$key]['answer'])[0];
 						$max = explode('/', $answers[$key]['answer'])[1];
-						if ($value < $min || $value > $max) {
+						if ($value['answer'] < $min || $value['answer'] > $max) {
 							$result = false;
 						}
 					}
@@ -111,20 +113,22 @@ if (isset($_POST['user_id'])) {
 		}
 		elseif ($_POST['method'] == 'sign_in') {
 			header("Location: ".$adress."/webSite/questionnaires/result.html");			
-			$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, key_user)
-				SELECT :key_question, :answer, :result, id FROM users WHERE email like :email");
+			$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, key_user)
+				SELECT :key_question, :answer, :result, :rank, id FROM users WHERE email like :email");
 			$stmt->bindParam(':key_question', $key_question);
 			$stmt->bindParam(':answer', $answer);
 			$stmt->bindParam(':result', $result);
+			$stmt->bindParam(':rank', $rank);
 			$stmt->bindParam(':email', $email);
 			$email = $_POST['register'];
 
 			foreach ($_POST['q'] as $key => $value) {
 				$key_question = $key;
-				$answer = $value;
+				$answer = $value['answer'];
+				$rank = $value['rank'];
 				$result = true;
 				if ($answers[$key]['type'] == "text") {
-					$tmp = strtoupper(stripVN($value));
+					$tmp = strtoupper(stripVN($value['answer']));
 					$tmp = explode(" ", $tmp);
 					$a = explode(",", $answers[$key]['answer']);
 					foreach ($a as $k => $v) {
@@ -134,14 +138,14 @@ if (isset($_POST['user_id'])) {
 					}
 				}
 				elseif ($answers[$key]['type'] == "number") {
-					if ($value != $answers[$key]['answer']) {
+					if ($value['answer'] != $answers[$key]['answer']) {
 						$result = false;
 					}
 				}
 				elseif ($answers[$key]['type'] == "interval") {
 					$min = explode('/', $answers[$key]['answer'])[0];
 					$max = explode('/', $answers[$key]['answer'])[1];
-					if ($value < $min || $value > $max) {
+					if ($value['answer'] < $min || $value['answer'] > $max) {
 						$result = false;
 					}
 				}

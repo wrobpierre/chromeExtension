@@ -26,6 +26,9 @@ if (isset($_POST['key'])) {
 
 		if ($_POST['key'] == 'add') {
 			if (isset($_POST['d']) && isset($_POST['url']) && isset($_POST['uniqId']) ) {
+				/*echo "<pre>";
+				var_dump($_POST);
+				echo "</pre>";*/
 				/*$stmt = $conn->prepare("SELECT s.id, s.url, view, timer FROM sites s INNER JOIN firsturl fu ON s.key_first_url = fu.id WHERE fu.url like :url");
 				$stmt->bindParam(':url', $url);
 				$url = $_POST['url'];

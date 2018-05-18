@@ -68,68 +68,75 @@ if (isset($_POST['action'])) {
 			$id = uniqid();
 
 			$target_dir = "../img/quest_img/".$id;
+			$target_file = "";
 
-			mkdir($target_dir, 0777, true);
-
-			if ($_FILES["image_uploads"]["name"] != "") {
-				$target_file = $target_dir . "/" . basename($_FILES["image_uploads"]["name"]);
-				if (!move_uploaded_file($_FILES["image_uploads"]["tmp_name"], $target_file)) {
-					header('Location: ' . $_SERVER['HTTP_REFERER']);
-					//echo "fail";
-				} 
-			}
-
-			$stmt = $conn->prepare("INSERT INTO firsturl (url)
-				VALUES (:url)");
-			$stmt->bindParam(':url', $url);
-			$url = $adress."/webSite/questionnaires/questionnaire.html?id=".$id;
-			$stmt->execute();
-
-			$stmt = $conn->prepare("INSERT INTO questionnaires (title, statement, link_img, auto_correction, key_first_url)
-				SELECT :title, :statement, :link_img, :auto_correction, id FROM firsturl WHERE url like :url");
-			$stmt->bindParam(':title', $title);
-			$stmt->bindParam(':statement', $statement);
-			$stmt->bindParam(':link_img', $link_img);
-			$stmt->bindParam(':auto_correction', $auto_correction);
-			$stmt->bindParam(':url', $url);
-			$title = $_POST['title'];
-			$statement = $_POST['statement'];
-			$link_img = $target_file;
-			$auto_correction = ($_POST['auto_correction'] != 'auto') ? 0 : 1;
-			$stmt->execute();
-
-			$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, key_questionnaires)
-				SELECT :question, :type_ques, :answer, q.id 
-				FROM questionnaires q 
-				INNER JOIN firsturl fu ON q.key_first_url = fu.id 
-				WHERE url like :url");
-			$stmt->bindParam(':url', $url);
-			$stmt->bindParam(':question', $question);
-			$stmt->bindParam(':type_ques', $type_ques);
-			$stmt->bindParam(':answer', $answer);
-
-			foreach ($_POST['q'] as $key => $value) {
-				$question = $value['question'];
-
-				if ($auto_correction == 1) {
-					$type_ques = $value['type_ques'];
-
-					if ($type_ques == 'text') {
-						$answer = strtoupper(stripVN($value['answer']));
-					}
-					elseif ($type_ques == 'number') {
-						$answer = $value['answer']."/".$value['particule'];
-					}
-					elseif ($type_ques == 'interval') {
-						$answer = $value['min']."/".$value['max'];
-					}
-				}
-				else {
-					$type_ques = "free";
-					$answer = null;							
+			if (mkdir($target_dir, 0777, true)) {
+				if ($_FILES["image_uploads"]["name"] != "") {
+					$target_file = $target_dir . "/" . basename($_FILES["image_uploads"]["name"]);
+					if (!move_uploaded_file($_FILES["image_uploads"]["tmp_name"], $target_file)) {
+						header('Location: ' . $_SERVER['HTTP_REFERER']);
+						//echo "fail";
+					} 
 				}
 
+				$stmt = $conn->prepare("INSERT INTO firsturl (url)
+					VALUES (:url)");
+				$stmt->bindParam(':url', $url);
+				$url = $adress."/webSite/questionnaires/questionnaire.html?id=".$id;
 				$stmt->execute();
+
+				$stmt = $conn->prepare("INSERT INTO questionnaires (title, statement, link_img, auto_correction, key_first_url)
+					SELECT :title, :statement, :link_img, :auto_correction, id FROM firsturl WHERE url like :url");
+				$stmt->bindParam(':title', $title);
+				$stmt->bindParam(':statement', $statement);
+				$stmt->bindParam(':link_img', $link_img);
+				$stmt->bindParam(':auto_correction', $auto_correction);
+				$stmt->bindParam(':url', $url);
+				$title = $_POST['title'];
+				$statement = $_POST['statement'];
+				$link_img = $target_file;
+				$auto_correction = ($_POST['auto_correction'] != 'auto') ? 0 : 1;
+				$stmt->execute();
+
+				$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, key_questionnaires)
+					SELECT :question, :type_ques, :answer, q.id 
+					FROM questionnaires q 
+					INNER JOIN firsturl fu ON q.key_first_url = fu.id 
+					WHERE url like :url");
+				$stmt->bindParam(':url', $url);
+				$stmt->bindParam(':question', $question);
+				$stmt->bindParam(':type_ques', $type_ques);
+				$stmt->bindParam(':answer', $answer);
+
+				foreach ($_POST['q'] as $key => $value) {
+					$question = $value['question'];
+
+					if ($auto_correction == 1) {
+						$type_ques = $value['type_ques'];
+
+						if ($type_ques == 'text') {
+							$answer = strtoupper(stripVN($value['answer']));
+						}
+						elseif ($type_ques == 'number') {
+							$answer = $value['answer']."/".$value['particule'];
+						}
+						elseif ($type_ques == 'interval') {
+							$answer = $value['min']."/".$value['max'];
+						}
+						elseif ($type_ques == 'radio') {
+						# code...
+						}
+					}
+					else {
+						$type_ques = "free";
+						$answer = null;							
+					}
+
+					$stmt->execute();
+				}
+			}
+			else {
+				header('Location: ' . $_SERVER['HTTP_REFERER']);
 			}
 		}
 		elseif ($_POST['action'] == 'get_questions_to_edit') {

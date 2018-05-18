@@ -165,6 +165,7 @@
 					+'<option value="text">TEXT</option>'
 					+'<option value="number">NUMBER</option>'
 					+'<option value="interval">INTERVAL</option>'
+					+'<option value="radio">RADIO</option>'
 					+'</select>');
 				select.change(function(){
 					$(this).parent().next().empty();
@@ -189,6 +190,24 @@
 						min = $('<input class="input_question" type="number" step="any" name="q['+id_parent+'][min]"><label> to </label>')
 						max = $('<input class="input_question" type="number" step="any" name="q['+id_parent+'][max]">')
 						$(this).parent().next().append(la,min,max);
+					}
+					else if ( $(this).find(':selected').text() == "RADIO" ) {
+						la = $('<label>Enter the number of possible choices :</label><span class="error"></span>');
+						number = $('<input type="number">');
+						valid = $('<input type="button" value="create">');
+						valid.click(function(){
+							$(this).next().find('ol').empty();
+							n = $(this).prev().val();
+							for (var j = 0; j < n; j++) {
+								var choice = $('<li id="'+j+'"></li>');
+								var text = $('<input type="text" name="q['+id_parent+']['+j+'][choice]"><span class="error"></span>');
+								var answer = $('<input type="checkbox" name="q['+id_parent+']['+j+'][answer]"> <label>answer</label>');
+								choice.append(text,answer);
+								$(this).next().children('ol').append(choice);
+							}
+						});
+						radios = $('<div class="radios"> <ol type="A"></ol> </div>');
+						$(this).parent().next().append(la,number,valid,radios);
 					}
 				});
 				type_answer.append(lt,select);
@@ -290,11 +309,35 @@
 										valid = false;
 									}	
 								}
+								else if ($(this).find('select').find(':selected').text() == "RADIO") {
+									if ( $(this).find('.answer > .radios > ol > li').length == 0 ) {
+										$(this).find('.answer > span.error').text('Please add at least one choice');
+										valid = false;
+									}
+									else {
+										if( $(this).find('.answer > .radios > ol > li').find(':checked').length == 0) {
+											$(this).find('.answer > span.error').text('You need do choice the right choice');
+											valid = false;
+										}
+										else if ($(this).find('.answer > .radios > ol > li').find(':checked').length > 1 ) {
+											$(this).find('.answer > span.error').text('There can only be one right choice');
+											valid = false;
+										}	
+
+										$(this).find('.answer > .radios > ol > li').each(function(index,value){
+											console.log($(this))
+											if ( $(this).val() == "" ) {
+												$(this).find('span.error').text('Missing choice');
+												valid = false;
+											}
+										});
+									}
+								}
 							}	
 						}
 					});
 				}
-				alert(valid);
+				//alert(valid);
 				return valid;
 			})
 		});

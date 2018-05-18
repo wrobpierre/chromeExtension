@@ -304,6 +304,7 @@ function autoStop(){
       storage.get('uniqId', function(resultId){
         var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
         post.done(function(data){
+          alert(data);
           firstUrl = undefined;
           storage.clear();
         });

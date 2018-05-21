@@ -226,7 +226,7 @@
 				for (var i = 0; i < dataParse.length; i++) {
 					var div = $('<div class="question" id="'+(i+1)+'"></div>');
 					var number = $('<p>'+(i+1)+'/'+dataParse.length+'</p>');
-					var p = $('<p>'+dataParse[i]['question']+'</p>');
+					var p = $('<p>'+dataParse[i]['question'].split('(/=/)')[0]+'</p>');
 					if (dataParse[i]['type_ques'] == 'text') {
 						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+'][answer]">');
 						var valid = $('<input class="button" type="button" value="valid">');
@@ -245,6 +245,16 @@
 						var valid = $('<input class="button" type="button" value="valid">');
 						div.append(number,p,input,valid);
 					}
+					else if (dataParse[i]['type_ques'] == 'radio') {
+						var ol = $('<ol type="A"></ol>');
+						var choices = dataParse[i]['question'].split('(/=/)');
+						for (var j = 1; j < choices.length; j++) {
+							var input = $('<li> <input type="radio" name="q['+dataParse[i]['id']+'][answer]" value="'+(j-1)+'"> <label>'+choices[j]+'</label> </li>');
+							ol.append(input);
+						}
+						var valid = $('<input class="button" type="button" value="valid">');
+						div.append(number,p,ol,valid);
+					}
 					else if (dataParse[i]['type_ques'] == 'free') {
 						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+'][answer]">');
 						var valid = $('<input class="button" type="button" value="valid">');
@@ -260,7 +270,7 @@
 				var p = $('<p>Did you have any difficulty answering these questions?</p>');
 				var user_opinion = $('<div></div>');
 				for (var i = 0; i < dataParse.length; i++) {
-					var question = $('<p>'+dataParse[i]['question']+'</p>');
+					var question = $('<p>'+dataParse[i]['question'].split('(/=/)')[0]+'</p>');
 					var rank = $('<select name="q['+dataParse[i]['id']+'][rank]">'
 					+'<option value=""></option>'
 					+'<option value="easy">EASY</option>'

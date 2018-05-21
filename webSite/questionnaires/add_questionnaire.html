@@ -200,8 +200,8 @@
 							n = $(this).prev().val();
 							for (var j = 0; j < n; j++) {
 								var choice = $('<li id="'+j+'"></li>');
-								var text = $('<input type="text" name="q['+id_parent+']['+j+'][choice]"><span class="error"></span>');
-								var answer = $('<input type="checkbox" name="q['+id_parent+']['+j+'][answer]"> <label>answer</label>');
+								var text = $('<input type="text" name="q['+id_parent+'][choices]['+j+'][choice]"><span class="error"></span>');
+								var answer = $('<input type="checkbox" name="q['+id_parent+'][choices]['+j+'][answer]"> <label>answer</label>');
 								choice.append(text,answer);
 								$(this).next().children('ol').append(choice);
 							}
@@ -316,7 +316,7 @@
 									}
 									else {
 										if( $(this).find('.answer > .radios > ol > li').find(':checked').length == 0) {
-											$(this).find('.answer > span.error').text('You need do choice the right choice');
+											$(this).find('.answer > span.error').text('You need to choose the right choice');
 											valid = false;
 										}
 										else if ($(this).find('.answer > .radios > ol > li').find(':checked').length > 1 ) {
@@ -325,8 +325,7 @@
 										}	
 
 										$(this).find('.answer > .radios > ol > li').each(function(index,value){
-											console.log($(this))
-											if ( $(this).val() == "" ) {
+											if ( $(this).find('input[type=text]').val() == "" ) {
 												$(this).find('span.error').text('Missing choice');
 												valid = false;
 											}

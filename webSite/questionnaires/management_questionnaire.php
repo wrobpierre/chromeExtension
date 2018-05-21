@@ -1,8 +1,8 @@
 <?php 
 header('Access-Control-Allow-Origin: *');
 
-/*ini_set('display_errors',1);
-error_reporting(E_ALL);*/
+ini_set('display_errors',1);
+error_reporting(E_ALL);
 
 $adress = "http://163.172.59.102";
 //$adress = "http://localhost/chromeExtension";
@@ -63,6 +63,9 @@ if (isset($_POST['action'])) {
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		if ($_POST['action'] == 'add') {
+			/*echo "<pre>";
+			var_dump($_POST);
+			echo "</pre>";*/
 			header("Location: ".$adress."/webSite/questionnaires/questionnaire.html");
 
 			$id = uniqid();
@@ -124,7 +127,14 @@ if (isset($_POST['action'])) {
 							$answer = $value['min']."/".$value['max'];
 						}
 						elseif ($type_ques == 'radio') {
-						# code...
+							foreach ($value['choices'] as $k => $v) {
+								if (isset($v['answer'])) {
+									$answer = $k;
+									//echo $answer;
+								}
+								$question .= "(/=/)".$v['choice'];
+								echo $question.'<br>';
+							}
 						}
 					}
 					else {

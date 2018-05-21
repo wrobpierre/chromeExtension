@@ -52,31 +52,41 @@ post.done(function(data) {
       minutes = 0;
       secondes = 0;
       views = 0;
+      var tabMedianeTime = [];
+      var tabSort = []
+      var tabMedianeView = [];
       tmp.forEach(function(elem){
         views += parseInt(elem['view']);
         note += parseInt(elem['note']);
-        
         timer = JSON.parse(elem['timer']);
-        secondes += parseInt(timer['secondes']);
-        if (secondes >= 60) {
-          secondes = secondes%60;
-          minutes += 1;
-        }
-        minutes += parseInt(timer['minutes']);
-        if (minutes >= 60) {
-          minutes = minutes%60;
-          hours += 1;
-        }
-        hours += parseInt(timer['hours']);
+        //Ne fonctionne pas renvoie toujours un seul element dans chaque tab 
+        tabMedianeView.push(parseInt(elem['view']));
+        tabMedianeTime.push(parseInt(timer.hours)*3600+parseInt(timer.minutes)*60+parseInt(timer.secondes));
       });
-      element['view'] = views;
+      tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
+
+      element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
       element['avg'] = note/tmp.length;
       delete element['note'];
-      
+      tabSort = tabMedianeTime.sort(function compareNombres(a, b) {return a - b;});
       element['timer'] = JSON.parse(element['timer']);
+            
+      if((tabSort[Math.ceil(parseInt(tabSort.length/2))]/3600) >= 1){
+        hours = tabSort[Math.ceil(parseInt(tabSort.length/2))]/3600;
+        tabSort[Math.ceil(parseInt(tabSort.length/2))] -= Math.floor(hours)*3600;
+        hours = Math.floor(hours);
+      }
+      if((tabSort[Math.ceil(parseInt(tabSort.length/2))]/60)>= 1){
+        minutes = tabSort[Math.ceil(parseInt(tabSort.length/2))]/60
+        tabSort[Math.ceil(parseInt(tabSort.length/2))] -= Math.floor(minutes)*60;
+        minutes = Math.floor(minutes);
+      }
+      secondes = Math.floor(tabSort[Math.ceil(parseInt(tabSort.length/2))]);
+
       element['timer']['hours'] = hours;
       element['timer']['minutes'] = minutes;
       element['timer']['secondes'] = secondes;
+      
 
       if ( element['host_name'].indexOf('www.google.') == -1 ) {
         tabData.push(element);      
@@ -223,7 +233,7 @@ function getUrlParameter(sParam) {
       var time = parseInt(c['hours'])*3600 + parseInt(c['minutes'])*60 + parseInt(c['secondes']);
       var nbSecondesMax = parseInt(maxTime['hours'])*3600 + parseInt(maxTime['minutes'])*60 + parseInt(maxTime['secondes']);
       var nbSecondesMin = parseInt(minTime['hours'])*3600 + parseInt(minTime['minutes'])*60 + parseInt(minTime['secondes']);
-      var divisionTime = (nbSecondesMax - nbSecondesMin)/6;
+      var divisionTime = nbSecondesMax/6;
 
       var multiplyTime = 1;
       var hours =0;
@@ -387,7 +397,6 @@ function getUrlParameter(sParam) {
         if (minView == null || minView > parseInt(this.data[i].view)) {
           minView = this.data[i].view;
         }
-        console.log(this.data[i]);
       }
 
       percent = maxView/100;

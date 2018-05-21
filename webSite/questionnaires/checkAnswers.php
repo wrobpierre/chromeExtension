@@ -104,6 +104,16 @@ if (isset($_POST['user_id'])) {
 							$result = false;
 						}
 					}
+					elseif ($answers[$key]['type'] == "radio") {
+						if (isset($value['answer'])) {
+							if ($value['answer'] != $answers[$key]['answer']) {
+								$result = false;
+							}
+						}
+						else {
+							$result = false;
+						}
+					}
 					elseif ($answers[$key]['type'] == "free") {
 						$result = null;
 					}
@@ -112,6 +122,13 @@ if (isset($_POST['user_id'])) {
 			}
 		}
 		elseif ($_POST['method'] == 'sign_in') {
+			/*echo "<pre>";
+			var_dump($_POST);
+			echo "</pre>";
+
+			echo "<pre>";
+			var_dump($answers);
+			echo "</pre>";*/
 			header("Location: ".$adress."/webSite/questionnaires/result.html");			
 			$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, key_user)
 				SELECT :key_question, :answer, :result, :rank, id FROM users WHERE email like :email");
@@ -146,6 +163,16 @@ if (isset($_POST['user_id'])) {
 					$min = explode('/', $answers[$key]['answer'])[0];
 					$max = explode('/', $answers[$key]['answer'])[1];
 					if ($value['answer'] < $min || $value['answer'] > $max) {
+						$result = false;
+					}
+				}
+				elseif ($answers[$key]['type'] == "radio") {
+					if (isset($value['answer'])) {
+						if ($value['answer'] != $answers[$key]['answer']) {
+							$result = false;
+						}
+					}
+					else {
 						$result = false;
 					}
 				}

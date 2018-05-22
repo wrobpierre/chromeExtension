@@ -53,35 +53,33 @@ post.done(function(data) {
       secondes = 0;
       views = 0;
       var tabMedianeTime = [];
-      var tabSort = []
       var tabMedianeView = [];
       tmp.forEach(function(elem){
         views += parseInt(elem['view']);
         note += parseInt(elem['note']);
         timer = JSON.parse(elem['timer']);
-        //Ne fonctionne pas renvoie toujours un seul element dans chaque tab 
         tabMedianeView.push(parseInt(elem['view']));
         tabMedianeTime.push(parseInt(timer.hours)*3600+parseInt(timer.minutes)*60+parseInt(timer.secondes));
+        console.log(note);
       });
       tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
-
       element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
       element['avg'] = note/tmp.length;
       delete element['note'];
-      tabSort = tabMedianeTime.sort(function compareNombres(a, b) {return a - b;});
+      tabMedianeTime = tabMedianeTime.sort(function compareNombres(a, b) {return a - b;});
       element['timer'] = JSON.parse(element['timer']);
-            
-      if((tabSort[Math.ceil(parseInt(tabSort.length/2))]/3600) >= 1){
-        hours = tabSort[Math.ceil(parseInt(tabSort.length/2))]/3600;
-        tabSort[Math.ceil(parseInt(tabSort.length/2))] -= Math.floor(hours)*3600;
+
+      if((tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/3600) >= 1){
+        hours = tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/3600;
+        tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))] -= Math.floor(hours)*3600;
         hours = Math.floor(hours);
       }
-      if((tabSort[Math.ceil(parseInt(tabSort.length/2))]/60)>= 1){
-        minutes = tabSort[Math.ceil(parseInt(tabSort.length/2))]/60
-        tabSort[Math.ceil(parseInt(tabSort.length/2))] -= Math.floor(minutes)*60;
+      if((tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/60)>= 1){
+        minutes = tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/60
+        tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))] -= Math.floor(minutes)*60;
         minutes = Math.floor(minutes);
       }
-      secondes = Math.floor(tabSort[Math.ceil(parseInt(tabSort.length/2))]);
+      secondes = Math.floor(tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]);
 
       element['timer']['hours'] = hours;
       element['timer']['minutes'] = minutes;

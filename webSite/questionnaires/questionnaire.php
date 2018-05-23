@@ -1,3 +1,14 @@
+<?php
+session_start();
+if(isset($_SESSION['user'])){
+	$checkUser = $_SESSION['user'];
+}
+else{
+	$checkUser = null;
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,8 +48,10 @@
 				}
 			}
 		};
+		var checkUser = '<?php echo $checkUser ;?>';
+		console.log(checkUser);
 		var param = getUrlParameter('id');
-		
+
 		if (param == undefined) {
 			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"all" });
 
@@ -59,24 +72,27 @@
 						var statement = $('<p>'+value['statement']+'</p>')
 
 						var always_visible = $('<div></div>');
+
 						var do_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
+
 						var graph_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/graph.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
 						
-
+						if(checkUser != ""){
 						var option = $('<div class="option"></div>')
-						var edit = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
-						var del = $('<button class="button_delete">Delete</button>').click(function(){
-							var r = confirm("Are you sure to delete this questionnaire ?");
-							if (r == true) {
-								var postDel = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
-								postDel.done(function(data){
-									alert(data);
-									location.reload();
-								});
-							}
-						});
-						var edit_result = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_results.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value','Edit users\' results');
-						
+							var edit = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
+							var del = $('<button class="button_delete">Delete</button>').click(function(){
+								var r = confirm("Are you sure to delete this questionnaire ?");
+								if (r == true) {
+									var postDel = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
+									postDel.done(function(data){
+										alert(data);
+										location.reload();
+									});
+								}
+							});
+							var edit_result = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_results.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value','Edit users\' results');
+
+						}
 						if (value['link_img'] != null) {
 							info.append(img,statement);
 						}
@@ -85,19 +101,23 @@
 						}
 
 						always_visible.append(do_ques,graph_ques);
-						
-						if (value['auto_correction'] == 0) {
-							option.append(edit,del,edit_result);
+						if(checkUser != ""){
+
+							if (value['auto_correction'] == 0) {
+								option.append(edit,del,edit_result);
+							}
+							else {
+								option.append(edit,del);	
+							}
+
 						}
-						else {
-							option.append(edit,del);	
-						}
+
 
 						li.append(title,info,always_visible,option);
 						ul.append(li);
 					})
 
-					var add = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire.html\'"></input>').attr('value', 'Add a questionnaire');
+					var add = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire.php\'"></input>').attr('value', 'Add a questionnaire');
 					add.css("background-color", "#00B16A");
 					add.css("height", "40px");
 
@@ -106,6 +126,9 @@
 			});
 		}
 		else {
+			if (checkUser == "") {
+				document.location.href="../connexion/connexion.html"
+			}
 			//console.log(param);
 			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
 
@@ -272,11 +295,11 @@
 				for (var i = 0; i < dataParse.length; i++) {
 					var question = $('<p>'+dataParse[i]['question'].split('(/=/)')[0]+'</p>');
 					var rank = $('<select name="q['+dataParse[i]['id']+'][rank]">'
-					+'<option value=""></option>'
-					+'<option value="easy">EASY</option>'
-					+'<option value="medium">MEDIUM</option>'
-					+'<option value="hard">HARD</option>'
-					+'</select>');
+						+'<option value=""></option>'
+						+'<option value="easy">EASY</option>'
+						+'<option value="medium">MEDIUM</option>'
+						+'<option value="hard">HARD</option>'
+						+'</select>');
 
 					user_opinion.append(question,rank);
 				}

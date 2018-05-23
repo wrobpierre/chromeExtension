@@ -144,7 +144,7 @@ if (isset($_POST['key'])) {
 				$requete = "SELECT s.*, (SELECT SUM(a.result) FROM answers a WHERE a.key_user = s.key_user)note
 				FROM sites s
 				INNER JOIN firsturl fu ON s.key_first_url = fu.id
-				WHERE fu.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.html?id=".$_POST['id']."'";
+				WHERE fu.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.php?id=".$_POST['id']."'";
 			}
 			else {
 				$requete = "SELECT * FROM sites";

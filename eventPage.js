@@ -43,7 +43,7 @@ function getCurrentTabUrl(eventUrl) {
       url = eventUrl;
     }
 
-    if (url.indexOf(adress+'/webSite/questionnaires/questionnaire.html?id=') != -1) {
+    if (url.indexOf(adress+'/webSite/questionnaires/questionnaire.php?id=') != -1) {
       autoStart(url);
       storage.get('uniqId', function(resultId){
         var id = resultId.uniqId;

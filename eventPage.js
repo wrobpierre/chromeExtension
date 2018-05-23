@@ -65,9 +65,9 @@ function getCurrentTabUrl(eventUrl) {
         });
       });
     }
-    if (url.indexOf(adress+'/webSite/questionnaires/result.html') != -1) {
+    /*if (url.indexOf(adress+'/webSite/questionnaires/result.html') != -1) {
       autoStop();
-    }
+    }*/
 
     storage.get('firstUrl', function(result) {
       if(result.firstUrl != undefined && result.firstUrl != url){
@@ -230,6 +230,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
 });
 
+chrome.runtime.onMessageExternal.addListener(
+  function(request, sender, sendResponse) {
+    if (request.action == 'stop') {
+      autoStop();      
+    }
+    //sendResponse({result: request.openUrlInEditor});
+  });
+
 function sendSecondUrl(){
   storage.get('firstUrl', function(result) {
     var obj = {}
@@ -298,13 +306,13 @@ function autoStart(url){
 function autoStop(){
   if (listen) {
     //alert('stop');
-    listen = false;
 
     storage.get('data', function(result){
       storage.get('uniqId', function(resultId){
         var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
         post.done(function(data){
-          alert(data);
+          //alert(data);
+          listen = false;
           firstUrl = undefined;
           storage.clear();
         });

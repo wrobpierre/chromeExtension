@@ -31,6 +31,16 @@ else{
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
+
+		// The ID of the extension we want to talk to.
+		var editorExtensionId = "hndmaeoonglghdojdmbieedjgkgmmhck";
+		/*var test = 'https://developer.chrome.com/extensions/messaging';
+
+		chrome.runtime.sendMessage(editorExtensionId, {openUrlInEditor: test},
+			function(response) {
+				console.log(response);
+			});*/
+
 		var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
 
@@ -333,6 +343,13 @@ else{
 								valid = false;
 							}
 						})
+
+						if (valid) {
+							chrome.runtime.sendMessage(editorExtensionId, {action: 'stop'},
+								function(response) {
+									console.log(response);
+								});
+						}
 
 						return valid;
 					});

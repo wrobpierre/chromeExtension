@@ -20,6 +20,16 @@
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
+
+		// The ID of the extension we want to talk to.
+		var editorExtensionId = "hndmaeoonglghdojdmbieedjgkgmmhck";
+		var test = 'https://developer.chrome.com/extensions/messaging';
+		
+		chrome.runtime.sendMessage(editorExtensionId, {openUrlInEditor: test},
+			function(response) {
+				console.log(response);
+			});
+
 		var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
 
@@ -272,11 +282,11 @@
 				for (var i = 0; i < dataParse.length; i++) {
 					var question = $('<p>'+dataParse[i]['question'].split('(/=/)')[0]+'</p>');
 					var rank = $('<select name="q['+dataParse[i]['id']+'][rank]">'
-					+'<option value=""></option>'
-					+'<option value="easy">EASY</option>'
-					+'<option value="medium">MEDIUM</option>'
-					+'<option value="hard">HARD</option>'
-					+'</select>');
+						+'<option value=""></option>'
+						+'<option value="easy">EASY</option>'
+						+'<option value="medium">MEDIUM</option>'
+						+'<option value="hard">HARD</option>'
+						+'</select>');
 
 					user_opinion.append(question,rank);
 				}

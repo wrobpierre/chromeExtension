@@ -230,6 +230,18 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
 });
 
+chrome.runtime.onMessageExternal.addListener(
+  function(request, sender, sendResponse) {
+    sendResponse({result: request.openUrlInEditor});
+    if (sender.url == blocklistedWebsite)
+      sendResponse({result: 'fail'});
+      return;  // don't allow this web page access
+    if (request.openUrlInEditor)
+      //openUrl(request.openUrlInEditor);
+      alert(request.openUrlInEditor);
+      sendResponse({result: 'OK'});
+  });
+
 function sendSecondUrl(){
   storage.get('firstUrl', function(result) {
     var obj = {}

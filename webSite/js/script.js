@@ -227,7 +227,7 @@ function getUrlParameter(sParam) {
     circle          : {},
     gravity         : null,
     charge          : null,
-    changeTickValues: [1, 2, 3, 4],
+    changeTickValues: [1, 2, 3, 4,5,6,7,8],
     categorizeChange: function(c){
 
       var time = parseInt(c['hours'])*3600 + parseInt(c['minutes'])*60 + parseInt(c['secondes']);
@@ -297,7 +297,7 @@ function getUrlParameter(sParam) {
     
     rScale          : d3.scale.pow().exponent(0.15).domain([0,10000000000]).range([1,100]),
     radiusScale     : null,
-    changeScale     : d3.scale.linear().domain([0,8]).range([620,180]).clamp(true),
+    changeScale     : d3.scale.linear().domain([0,4]).range([620,180]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
     groupScale      : {},
     
@@ -451,11 +451,11 @@ function getUrlParameter(sParam) {
       .style("top", this.changeScale(0)+'px')
       .classed('nytg-discretionaryTick', true)
       .classed('nytg-discretionaryZeroTick', true)
-      d3.select("#nytg-discretionaryOverlay").append("div")
+      /*d3.select("#nytg-discretionaryOverlay").append("div")
       .html("<p>+26% or higher</p>")
       .style("top", this.changeScale(100)+'px')
       .classed('nytg-discretionaryTickLabel', true)
-      /*d3.select("#nytg-discretionaryOverlay").append("div")
+      d3.select("#nytg-discretionaryOverlay").append("div")
       .html("<p>&minus;26% or lower</p>")
       .style("top", this.changeScale(-100)+'px')
       .classed('nytg-discretionaryTickLabel', true)*/

@@ -280,15 +280,15 @@ if (isset($_POST['action'])) {
 				echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "questionnaire"));
 			}
 		}
-		elseif ($_POST['action'] == 'get_title_question') {
+		elseif ($_POST['action'] == 'get_data_question') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT q.title 
+				$stmt = $conn->prepare("SELECT q.title, q.statement
 					FROM firsturl fu
 					INNER JOIN questionnaires q ON fu.id = q.key_first_url
 					WHERE fu.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.php?id=".$_POST['id']."'");
 				$stmt->execute();
 
-				echo json_encode($stmt->fetchAll(PDO::FETCH_COLUMN, 0));	
+				echo json_encode($stmt->fetchAll());	
 			}
 		}
 		elseif ($_POST['action'] == 'check_title') {

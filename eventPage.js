@@ -43,7 +43,7 @@ function getCurrentTabUrl(eventUrl) {
       url = eventUrl;
     }
 
-    if (url.indexOf(adress+'/webSite/questionnaires/questionnaire.php?id=') != -1) {
+    /*if (url.indexOf(adress+'/webSite/questionnaires/questionnaire.php?id=') != -1) {
       autoStart(url);
       storage.get('uniqId', function(resultId){
         var id = resultId.uniqId;
@@ -64,7 +64,7 @@ function getCurrentTabUrl(eventUrl) {
           }
         });
       });
-    }
+    }*/
     /*if (url.indexOf(adress+'/webSite/questionnaires/result.html') != -1) {
       autoStop();
     }*/
@@ -233,7 +233,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
     if (request.action == 'stop') {
-      autoStop();      
+      autoStop(request.email);      
+    }
+    else if (request.action == 'start') {
+      autoStart(request.url);      
     }
     //sendResponse({result: request.openUrlInEditor});
   });
@@ -292,7 +295,7 @@ function sendFirstUrl(){
 function autoStart(url){
   if (!listen) {
     //alert('start');
-    createUniqId();
+    //createUniqId();
     sendFirstUrl();
     listen = true;
     firstUrl = url;
@@ -303,20 +306,20 @@ function autoStart(url){
   }
 }
 
-function autoStop(){
+function autoStop(email){
   if (listen) {
     //alert('stop');
 
     storage.get('data', function(result){
-      storage.get('uniqId', function(resultId){
-        var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, uniqId: resultId.uniqId, key:'add' });
+      //storage.get('uniqId', function(resultId){
+        var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, key:'add', email:email });
         post.done(function(data){
           //alert(data);
           listen = false;
           firstUrl = undefined;
           storage.clear();
         });
-      });
+      //});
     });
   }
 }

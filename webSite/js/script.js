@@ -1,5 +1,6 @@
 var minTime = null;
 var maxTime = null;
+var nb_question = null;
 var errorImg = false;
 var adress = "http://163.172.59.102"
 // var adress = "http://localhost/chromeExtension"
@@ -42,9 +43,9 @@ post.done(function(data) {
   var alreadySave = false;
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
-  //console.log(dataParse);
+  console.log(dataParse);
   dataParse.forEach(function(element){
-
+    nb_question = element['nb_question'];
     if (!tabData.find(function(elem){ return elem.url === element.url; })) {
       tmp = dataParse.filter(function(obj){ return obj.url == element.url; });
       note = 0;
@@ -64,8 +65,9 @@ post.done(function(data) {
       tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
       element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
       element['avg'] = note/tmp.length;
-      console.log(element['avg']);
+      //console.log(element['avg']);
       delete element['note'];
+      delete element['nb_question'];
       tabMedianeTime = tabMedianeTime.sort(function compareNombres(a, b) {return a - b;});
       element['timer'] = JSON.parse(element['timer']);
 
@@ -112,14 +114,15 @@ post.done(function(data) {
         }
       }
     }
+
     nytg.budget_array_data.push(element);
+
     // if (minAvg > element['avg'] ) {
     //   minAvg = element['avg'];
     // }
     // if (maxAvg < element['avg']) {
     //   maxAvg = element['avg'];
     // }
-
   })
 
   // for (var i = minAvg; i <= maxAvg; i++) {
@@ -136,26 +139,26 @@ post.done(function(data) {
 
   nytg.category_data = [{"label":"Health and Human Services","total":921605000,"num_children":26,"short_label":"Health and Human Services"},{"label":"State","total":31608000,"num_children":8,"short_label":"State"},{"label":"Judicial Branch","total":7502000,"num_children":13,"short_label":"Judicial Branch"},{"label":"International Assistance Programs","total":37399000,"num_children":16,"short_label":"International"},{"label":"Agriculture","total":154667000,"num_children":45,"short_label":"Agriculture"},{"label":"Treasury","total":519490000,"num_children":15,"short_label":"Treasury"},{"label":"Other Defense Civil Programs","total":57416000,"num_children":9,"short_label":"Defense Civil Programs"},{"label":"Appalachian Regional Commission","total":64000,"num_children":2,"short_label":"Appalachian Commission"},{"label":"Legislative Branch","total":4789000,"num_children":20,"short_label":"Legislative Branch"},{"label":"Veterans Affairs","total":137381000,"num_children":9,"short_label":"Veterans Affairs"},{"label":"Justice","total":30023000,"num_children":18,"short_label":"Justice"},{"label":"Interior","total":11357000,"num_children":31,"short_label":"Interior"},{"label":"Commerce","total":9239000,"num_children":21,"short_label":"Commerce"},{"label":"Labor","total":88993000,"num_children":15,"short_label":"Labor"},{"label":"Homeland Security","total":45109000,"num_children":23,"short_label":"Homeland Security"},{"label":"Housing and Urban Development","total":44010000,"num_children":14,"short_label":"Housing"},{"label":"Corps of Engineers--Civil Works","total":4668000,"num_children":3,"short_label":"Corps of Engineers"},{"label":"Executive Office of the President","total":392000,"num_children":12,"short_label":"Office of the President"},{"label":"Energy","total":32300000,"num_children":10,"short_label":"Energy"},{"label":"Transportation","total":74280000,"num_children":22,"short_label":"Transportation"},{"label":"Education","total":55685000,"num_children":15,"short_label":"Education"},{"label":"Federal Deposit Insurance Corporation","total":1515000,"num_children":5,"short_label":"F.D.I.C."},{"label":"District of Columbia","total":902000,"num_children":5,"short_label":"District of Columbia"},{"label":"Environmental Protection Agency","total":8138000,"num_children":2,"short_label":"E.P.A."},{"label":"Defense - Military","total":620259000,"num_children":13,"short_label":"Defense"},{"label":"Institute of Museum and Library Services","total":231000,"num_children":2,"short_label":"Museum and Library Services"},{"label":"National Aeronautics and Space Administration","total":17693000,"num_children":2,"short_label":"NASA"},{"label":"National Archives and Records Administration","total":370000,"num_children":3,"short_label":"National Archives"},{"label":"National Science Foundation","total":7470000,"num_children":2,"short_label":"N.S.F."},{"label":"Nuclear Regulatory Commission","total":127000,"num_children":2,"short_label":"Nuclear Regulation"},{"label":"Office of Personnel Management","total":94857000,"num_children":3,"short_label":"Personnel Management"},{"label":"Postal Service","total":78000,"num_children":2,"short_label":"Postal Service"},{"label":"Public Company Accounting Oversight Board","total":237000,"num_children":2,"short_label":"Accounting Oversight"},{"label":"Railroad Retirement Board","total":7202000,"num_children":3,"short_label":"Railroad Retirement"},{"label":"Small Business Administration","total":1111000,"num_children":2,"short_label":"Small Business"},{"label":"Social Security Administration","total":885315000,"num_children":2,"short_label":"Social Security"},{"label":"Federal Communications Commission","total":9633000,"num_children":2,"short_label":"F.C.C."},{"label":"Securities Investor Protection Corporation","total":259000,"num_children":2,"short_label":"S.I.P.C."},{"label":"Other","total":-512596000,"num_children":97,"short_label":"Other"}];
 
-  var question = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'get_title_question', id:id });
+  var question = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'get_data_question', id:id });
   question.done(function(data){
     if (data != "") {
       var param = getUrlParameter('id');
 
       var dataParse = JSON.parse(data);
-      //console.log(dataParse[0]);
-      document.getElementById('question_title').textContent = dataParse[0];
+      //console.log(dataParse);
+      document.getElementById('question_title').textContent = dataParse[0]['title'];
       var li = document.createElement("li");
       var a = document.createElement("a");
       a.style.textDecoration = "none";
       a.style.color = "#999";
       a.setAttribute("href" ,  "questionnaires/questionnaire.php?id="+param);
-      console.log(data);
       a.textContent = "Answer this questionnaire"
       li.appendChild(a);
       document.getElementById('navBarGraph').appendChild(li);
       // document.getElementById('navBarGraph').appendChild() += "<li style='display: none;'><a href='' style='text-decoration: none; color: #999;'>Answer this questionnaire</a></li>";
+      document.querySelector('.nytg-overview > p').textContent = dataParse[0]['statement'];
     }
-  })
+  });
 
 // BEGIN nytg Additions
 jQuery.noConflict();
@@ -186,7 +189,14 @@ nytg.formatNumber = function(n) {
   return  s + suffix;
 };
 
-function getUrlParameter(sParam) {
+nytg.test1 = [];
+for (var i = 0; i < nb_question; i++) {
+  nytg.test1.push(i+1);
+}
+
+nytg.test2 = [0,nb_question];
+
+/*function getUrlParameter(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
   sURLVariables = sPageURL.split('&'),
   sParameterName,
@@ -199,7 +209,7 @@ function getUrlParameter(sParam) {
       return sParameterName[1] === undefined ? true : sParameterName[1];
     }
   }
-};
+};*/
 
 /********************************
  ** FILE: Chart.js
@@ -245,7 +255,7 @@ function getUrlParameter(sParam) {
     circle          : {},
     gravity         : null,
     charge          : null,
-    changeTickValues: [1, 2, 3, 4,5,6,7,8],
+    changeTickValues: nytg.test1,
     categorizeChange: function(c){
 
       var time = parseInt(c['hours'])*3600 + parseInt(c['minutes'])*60 + parseInt(c['secondes']);
@@ -315,7 +325,7 @@ function getUrlParameter(sParam) {
     
     rScale          : d3.scale.pow().exponent(0.15).domain([0,10000000000]).range([1,100]),
     radiusScale     : null,
-    changeScale     : d3.scale.linear().domain([0,4]).range([620,180]).clamp(true),
+    changeScale     : d3.scale.linear().domain(nytg.test2).range([620,180]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
     groupScale      : {},
     
@@ -459,7 +469,7 @@ function getUrlParameter(sParam) {
       
       for (var i=0; i < this.changeTickValues.length; i++) {
         d3.select("#nytg-discretionaryOverlay").append("div")
-        .html("<p>"+this.tickChangeFormat(this.changeTickValues[i])+"</p>")
+        .html("<p>"+this.changeTickValues[i]+"/"+this.changeTickValues.length+"</p>")
         .style("top", this.changeScale(this.changeTickValues[i])+'px')
         .classed('nytg-discretionaryTick', true)
         .classed('nytg-discretionaryZeroTick', (this.changeTickValues[i] === 0) )

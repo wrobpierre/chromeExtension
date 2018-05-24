@@ -30,7 +30,7 @@ $password = "stageOsaka";
 //$password = "";
 $dbname = "chrome_extension";
 
-if (isset($_POST['user_id'])) {
+if (isset($_POST['user_email'])) {
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     	// set the PDO error mode to exception
@@ -57,131 +57,67 @@ if (isset($_POST['user_id'])) {
 			$answers[$value['id']] = array("type" => $value['type_ques'], "answer" => $value['answer']);
 		}
 
-		if ($_POST['method'] == 'sign_up') {
-			$stmid = $conn->prepare("INSERT INTO users (check_id,name,email,job) VALUES (:createId, :name, :email, :job)");
-			$stmid->bindParam(':createId', $createId);
-			$stmid->bindParam(':name', $name);
-			$stmid->bindParam(':email', $email);
-			$stmid->bindParam(':job', $job);
-			$createId = $_POST['user_id'];
-			$name = $_POST['name'];
-			$email = $_POST['login'];
-			$job = $_POST['job'];
+		/*echo "<pre>";
+		var_dump($_POST);
+		echo "</pre>";
 
-			if($stmid->execute()){
-				header("Location: ".$adress."/webSite/questionnaires/result.html");			
-				$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, key_user)
-					SELECT :key_question, :answer, :result, :rank, id FROM users WHERE check_id like '".$_POST['user_id']."'");
-				$stmt->bindParam(':key_question', $key_question);
-				$stmt->bindParam(':answer', $answer);
-				$stmt->bindParam(':result', $result);
-				$stmt->bindParam(':rank', $rank);
+		echo "<pre>";
+		var_dump($answers);
+		echo "</pre>";*/
 
-				foreach ($_POST['q'] as $key => $value) {
-					$key_question = $key;
-					$answer = $value['answer'];
-					$rank = $value['rank'];
-					$result = true;
-					if ($answers[$key]['type'] == "text") {
-						$tmp = strtoupper(stripVN($value['answer']));
-						$tmp = explode(" ", $tmp);
-						$a = explode(",", $answers[$key]['answer']);
-						foreach ($a as $k => $v) {
-							if (array_search($v, $tmp) === false) {
-								$result = false;
-							}
-						}
+		header("Location: ".$adress."/webSite/questionnaires/result.html");			
+		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, key_user)
+			SELECT :key_question, :answer, :result, :rank, id FROM users WHERE email like :email");
+		$stmt->bindParam(':key_question', $key_question);
+		$stmt->bindParam(':answer', $answer);
+		$stmt->bindParam(':result', $result);
+		$stmt->bindParam(':rank', $rank);
+		$stmt->bindParam(':email', $email);
+		$email = $_POST['user_email'];
+
+		foreach ($_POST['q'] as $key => $value) {
+			$key_question = $key;
+			$answer = $value['answer'];
+			$rank = $value['rank'];
+			$result = true;
+			if ($answers[$key]['type'] == "text") {
+				$tmp = strtoupper(stripVN($value['answer']));
+				$tmp = explode(" ", $tmp);
+				$a = explode(",", $answers[$key]['answer']);
+				foreach ($a as $k => $v) {
+					if (array_search($v, $tmp) === false) {
+						$result = false;
 					}
-					elseif ($answers[$key]['type'] == "number") {
-						if ($value['answer'] != explode('/', $answers[$key]['answer'])[0]) {
-							$result = false;
-						}
-					}
-					elseif ($answers[$key]['type'] == "interval") {
-						$min = explode('/', $answers[$key]['answer'])[0];
-						$max = explode('/', $answers[$key]['answer'])[1];
-						if ($value['answer'] < $min || $value['answer'] > $max) {
-							$result = false;
-						}
-					}
-					elseif ($answers[$key]['type'] == "radio") {
-						if (isset($value['answer'])) {
-							if ($value['answer'] != $answers[$key]['answer']) {
-								$result = false;
-							}
-						}
-						else {
-							$result = false;
-						}
-					}
-					elseif ($answers[$key]['type'] == "free") {
-						$result = null;
-					}
-					$stmt->execute();
 				}
 			}
-		}
-		elseif ($_POST['method'] == 'sign_in') {
-			/*echo "<pre>";
-			var_dump($_POST);
-			echo "</pre>";
-
-			echo "<pre>";
-			var_dump($answers);
-			echo "</pre>";*/
-			header("Location: ".$adress."/webSite/questionnaires/result.html");			
-			$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, key_user)
-				SELECT :key_question, :answer, :result, :rank, id FROM users WHERE email like :email");
-			$stmt->bindParam(':key_question', $key_question);
-			$stmt->bindParam(':answer', $answer);
-			$stmt->bindParam(':result', $result);
-			$stmt->bindParam(':rank', $rank);
-			$stmt->bindParam(':email', $email);
-			$email = $_POST['register'];
-
-			foreach ($_POST['q'] as $key => $value) {
-				$key_question = $key;
-				$answer = $value['answer'];
-				$rank = $value['rank'];
-				$result = true;
-				if ($answers[$key]['type'] == "text") {
-					$tmp = strtoupper(stripVN($value['answer']));
-					$tmp = explode(" ", $tmp);
-					$a = explode(",", $answers[$key]['answer']);
-					foreach ($a as $k => $v) {
-						if (array_search($v, $tmp) === false) {
-							$result = false;
-						}
-					}
+			elseif ($answers[$key]['type'] == "number") {
+				if ($value['answer'] != $answers[$key]['answer']) {
+					$result = false;
 				}
-				elseif ($answers[$key]['type'] == "number") {
+			}
+			elseif ($answers[$key]['type'] == "interval") {
+				$min = explode('/', $answers[$key]['answer'])[0];
+				$max = explode('/', $answers[$key]['answer'])[1];
+				if ($value['answer'] < $min || $value['answer'] > $max) {
+					$result = false;
+				}
+			}
+			elseif ($answers[$key]['type'] == "radio") {
+				if (isset($value['answer'])) {
 					if ($value['answer'] != $answers[$key]['answer']) {
 						$result = false;
 					}
 				}
-				elseif ($answers[$key]['type'] == "interval") {
-					$min = explode('/', $answers[$key]['answer'])[0];
-					$max = explode('/', $answers[$key]['answer'])[1];
-					if ($value['answer'] < $min || $value['answer'] > $max) {
-						$result = false;
-					}
+				else {
+					$result = false;
 				}
-				elseif ($answers[$key]['type'] == "radio") {
-					if (isset($value['answer'])) {
-						if ($value['answer'] != $answers[$key]['answer']) {
-							$result = false;
-						}
-					}
-					else {
-						$result = false;
-					}
-				}
-				elseif ($answers[$key]['type'] == "free") {
-					$result = null;
-				}
-				$stmt->execute();
 			}
+			elseif ($answers[$key]['type'] == "free") {
+				$result = null;
+			}
+			$stmt->execute();
 		}
+
 	}
 	catch(PDOException $e)
 	{
@@ -190,7 +126,7 @@ if (isset($_POST['user_id'])) {
 	$conn = null;
 }
 else {
-	echo "missing user_id";
+	echo "missing user_email";
 }
 
 ?>

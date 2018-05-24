@@ -1,10 +1,14 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 
+    $adress = "http://163.172.59.102";
+    //$adress = "http://localhost/chromeExtension";
+
     $servername = "localhost";
     $username = "root";
     $password = "stageOsaka";
-    // $password = "";
+
+    //$password = "";
     $dbname = "chrome_extension";
 
     try {
@@ -30,7 +34,8 @@ header('Access-Control-Allow-Origin: *');
         if($_POST['email'] == $email && $pwdSalt == $pwdCheck){
             session_start();
             $_SESSION['user'] = $email;
-            echo "Success";    
+            echo "Success";
+            header("Location: ".$adress."/webSite/index.html");
         }
         else{ 
             echo "Failed";
@@ -38,7 +43,7 @@ header('Access-Control-Allow-Origin: *');
     }
 }
 catch(PDOException $e)
-    {
-        echo "Error: " . $e->getMessage();
-    }
+{
+    echo "Error: " . $e->getMessage();
+}
 ?>

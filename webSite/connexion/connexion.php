@@ -1,37 +1,38 @@
 <?php
 header('Access-Control-Allow-Origin: *');
-    /**
-     * Nous créons deux variables : $username et $password qui valent respectivement "Sdz" et "salut"
-     */
 
     $servername = "localhost";
     $username = "root";
-    // $password = "stageOsaka";
-    $password = "";
+    $password = "stageOsaka";
+    // $password = "";
     $dbname = "chrome_extension";
 
     try {
 
-        if( isset($_POST['username']) && isset($_POST['password']) ){
+        if( isset($_POST['email']) && isset($_POST['password']) ){
         
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        // set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $stmtCheck = $conn->prepare("SELECT id, email, check_id FROM users WHERE email like '".$_POST['username']."' AND check_id like '".$_POST['password']."'");
-        $stmtCheck->execute();
+        $salt = "7Gmk6}b]qgs%";
+        $salt = md5($salt);
+        $pwd = $_POST['password'];
+        $pwdSalt = md5($salt.$pwd);
 
+        $stmtCheck = $conn->prepare("SELECT id, email, password FROM users WHERE email like '".$_POST['email']."'");
+
+        $stmtCheck->execute();
         $user = $stmtCheck->fetchAll();
 
         $email = $user[0]['email'];
-        $pwd = $user[0]['check_id'];
+        $pwdCheck = $user[0]['password'];        
 
-        if($_POST['username'] == $email && $_POST['password'] == $pwd){ // Si les infos correspondent...
+        if($_POST['email'] == $email && $pwdSalt == $pwdCheck){
             session_start();
             $_SESSION['user'] = $email;
             echo "Success";    
         }
-        else{ // Sinon
+        else{ 
             echo "Failed";
         }
     }

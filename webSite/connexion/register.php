@@ -3,8 +3,8 @@ header('Access-Control-Allow-Origin: *');
 
 $servername = "localhost";
 $username = "root";
-// $password = "stageOsaka";
-$password = "";
+$password = "stageOsaka";
+// $password = "";
 $dbname = "chrome_extension";
 
 try {

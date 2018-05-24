@@ -41,7 +41,7 @@ else{
 				console.log(response);
 			});*/
 
-		var adress = "http://163.172.59.102"
+			var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
 
 		function getUrlParameter(sParam) {
@@ -88,7 +88,7 @@ else{
 						var graph_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/graph.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
 						
 						if(checkUser != ""){
-						var option = $('<div class="option"></div>')
+							var option = $('<div class="option"></div>')
 							var edit = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
 							var del = $('<button class="button_delete">Delete</button>').click(function(){
 								var r = confirm("Are you sure to delete this questionnaire ?");
@@ -150,15 +150,36 @@ else{
 				statement = $('<p></p>').text(dataParse[0]['statement']);
 				$('#content').append(statement);
 
-				if (dataParse[0]['link_img'] != "") {
+				/*if (dataParse[0]['link_img'] != "") {
 					link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link']);
 					$('#content').append(link);
-				}
-				var form = $('<form method="post" action="checkAnswers.php"></form>');
-				var user_id = $('<input type="hidden" name="user_id">');
-				form.append(user_id);	
+				}*/
 
-				var dataUser = $('<div id="dataUser"></div>');
+				var form = $('<form method="post" action="checkAnswers.php"></form>');
+				var user_email = $('<input type="hidden" name="user_email" value="'+checkUser+'">');
+				form.append(user_email);
+
+				var start = $('<div></div>');
+				var valid = $('<button class="button">Start questionnaire</button>');
+				valid.click(function(){
+					$(this).parent().css('display','none');
+					$(this).parent().next().css('display','block');
+					
+					if (dataParse[0]['link_img'] != "") {
+						link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link']);
+						link.insertAfter('#content > h1 + p');
+					}
+
+					var url = window.location.href; 
+					chrome.runtime.sendMessage(editorExtensionId, {action: 'start', url: url},
+						function(response) {
+							console.log(response);
+						});
+				});
+
+				start.append(valid);
+				form.append(start);
+				/*var dataUser = $('<div id="dataUser"></div>');
 				var method = $('<input type="hidden" name="method">');
 
 				var button_sign_up = $('<button class="sign_up button">Sign up</button>');
@@ -254,7 +275,7 @@ else{
 				var info = $('<p>*if you wish to have your personal data deleted, contact us at this email address: stageosakadawin@gmail.com</p>')
 
 				dataUser.append(method,button_sign_up,button_sign_in,sign_up,sign_in,info);
-				form.append(dataUser);
+				form.append(dataUser);*/
 
 				for (var i = 0; i < dataParse.length; i++) {
 					var div = $('<div class="question" id="'+(i+1)+'"></div>');
@@ -327,7 +348,6 @@ else{
 				$(document).ready(function(){
 
 					$('div.question').css('display','none');
-					//$('div#dataUser').css('display','none');
 					$('form div:last-child').css('display','none');
 
 					$('div.question > input[type="button"]').click(function(){
@@ -345,7 +365,7 @@ else{
 						})
 
 						if (valid) {
-							chrome.runtime.sendMessage(editorExtensionId, {action: 'stop'},
+							chrome.runtime.sendMessage(editorExtensionId, {action: 'stop', email:checkUser},
 								function(response) {
 									console.log(response);
 								});

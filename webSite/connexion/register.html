@@ -9,16 +9,19 @@
 
     <h1>Un formulaire de d'enregistrement en AJAX</h1>
 
-    <form>
-    <p>
-        Nom d'utilisateur : <input type="email" id="email" />
-        Mot de passe : <input type="password" id="password" />
-        Job : <input type="text" id="job" />
-        Name : <input type="text" id="name" />
-        <input type="submit" id="submit" value="Register !" />
-        <div id="resultat"></div>
+    <form id="form">
+        <p>
+            Email : <input type="email" id="email" />
+            Re-enter your email: <input type="email" id="emailCheck" />
 
-    </p>
+            Password : <input type="password" id="password" />
+            Re-enter your password : <input type="password" id="passwordCheck" />
+            Name : <input type="text" id="name" />
+            Job : <input type="text" id="job" />
+            <input type="submit" id="submit" value="Register !" />
+            <div id="resultat"></div>
+
+        </p>
     </form>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>

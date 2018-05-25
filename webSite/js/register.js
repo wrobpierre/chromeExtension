@@ -2,7 +2,7 @@ $(document).ready(function(){
 
      $("#submit").click(function(e){
         e.preventDefault();
-        if($("#email").val() == $("#emailCheck").val() && $("#password").val() == $("#passwordCheck").val() && validateEmail($("#email").val())){
+        if($("#email").val() == $("#emailCheck").val() && $("#password").val() == $("#passwordCheck").val() && $("#password").val().length >= 8 && validateEmail($("#email").val())){
             $.post(
                 '../connexion/register.php',
                 {
@@ -38,6 +38,9 @@ $(document).ready(function(){
             }
             else if(!validateEmail($("#email").val())){
                 $("#resultat").html("<p>Your email is not valid.</p>");
+            }
+            else if($("#password").val().length < 8){
+                $("#resultat").html("<p>Your password must be at least 8 characters.</p>");
             }
             else{
                 $("#resultat").html("<p>A problem accured please try later.</p>");

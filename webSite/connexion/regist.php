@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Un formulaire d'enregistrement en AJAX</title>
+    <title>ChromeExtension</title>
 </head>
 
 <?php include '../layout/includes.php'; ?>

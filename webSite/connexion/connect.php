@@ -20,20 +20,20 @@
                             Email :
                         </div>
                         <div >
-                           <input class="input_question" type="email" id="email" />
-                       </div>
+                         <input class="input_question" type="email" id="email" />
+                     </div>
 
-                   </div>
-                   <div class="w3-padding-16">
+                 </div>
+                 <div class="w3-padding-16">
                     <div>
                         Password :
                     </div>
                     <div>
-                       <input class="input_question" type="password" id="password" />
-                   </div>
+                     <input class="input_question" type="password" id="password" />
+                 </div>
 
-               </div>
-               <div class="w3-row-padding w3-row-padding w3-light-grey w3-padding-16">
+             </div>
+             <div class="w3-row-padding w3-row-padding w3-light-grey w3-padding-16">
                 <input type="submit" id="submit" value="Sign in !" />
             </div>
             <div id="resultat" class="w3-container w3-red"></div>

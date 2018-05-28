@@ -137,7 +137,7 @@ else{
 		}
 		else {
 			if (checkUser == "") {
-				document.location.href="../connexion/connexion.html"
+				document.location.href="../connexion/connect.php"
 			}
 			//console.log(param);
 			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });

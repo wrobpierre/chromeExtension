@@ -17,7 +17,7 @@
 			<div class="w3-row-padding w3-row-padding w3-light-grey w3-margin w3-padding-16 w3-centered">
 				<div class="w3-padding-16">
 					<div class="w3-container w3-red">
-						<?php
+						<h3><?php
 						switch($_GET['erreur'])
 						{
 							case '400':
@@ -59,16 +59,18 @@
 							default:
 							echo 'Erreur !';
 						}
-						?>
+						?></h3>
 
 					</div>      
 				</div>
 			</div>
+		</div>
+	</div>
 
-			<?php include './layout/footer.php'; ?>
+	<?php include './layout/footer.php'; ?>
 
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-			<script src="./js/md5.min.js" type="text/javascript"></script>
-			<script src="./js/register.js" type="text/javascript"></script>
-		</body>
-		</html>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="./js/md5.min.js" type="text/javascript"></script>
+	<script src="./js/register.js" type="text/javascript"></script>
+</body>
+</html>

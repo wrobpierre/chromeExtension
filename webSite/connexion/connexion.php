@@ -35,7 +35,7 @@ header('Access-Control-Allow-Origin: *');
             session_start();
             $_SESSION['user'] = $email;
             echo "Success";
-            header("Location: ".$adress."/webSite/index.html");
+            // header("Location: ".$adress."/webSite/index.php");
         }
         else{ 
             echo "Failed";

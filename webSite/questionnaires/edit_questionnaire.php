@@ -1,3 +1,9 @@
+<?php
+if (!isset($_SESSION['user'])) {
+    header("Location: destination.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>

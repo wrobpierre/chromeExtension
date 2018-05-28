@@ -31,10 +31,28 @@
 				<h1>Edit questionnaire</h1>
 				<input class="input_question" type="hidden" name="action" value="edit">
 				<input class="input_question" type="hidden" name="id_questionnaire">
+
 				<label>Enter the title of your questionnaire&nbsp;:&nbsp;</label>
 				<span class="error"></span>
 				<input class="input_question" type="text" name="title"><br>
-				<label>Choose the type of your questionnaire&nbsp;:&nbsp;</label>
+				
+				<label>Statement of the questionnaire&nbsp;:</label>
+				<span class="error"></span>
+				<textarea form="form" name="statement"></textarea><br><br>
+
+				<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
+				<span class="error"></span><br>
+				<input type="radio" name="auto_correction" value="auto"><label>Automatic</label><br>
+				<input type="radio" name="auto_correction" value="manuel"><label>Manuel</label><br><br>
+				
+				<label for="image_uploads">Select images to upload (PNG, JPG):</label>
+				<span class="error"></span>
+				<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
+				<div class="preview">
+					<p>Aucun fichier sélectionné pour le moment</p>
+				</div>
+
+				<!--<label>Choose the type of your questionnaire&nbsp;:&nbsp;</label>
 				<select class="select_question" name="type">
 					<option value="article">Article</option>
 					<option value="image">Image</option>
@@ -43,7 +61,7 @@
 					<label></label>
 					<span class="error"></span>
 					<input class="input_question" type="text" name="data">
-				</div>
+				</div>-->
 				<h2>Current questions :</h2>
 				<div id="current">
 					<div class="all_questions">
@@ -96,15 +114,11 @@
 
 				$('input[name="title"]').val(dataParse[0]['title']);
 
-				if (dataParse[0]['type'] == 0) {
-					$('select[name="type"]').val('article');
-					$('.selector').find('label').text('Link to your Article : ');
-					$('input[name="data"]').attr('value', dataParse[0]['link']);
+				if (dataParse[0]['auto_correction'] == 0) {
+					$('input[type="radio"][value="manuel"]').prop("checked", true);
 				} 
 				else {
-					$('select[name="type"]').val('image');
-					$('.selector').find('label').text('Link to your Image : ');
-					$('input[name="data"]').attr('value', dataParse[0]['link']);
+					$('input[type="radio"][value="auto"]').prop("checked", true);
 				}
 
 				$.each(dataParse, function(index, value){

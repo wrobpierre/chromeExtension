@@ -43,7 +43,7 @@ post.done(function(data) {
   var alreadySave = false;
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
-  console.log(dataParse);
+  //console.log(dataParse);
   dataParse.forEach(function(element){
     nb_question = element['nb_question'];
     if (!tabData.find(function(elem){ return elem.url === element.url; })) {
@@ -325,7 +325,7 @@ nytg.test2 = [0,nb_question];
     
     rScale          : d3.scale.pow().exponent(0.15).domain([0,10000000000]).range([1,100]),
     radiusScale     : null,
-    changeScale     : d3.scale.linear().domain(nytg.test2).range([620,180]).clamp(true),
+    changeScale     : d3.scale.linear().domain(nytg.test2).range([620,220]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
     groupScale      : {},
     
@@ -441,6 +441,7 @@ nytg.test2 = [0,nb_question];
           changeCategory: this.categorizeChange(n['timer']),
           value: n[/*this.currentYearDataColumn*/'view'],
           url: n['url'],
+          avg: n['avg'],
           //discretion: n['discretion'],
           //isNegative: (n[this.currentYearDataColumn] < 0),
           positions: n.positions,
@@ -621,9 +622,9 @@ nytg.test2 = [0,nb_question];
       .nodes(this.nodes)
       .size([this.width, this.height])
       
-      //console.log(this.nodes)
+      console.log(this.nodes)
       //console.log(this.svg)
-      //console.log(this.circle)
+      console.log(this.circle)
 
       // this.circle.call(this.force.drag)
       
@@ -665,6 +666,10 @@ nytg.test2 = [0,nb_question];
 
     discretionaryLayout: function() {
       var that = this;
+      /*this.node.sort(function(a,b){
+        return a.avg - b.avg;
+      });*/
+
       this.force
       .gravity(0)
       .charge(0)
@@ -796,35 +801,35 @@ nytg.test2 = [0,nb_question];
     discretionarySort: function(alpha) {
       var that = this;
       return function(d){
-        var targetY = that.height / 2;
+        //var targetY = that.height / 2;
         var targetX = 0;
         
-        //if (d.isNegative) {
+        /*if (d.isNegative) {
           if (d.changeCategory > 0) {
             d.x = - 200
           } else {
             d.x =  1100
           }
           return;
-        //}
+        }*/
         
         
-        if (d.discretion === "Discretionary") {
-          targetY = that.changeScale(d.change);
+        //if (d.discretion === "Discretionary") {
+          //targetY = that.changeScale(d.change);
           targetX = 100 + that.groupScale(d.group)*(that.width - 120);
-          if (isNaN(targetY)) {targetY = that.centerY};
+          /*if (isNaN(targetY)) {targetY = that.centerY};
           if (targetY > (that.height-80)) {targetY = that.height-80};
-          if (targetY < 80) {targetY = 80};
+          if (targetY < 80) {targetY = 80};*/
           
-        } else if ((d.discretion === "Mandatory")||(d.discretion === "Net interest")) {
+        /*} else if ((d.discretion === "Mandatory")||(d.discretion === "Net interest")) {
           targetX = -300 + Math.random()* 100;
           targetY = d.y;
         } else {
           targetX = 0
-        };
+        };*/
         
-        d.y = d.y + (targetY - d.y) * Math.sin(Math.PI * (1 - alpha*10)) * 0.2
-        d.x = d.x + (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.1
+        d.y = (nb_question-d.avg)*100+220;//d.y + (targetY - d.y) * Math.sin(Math.PI * (1 - alpha*10)) * 0.2
+        d.x = ()890;//d.x + (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.1;
       };
     },
 

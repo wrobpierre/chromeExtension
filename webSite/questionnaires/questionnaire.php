@@ -125,13 +125,14 @@ else{
 
 						li.append(title,info,always_visible,option);
 						ul.append(li);
+						$('#content').append(ul);
 					})
-
-					var add = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire.php\'"></input>').attr('value', 'Add a questionnaire');
-					add.css("background-color", "#00B16A");
-					add.css("height", "40px");
-
-					$('#content').append(ul,add);
+					if (checkUser != "") {
+						var add = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire.php\'"></input>').attr('value', 'Add a questionnaire');
+						add.css("background-color", "#00B16A");
+						add.css("height", "40px");
+						$('#content').append(add);
+					}
 				}
 			});
 		}

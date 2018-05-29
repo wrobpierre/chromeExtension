@@ -1,10 +1,9 @@
 <?php
 session_start();
-if(isset($_SESSION['user'])){
-	$checkUser = $_SESSION['user'];
-}
-else{
-	$checkUser = null;
+
+if (!isset($_SESSION['user'])) {
+	header("Location: ../index.php");
+	exit;
 }
 
 ?>

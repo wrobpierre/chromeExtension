@@ -1,6 +1,7 @@
 var minTime = null;
 var maxTime = null;
 var nb_question = null;
+var nb_site = null;
 var errorImg = false;
 var adress = "http://163.172.59.102"
 // var adress = "http://localhost/chromeExtension"
@@ -43,7 +44,7 @@ post.done(function(data) {
   var alreadySave = false;
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
-  //console.log(dataParse);
+  console.log(dataParse);
   dataParse.forEach(function(element){
     nb_question = element['nb_question'];
     if (!tabData.find(function(elem){ return elem.url === element.url; })) {
@@ -55,12 +56,14 @@ post.done(function(data) {
       views = 0;
       var tabMedianeTime = [];
       var tabMedianeView = [];
+      var tabMedianeFirstTime = [];
       tmp.forEach(function(elem){
         views += parseInt(elem['view']);
         note += parseInt(elem['note']);
         timer = JSON.parse(elem['timer']);
         tabMedianeView.push(parseInt(elem['view']));
         tabMedianeTime.push(parseInt(timer.hours)*3600+parseInt(timer.minutes)*60+parseInt(timer.secondes));
+        tabMedianeFirstTime.push(new Date(elem['first_time']).getTime());
       });
       tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
       element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
@@ -87,14 +90,20 @@ post.done(function(data) {
       element['timer']['minutes'] = minutes;
       element['timer']['secondes'] = secondes;
       
+      tabMedianeFirstTime.sort(function compareNombres(a, b) {return a - b;});
+      element['first_time'] = tabMedianeFirstTime[Math.ceil(parseInt(tabMedianeTime.length/2))];
 
       if ( element['host_name'].indexOf('www.google.') == -1 ) {
         tabData.push(element);      
       }
     }
   });
+  nb_site = tabData.length;
 
-  //console.log(tabData);
+  tabData.sort(function(a,b) {
+    return a.first_time - b.first_time;
+  });
+  console.log(tabData);
   // var minAvg = tabData[0]['avg'];
   // var maxAvg = 0;
   tabData.forEach(function(element){
@@ -622,9 +631,9 @@ nytg.test2 = [0,nb_question];
       .nodes(this.nodes)
       .size([this.width, this.height])
       
-      console.log(this.nodes)
+      //console.log(this.nodes)
       //console.log(this.svg)
-      console.log(this.circle)
+      //console.log(this.circle)
 
       // this.circle.call(this.force.drag)
       
@@ -801,9 +810,31 @@ nytg.test2 = [0,nb_question];
     discretionarySort: function(alpha) {
       var that = this;
       return function(d){
-        //var targetY = that.height / 2;
         var targetX = 0;
+        //var targetY = 0;//that.height / 2;
+
+        id = tabData.indexOf( tabData.find( site => site.url === d.url) );
+        lastX = id*(870/nb_site)+(60+d.radius);
+        lastY = (nb_question-d.avg)*(400/nb_question)+220;
+        //console.log(d.radius);
+
+        var speedX = (lastX - d.x)/10;
+        var speedY = (lastY - d.y)/10;
         
+        if (lastX >= d.x && lastX - d.x <= 0.5) {
+          speedX = 0;
+        }
+        else if (lastX <= d.x && lastX - d.x >= 0.5) {
+          speedX = 0; 
+        }
+
+        if (lastY >= d.y && lastY - d.y <= 0.5) {
+          speedY = 0;
+        }
+        else if (lastY <= d.y && lastY - d.y >= 0.5) {
+          speedY = 0; 
+        }
+
         /*if (d.isNegative) {
           if (d.changeCategory > 0) {
             d.x = - 200
@@ -812,24 +843,25 @@ nytg.test2 = [0,nb_question];
           }
           return;
         }*/
-        
-        
-        //if (d.discretion === "Discretionary") {
-          //targetY = that.changeScale(d.change);
+              
+        /*if (d.discretion === "Discretionary") {
+          targetY = that.changeScale(d.change);
           targetX = 100 + that.groupScale(d.group)*(that.width - 120);
-          /*if (isNaN(targetY)) {targetY = that.centerY};
+          if (isNaN(targetY)) {targetY = that.centerY};
           if (targetY > (that.height-80)) {targetY = that.height-80};
-          if (targetY < 80) {targetY = 80};*/
+          if (targetY < 80) {targetY = 80};
           
-        /*} else if ((d.discretion === "Mandatory")||(d.discretion === "Net interest")) {
+        } else if ((d.discretion === "Mandatory")||(d.discretion === "Net interest")) {
           targetX = -300 + Math.random()* 100;
           targetY = d.y;
         } else {
           targetX = 0
         };*/
-        
-        d.y = (nb_question-d.avg)*100+220;//d.y + (targetY - d.y) * Math.sin(Math.PI * (1 - alpha*10)) * 0.2
-        d.x = ()890;//d.x + (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.1;
+
+        d.x = d.x + speedX;//id*(870/nb_site)+100;//d.x + (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.1;
+        d.y = d.y + speedY;//d.y + (targetY - d.y) * Math.sin(Math.PI * (1 - alpha*10)) * 0.2
+        //console.log(d.url);
+        //console.log(id);
       };
     },
 

@@ -66,7 +66,7 @@ if (isset($_POST['action'])) {
 			/*echo "<pre>";
 			var_dump($_POST);
 			echo "</pre>";*/
-			//header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
 
 			$id = uniqid();
 

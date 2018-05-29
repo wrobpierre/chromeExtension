@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-    header("Location: ../index.php");
-    exit;
+	header("Location: ../index.php");
+	exit;
 }
 ?>
 <!DOCTYPE html>
@@ -190,6 +190,7 @@ if (!isset($_SESSION['user'])) {
 					type_answer.append(lt,select);
 					if ( $('input[type="radio"]:checked').val() == "manuel" ) {
 						type_answer.hide();
+						console.log('test');
 					}
 
 					var answer = $('<div class="answer"></div>');
@@ -233,20 +234,23 @@ if (!isset($_SESSION['user'])) {
 
 $(document).ready(function(){
 	var i = 0;
-	$('select').change(function(){
-		if( $('select option:selected').text() == "Article" ) {
-			$('.selector').find('label').text('Link to your Article : ');
+	$('input[type=radio][name=auto_correction]').change(function(){
+		if (this.value == 'auto') {
+			$('div.type_answer').show();
+			$('div.answer').show();
 		}
-		else if ( $('select option:selected').text() == "Image" ) {
-			$('.selector').find('label').text('Link to your Image : ');
+		else if (this.value == 'manuel') {
+			$('div.type_answer').hide();
+			$('div.answer').hide();
 		}
-	});
+	})
 
 	$('input[value="add question"]').click(function(){
 		var div = $('<div id="'+i+'"></div>').attr('class','question');
 		var lq = $('<label>Question&nbsp;:&nbsp;</label> <span class="error"></span>');
 		var iq = $('<input class="input_question" type="text" name="nq['+i+'][question]"><br>');
 
+		var type_answer = $('<div class="type_answer"></div>'); 
 		var lt = $('<label>Type of question : </label> <span class="error"></span>');
 		var select = $('<select class="select_type" name="nq['+i+'][type_ques]">'
 			+'<option></option>'
@@ -256,48 +260,54 @@ $(document).ready(function(){
 			+'<option value="radio">RADIO</option>'
 			+'</select>');
 		select.change(function(){
-			$(this).next().empty();
-			var id_parent = $(this).parent().attr('id');
+			$(this).parent()..next().empty();
+			var id_parent = $(this).parent()..parent().attr('id');
 			if ( $(this).find(':selected').text() == "" ) {
-				$(this).next().empty();
+				$(this).parent()..next().empty();
 			}
 			else if ( $(this).find(':selected').text() == "TEXT" ) {
 				la = $('<label>Answer&nbsp;(put a list of words separated by a comma without spaces, eg: apple,pear,banana,...):&nbsp;</label><span class="error"></span>');
 				ia = $('<input class="input_question" type="text" name="nq['+id_parent+'][answer]"><br>');
-				$(this).next().append(la,ia);
+				$(this).parent()..next().append(la,ia);
 			}
 			else if ( $(this).find(':selected').text() == "NUMBER" ) {
 				la = $('<label>Answer&nbsp;(put a number):&nbsp;</label><span class="error"></span>');
 				ia = $('<input class="input_question" type="number" step="any" name="nq['+id_parent+'][answer]"><br>');
 				particule_label = $('<label>Particule (eg:3 million instead of 3 000 000):&nbsp;</label>');
 				particule_input = $('<input type="text" name="nq['+id_parent+'][particule]">');
-				$(this).next().append(la,ia,particule_label,particule_input);
+				$(this).parent()..next().append(la,ia,particule_label,particule_input);
 			}
 			else if ( $(this).find(':selected').text() == "INTERVAL" ) {
 				la = $('<label>Answer&nbsp;(put the minimum in the first area and the max in the other. The values are include):&nbsp;</label><span class="error"></span>');
 				min = $('<input class="input_question" type="number" step="any" name="nq['+id_parent+'][min]"><label> to </label>')
 				max = $('<input class="input_question" type="number" step="any" name="nq['+id_parent+'][max]">')
-				$(this).next().append(la,min,max);
+				$(this).parent()..next().append(la,min,max);
 			}
 			else if ( $(this).find(':selected').text() == "RADIO" ) {
-						la = $('<label>Enter the number of possible choices :</label><span class="error"></span>');
-						number = $('<input type="number">');
-						valid = $('<input type="button" value="create">');
-						valid.click(function(){
-							$(this).next().find('ol').empty();
-							n = $(this).prev().val();
-							for (var j = 0; j < n; j++) {
-								var choice = $('<li id="'+j+'"></li>');
-								var text = $('<input type="text" name="q['+id_parent+'][choices]['+j+'][choice]"><span class="error"></span>');
-								var answer = $('<input type="checkbox" name="q['+id_parent+'][choices]['+j+'][answer]"> <label>answer</label>');
-								choice.append(text,answer);
-								$(this).next().children('ol').append(choice);
-							}
-						});
-						radios = $('<div class="radios"> <ol type="A"></ol> </div>');
-						$(this).parent().next().append(la,number,valid,radios);
+				la = $('<label>Enter the number of possible choices :</label><span class="error"></span>');
+				number = $('<input type="number">');
+				valid = $('<input type="button" value="create">');
+				valid.click(function(){
+					$(this).next().find('ol').empty();
+					n = $(this).prev().val();
+					for (var j = 0; j < n; j++) {
+						var choice = $('<li id="'+j+'"></li>');
+						var text = $('<input type="text" name="nq['+id_parent+'][choices]['+j+'][choice]"><span class="error"></span>');
+						var answer = $('<input type="checkbox" name="nq['+id_parent+'][choices]['+j+'][answer]"> <label>answer</label>');
+						choice.append(text,answer);
+						$(this).next().children('ol').append(choice);
 					}
+				});
+				radios = $('<div class="radios"> <ol type="A"></ol> </div>');
+				$(this).parent().next().append(la,number,valid,radios);
+			}
 		});
+		type_answer.append(lt,select);
+		if ( $('input[type="radio"]:checked').val() == "manuel" ) {
+			type_answer.hide();
+			console.log('test');
+		}
+
 		var answer = $('<div class="answer"></div>');
 
 		var button = $('<input class="button_delete" type="button" value="delete question"><br>');
@@ -305,7 +315,7 @@ $(document).ready(function(){
 			$(this).parent().remove();
 		});
 		var error = $('<span class="error"></span>');
-		div.append(lq,iq,lt,select,answer,button,error,'<hr>');
+		div.append(lq,iq,type_answer,answer,button,error,'<hr>');
 		$('div#new > div.all_questions').append(div);
 		i += 1;
 	})
@@ -336,21 +346,18 @@ $(document).ready(function(){
 					valid = false;
 				}
 				if ($(this).find('select').find(':selected').text() == "") {
-					console.log('2')
 					$(this).find('select[name="q['+id+'][type_ques]"]').prev().text('Select the type of the question');
 					valid = false;
 				}
 				else {
 					if ($(this).find('select').find(':selected').text() == "TEXT" || $(this).find('select').find(':selected').text() == "NUMBER") {
 						if ($(this).find('input[name="q['+id+'][answer]"]').val() == "") {
-							console.log('3')
 							$(this).find('input[name="q['+id+'][answer]"]').prev().text('Missing answer');
 							valid = false;
 						}
 					}
 					else if ($(this).find('select').find(':selected').text() == "INTERVAL") {
 						if ($(this).find('input[name="q['+id+'][min]"]').val() == "" || $(this).find('input[name="q['+id+'][max]"]').val() == "") {
-							console.log('4')
 							$(this).find('input[name="q['+id+'][min]"]').prev().text('Missing min or max');
 							valid = false;
 						}	

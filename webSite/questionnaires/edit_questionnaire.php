@@ -1,9 +1,17 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-    header("Location: ../index.php");
-    exit;
+	header("Location: ../index.php");
+	exit;
 }
+$inactive = 60; 
+$session_life = time() - $_SESSION['timeout'];
+if($session_life > $inactive){
+	session_destroy(); 
+	header("Location: ../index.php");
+	exit;
+}
+$_SESSION['timeout']=time();
 ?>
 <!DOCTYPE html>
 <html>
@@ -183,7 +191,7 @@ if (!isset($_SESSION['user'])) {
 						if (r == true) {
 							var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"delete_question", id:value['id'] });
 							$(this).parent().remove();
-						}			
+						}
 					});
 					var error = $('<span class="error"></span>');
 					div.append(lq,iq,lt,select,answer,button,error,'<hr>');
@@ -330,6 +338,23 @@ $(document).ready(function(){
 });
 }
 });
+</script>
+<script type="text/javascript">
+	setInterval("deco()", 10000);
+
+	function deco()
+	{
+		var timeNow = new Date().getTime();
+		timeNow = timeNow * 0.001;
+		timeNow = Math.floor(timeNow);
+
+		var timeExpire = '<?php echo $_SESSION['timeout']; ?>' ; 
+		if (timeNow >= timeExpire)
+		{
+			alert("You have been idle for a while, please reconnect..");
+			window.location='../index.php';
+		}
+	}
 </script>
 <script src="../js/parallax.js-1.5.0/parallax.js"></script>
 </body>

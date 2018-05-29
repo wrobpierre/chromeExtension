@@ -4,6 +4,14 @@ if (!isset($_SESSION['user'])) {
 	header("Location: ../index.php");
 	exit;
 }
+$inactive = 60; 
+$session_life = time() - $_SESSION['timeout'];
+if($session_life > $inactive){
+  session_destroy(); 
+  header("Location: ../index.php");
+  exit;
+}
+$_SESSION['timeout']=time();
 ?>
 <!DOCTYPE html>
 <html>

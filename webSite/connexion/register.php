@@ -43,6 +43,7 @@ try {
 		if($stmid->execute()){
 			session_start();
 			$_SESSION['user'] = $email;
+			$_SESSION['timeout'] = time();
 			echo "Success";
 		}
         else{

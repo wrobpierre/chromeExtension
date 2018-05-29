@@ -1,17 +1,22 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['user'])) {
 	header("Location: ../index.php");
 	exit;
 }
-$inactive = 60; 
-$session_life = time() - $_SESSION['timeout'];
-if($session_life > $inactive){
-  session_destroy(); 
-  header("Location: ../index.php");
-  exit;
+else{
+	$checkUser = $_SESSION['user'];
+	$inactive = 600; 
+	$session_life = time() - $_SESSION['timeout'];
+	if($session_life > $inactive){
+		session_destroy(); 
+		header("Location: ../index.php");
+		exit;
+	}
+	$_SESSION['timeout']=time();
 }
-$_SESSION['timeout']=time();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,7 +55,9 @@ $_SESSION['timeout']=time();
 			<div id="questionnaire">
 				<h1>Add a questionnaire</h1>
 				<hr>
-				<input type="hidden" name="action" value="add"><br>
+				<input type="hidden" name="action" value="add">
+				<input type="hidden" name="user_email" value="<?php echo $checkUser ;?>">
+
 				<label>Enter the title of your questionnaire&nbsp;:</label>
 				<span class="error"></span>
 				<input class="input_question" type="text" name="title"><br>
@@ -61,7 +68,7 @@ $_SESSION['timeout']=time();
 				
 				<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
 				<span class="error"></span><br>
-				<input type="radio" name="auto_correction" value="auto"><label>Automatic</label><br>
+				<input type="radio" name="auto_correction" value="auto" checked="checked"><label>Automatic</label><br>
 				<input type="radio" name="auto_correction" value="manuel"><label>Manuel</label><br><br>
 
 				<label for="image_uploads">Select images to upload (PNG, JPG):</label>
@@ -87,6 +94,9 @@ $_SESSION['timeout']=time();
 	<script type="text/javascript">
 		var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
+
+		var checkUser = '<?php echo $checkUser ;?>';
+		console.log(checkUser);
 
 		$(document).ready(function(){
 			var i = 0

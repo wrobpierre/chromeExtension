@@ -42,14 +42,8 @@ else{
 
 		// The ID of the extension we want to talk to.
 		var editorExtensionId = "hndmaeoonglghdojdmbieedjgkgmmhck";
-		/*var test = 'https://developer.chrome.com/extensions/messaging';
 
-		chrome.runtime.sendMessage(editorExtensionId, {openUrlInEditor: test},
-			function(response) {
-				console.log(response);
-			});*/
-
-			var adress = "http://163.172.59.102"
+		var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
 
 		function getUrlParameter(sParam) {
@@ -130,7 +124,6 @@ else{
 
 						}
 
-
 						li.append(title,info,always_visible,option);
 						ul.append(li);
 						$('#content').append(ul);
@@ -159,11 +152,6 @@ else{
 				statement = $('<p></p>').text(dataParse[0]['statement']);
 				$('#content').append(statement);
 
-				/*if (dataParse[0]['link_img'] != "") {
-					link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link']);
-					$('#content').append(link);
-				}*/
-
 				var form = $('<form method="post" action="checkAnswers.php"></form>');
 				var user_email = $('<input type="hidden" name="user_email" value="'+checkUser+'">');
 				form.append(user_email);
@@ -188,103 +176,6 @@ else{
 
 				start.append(valid);
 				form.append(start);
-				/*var dataUser = $('<div id="dataUser"></div>');
-				var method = $('<input type="hidden" name="method">');
-
-				var button_sign_up = $('<button class="sign_up button">Sign up</button>');
-				button_sign_up.prop('disabled',true);
-				button_sign_up.click(function(){
-					$('div.sign_up').css('display', 'block');
-					$('div.sign_in').css('display', 'none');
-					$(this).prop('disabled',true);
-					$('button.sign_in').prop("disabled",false);
-				});
-
-				var button_sign_in = $('<button class="sign_in button">Sign in</button>');
-				button_sign_in.click(function(){
-					$('div.sign_in').css('display', 'block');
-					$('div.sign_up').css('display', 'none');
-					$(this).prop('disabled',true);
-					$('button.sign_up').prop('disabled',false);
-				});
-
-				var sign_up = $('<div class="sign_up"></div>');
-				var name = $('<div> <label>Your name :</label> <input class="input_question" type="text" name="name" style="margin:0"> <span class="error"></span> </div>');
-				var job = $('<div> <label>Your job/domain :</label> <input class="input_question" type="text" name="job" style="margin:0"> <span class="error"></span> </div>');
-				var login = $('<div> <label>Your email :</label> <input class="input_question" type="email" name="login" style="margin:0"> <span class="error"></span> </div>');
-				var valid = $('<input class="button" type="button" value="valid">');
-				valid.click(function(){
-					$('span.error').text('');
-					valid = true;
-
-					if ($('input[name="name"]').val() == "") {
-						valid = false;
-						$('input[name="name"] + span.error').text('missing name');
-					}
-
-					if ($('input[name="job"]').val() == "") {
-						valid = false;
-						$('input[name="job"] + span.error').text('missing job');
-					}
-
-					if ($('input[name="login"]').val() == "") {
-						valid = false;
-						$('input[name="login"] + span.error').text('missing email');
-					}
-					else {
-						var email = $('input[name="login"]').val();
-						var post = $.post(adress+'/dataBase.php', { key:'check_user_email', email:email });
-						post.done(function(data){
-							if (data != 0) {
-								valid = false;
-								$('input[name="login"] + span.error').text('Already exist');
-							} 
-							else {
-								$('input[name="login"] + span.error').text('');	
-								if (valid) {
-									$('input[name="method"]').val('sign_up');
-									$('div.sign_up > input.button').parent().parent().css('display','none');
-									$('div.sign_up > input.button').parent().parent().next().css('display','block');
-								}
-							}
-						});
-					}
-				});
-				sign_up.append(name,job,login,valid);
-
-				var sign_in = $('<div class="sign_in"></div>');
-				var register = $('<div> <label>Your email :</label> <input class="input_question" type="email" name="register" style="margin:0"> <span class="error"></span> </div>');
-				var valid = $('<input class="button" type="button" value="valid">');
-				valid.click(function(){
-					if ($('input[name="register"]').val() == "") {
-						$('input[name="register"] + span.error').text('missing email');
-					}
-					else {
-						var email = $('input[name="register"]').val();
-						var post = $.post(adress+'/dataBase.php', { key:'check_user_email', email:email, method:'sign_in' });
-						post.done(function(data){
-							var dp = JSON.parse(data);
-							if (dp.length == 0) {
-								$('input[name="register"] + span.error').text('Doesn\'t exist');
-							} 
-							else {
-								$('input[name="register"] + span.error').text('');
-								$('input[name="user_id"]').val(dp[0]['check_id']);
-
-								$('input[name="method"]').val('sign_in');
-								$('div.sign_in > input.button').parent().parent().css('display','none');
-								$('div.sign_in > input.button').parent().parent().next().css('display','block');
-							}
-						});
-					}
-				});
-				sign_in.css('display', 'none');
-				sign_in.append(register,valid);
-
-				var info = $('<p>*if you wish to have your personal data deleted, contact us at this email address: stageosakadawin@gmail.com</p>')
-
-				dataUser.append(method,button_sign_up,button_sign_in,sign_up,sign_in,info);
-				form.append(dataUser);*/
 
 				for (var i = 0; i < dataParse.length; i++) {
 					var div = $('<div class="question" id="'+(i+1)+'"></div>');

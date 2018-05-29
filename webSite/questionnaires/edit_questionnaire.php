@@ -1,17 +1,22 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['user'])) {
 	header("Location: ../index.php");
 	exit;
 }
-$inactive = 60; 
-$session_life = time() - $_SESSION['timeout'];
-if($session_life > $inactive){
-	session_destroy(); 
-	header("Location: ../index.php");
-	exit;
+else{
+	$checkUser = $_SESSION['user'];
+	$inactive = 600; 
+	$session_life = time() - $_SESSION['timeout'];
+	if($session_life > $inactive){
+		session_destroy(); 
+		header("Location: ../index.php");
+		exit;
+	}
+	$_SESSION['timeout']=time();
 }
-$_SESSION['timeout']=time();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,10 +51,28 @@ $_SESSION['timeout']=time();
 				<h1>Edit questionnaire</h1>
 				<input class="input_question" type="hidden" name="action" value="edit">
 				<input class="input_question" type="hidden" name="id_questionnaire">
+
 				<label>Enter the title of your questionnaire&nbsp;:&nbsp;</label>
 				<span class="error"></span>
 				<input class="input_question" type="text" name="title"><br>
-				<label>Choose the type of your questionnaire&nbsp;:&nbsp;</label>
+				
+				<label>Statement of the questionnaire&nbsp;:</label>
+				<span class="error"></span>
+				<textarea form="form" name="statement"></textarea><br><br>
+
+				<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
+				<span class="error"></span><br>
+				<input type="radio" name="auto_correction" value="auto"><label>Automatic</label><br>
+				<input type="radio" name="auto_correction" value="manuel"><label>Manuel</label><br><br>
+				
+				<label for="image_uploads">Select images to upload (PNG, JPG):</label>
+				<span class="error"></span>
+				<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
+				<div class="preview">
+					<p>Aucun fichier sélectionné pour le moment</p>
+				</div>
+
+				<!--<label>Choose the type of your questionnaire&nbsp;:&nbsp;</label>
 				<select class="select_question" name="type">
 					<option value="article">Article</option>
 					<option value="image">Image</option>
@@ -58,7 +81,7 @@ $_SESSION['timeout']=time();
 					<label></label>
 					<span class="error"></span>
 					<input class="input_question" type="text" name="data">
-				</div>
+				</div>-->
 				<h2>Current questions :</h2>
 				<div id="current">
 					<div class="all_questions">
@@ -82,6 +105,7 @@ $_SESSION['timeout']=time();
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
 		var adress = "http://163.172.59.102";
+		var checkUser = '<?php echo $checkUser ;?>';
 		// var adress = "http://localhost/chromeExtension";
 
 		function getUrlParameter(sParam) {
@@ -111,15 +135,13 @@ $_SESSION['timeout']=time();
 
 				$('input[name="title"]').val(dataParse[0]['title']);
 
-				if (dataParse[0]['type'] == 0) {
-					$('select[name="type"]').val('article');
-					$('.selector').find('label').text('Link to your Article : ');
-					$('input[name="data"]').attr('value', dataParse[0]['link']);
+				$('textarea[name="statement"]').val(dataParse[0]['statement']);
+
+				if (dataParse[0]['auto_correction'] == 0) {
+					$('input[type="radio"][value="manuel"]').prop("checked", true);
 				} 
 				else {
-					$('select[name="type"]').val('image');
-					$('.selector').find('label').text('Link to your Image : ');
-					$('input[name="data"]').attr('value', dataParse[0]['link']);
+					$('input[type="radio"][value="auto"]').prop("checked", true);
 				}
 
 				$.each(dataParse, function(index, value){
@@ -127,38 +149,62 @@ $_SESSION['timeout']=time();
 					var lq = $('<label>Question&nbsp;:&nbsp;</label> <span class="error"></span>');
 					var iq = $('<input class="input_question" type="text" name="q['+value['id']+'][question]">').attr('value', value['question']);
 
+					var type_answer = $('<div class="type_answer"></div>'); 
 					var lt = $('<br><label>Type of question : </label> <span class="error"></span>');
 					var select = $('<select class="select_type" name="q['+value['id']+'][type_ques]">'
 						+'<option></option>'
 						+'<option value="text">TEXT</option>'
 						+'<option value="number">NUMBER</option>'
 						+'<option value="interval">INTERVAL</option>'
+						+'<option value="radio">RADIO</option>'
 						+'</select>');
 					select.change(function(){
-						$(this).next().empty();
-						var id_parent = $(this).parent().attr('id');
+						$(this).parent().next().empty();
+						var id_parent = $(this).parent().parent().attr('id');
 						if ( $(this).find(':selected').text() == "" ) {
-							$(this).next().empty();
+							$(this).parent().next().empty();
 						}
 						else if ( $(this).find(':selected').text() == "TEXT" ) {
 							la = $('<label>Answer&nbsp;(put a list of words separated by a comma without spaces, eg: apple,pear,banana,...):&nbsp;</label><span class="error"></span>');
 							ia = $('<input class="input_question" type="text" name="q['+id_parent+'][answer]"><br>');
-							$(this).next().append(la,ia);
+							$(this).parent().next().append(la,ia);
 						}
 						else if ( $(this).find(':selected').text() == "NUMBER" ) {
 							la = $('<label>Answer&nbsp;(put a number):&nbsp;</label><span class="error"></span>');
 							ia = $('<input class="input_question" type="number" step="any" name="q['+id_parent+'][answer]"><br>');
 							particule_label = $('<label>Particule (eg:3 million instead of 3 000 000):&nbsp;</label>');
 							particule_input = $('<input type="text" name="q['+id_parent+'][particule]">');
-							$(this).next().append(la,ia,particule_label,particule_input);
+							$(this).parent().next().append(la,ia,particule_label,particule_input);
 						}
 						else if ( $(this).find(':selected').text() == "INTERVAL" ) {
 							la = $('<label>Answer&nbsp;(put the minimum in the first area and the max in the other. The values are include):&nbsp;</label><span class="error"></span>');
 							min = $('<input class="input_question" type="number" step="any" name="q['+id_parent+'][min]"><label> to </label>')
 							max = $('<input class="input_question" type="number" step="any" name="q['+id_parent+'][max]">')
-							$(this).next().append(la,min,max);
+							$(this).parent().next().append(la,min,max);
+						}
+						else if ( $(this).find(':selected').text() == "RADIO" ) {
+							la = $('<label>Enter the number of possible choices :</label><span class="error"></span>');
+							number = $('<input type="number">');
+							valid = $('<input type="button" value="create">');
+							valid.click(function(){
+								$(this).next().find('ol').empty();
+								n = $(this).prev().val();
+								for (var j = 0; j < n; j++) {
+									var choice = $('<li id="'+j+'"></li>');
+									var text = $('<input type="text" name="q['+id_parent+'][choices]['+j+'][choice]"><span class="error"></span>');
+									var answer = $('<input type="checkbox" name="q['+id_parent+'][choices]['+j+'][answer]"> <label>answer</label>');
+									choice.append(text,answer);
+									$(this).next().children('ol').append(choice);
+								}
+							});
+							radios = $('<div class="radios"> <ol type="A"></ol> </div>');
+							$(this).parent().next().append(la,number,valid,radios);
 						}
 					});
+					type_answer.append(lt,select);
+					if ( $('input[type="radio"]:checked').val() == "manuel" ) {
+						type_answer.hide();
+					}
 
 					var answer = $('<div class="answer"></div>');
 
@@ -194,7 +240,7 @@ $_SESSION['timeout']=time();
 						}
 					});
 					var error = $('<span class="error"></span>');
-					div.append(lq,iq,lt,select,answer,button,error,'<hr>');
+					div.append(lq,iq,type_answer,answer,button,error,'<hr>');
 					$('div#current > div.all_questions').append(div);
 				});
 
@@ -221,6 +267,7 @@ $(document).ready(function(){
 			+'<option value="text">TEXT</option>'
 			+'<option value="number">NUMBER</option>'
 			+'<option value="interval">INTERVAL</option>'
+			+'<option value="radio">RADIO</option>'
 			+'</select>');
 		select.change(function(){
 			$(this).next().empty();
@@ -246,6 +293,24 @@ $(document).ready(function(){
 				max = $('<input class="input_question" type="number" step="any" name="nq['+id_parent+'][max]">')
 				$(this).next().append(la,min,max);
 			}
+			else if ( $(this).find(':selected').text() == "RADIO" ) {
+						la = $('<label>Enter the number of possible choices :</label><span class="error"></span>');
+						number = $('<input type="number">');
+						valid = $('<input type="button" value="create">');
+						valid.click(function(){
+							$(this).next().find('ol').empty();
+							n = $(this).prev().val();
+							for (var j = 0; j < n; j++) {
+								var choice = $('<li id="'+j+'"></li>');
+								var text = $('<input type="text" name="q['+id_parent+'][choices]['+j+'][choice]"><span class="error"></span>');
+								var answer = $('<input type="checkbox" name="q['+id_parent+'][choices]['+j+'][answer]"> <label>answer</label>');
+								choice.append(text,answer);
+								$(this).next().children('ol').append(choice);
+							}
+						});
+						radios = $('<div class="radios"> <ol type="A"></ol> </div>');
+						$(this).parent().next().append(la,number,valid,radios);
+					}
 		});
 		var answer = $('<div class="answer"></div>');
 
@@ -342,14 +407,10 @@ $(document).ready(function(){
 <script type="text/javascript">
 	setInterval("deco()", 10000);
 
-	function deco()
-	{
-		var timeNow = new Date().getTime();
-		timeNow = timeNow * 0.001;
-		timeNow = Math.floor(timeNow);
-
-		var timeExpire = '<?php echo $_SESSION['timeout']; ?>' ; 
-		if (timeNow >= timeExpire)
+	function deco(){
+			console.log('test');
+			var checkSession = '<?php echo !isset($_SESSION['user']) ?>';
+		if (checkSession)
 		{
 			alert("You have been idle for a while, please reconnect..");
 			window.location='../index.php';

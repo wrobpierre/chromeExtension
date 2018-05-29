@@ -103,7 +103,7 @@ if (isset($_POST['key'])) {
 				WHERE u.id = ".$_POST['user']." AND fu.id = ".$_POST['id'];
 			}
 			elseif (isset($_POST['id'])) {
-				$requete = "SELECT s.*, (SELECT SUM(a.result) FROM answers a WHERE a.key_user = s.key_user)note, (SELECT COUNT(*) FROM questions WHERE questions.key_questionnaires = q.id)nb_question
+				$requete = "SELECT s.*, (SELECT SUM(a.result) FROM answers a WHERE a.key_user = s.key_user)note, (SELECT distinct COUNT(*) FROM questions WHERE questions.key_questionnaires = q.id)nb_question
 				FROM sites s
 				INNER JOIN firsturl fu ON s.key_first_url = fu.id
 				INNER JOIN questionnaires q ON fu.id = q.key_first_url

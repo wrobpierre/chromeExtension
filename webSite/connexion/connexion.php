@@ -34,6 +34,7 @@ header('Access-Control-Allow-Origin: *');
         if($_POST['email'] == $email && $pwdSalt == $pwdCheck){
             session_start();
             $_SESSION['user'] = $email;
+            $_SESSION['timeout']= time();
             echo "Success";
             // header("Location: ".$adress."/webSite/index.php");
         }

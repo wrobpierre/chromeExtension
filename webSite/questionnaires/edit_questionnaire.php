@@ -1,9 +1,22 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['user'])) {
 	header("Location: ../index.php");
 	exit;
 }
+else{
+	$checkUser = $_SESSION['user'];
+	$inactive = 600; 
+	$session_life = time() - $_SESSION['timeout'];
+	if($session_life > $inactive){
+		session_destroy(); 
+		header("Location: ../index.php");
+		exit;
+	}
+	$_SESSION['timeout']=time();
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -92,6 +105,7 @@ if (!isset($_SESSION['user'])) {
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
 		var adress = "http://163.172.59.102";
+		var checkUser = '<?php echo $checkUser ;?>';
 		// var adress = "http://localhost/chromeExtension";
 
 		function getUrlParameter(sParam) {
@@ -224,7 +238,7 @@ if (!isset($_SESSION['user'])) {
 						if (r == true) {
 							var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"delete_question", id:value['id'] });
 							$(this).parent().remove();
-						}			
+						}
 					});
 					var error = $('<span class="error"></span>');
 					div.append(lq,iq,type_answer,answer,button,error,'<hr>');
@@ -396,6 +410,19 @@ $(document).ready(function(){
 });
 }
 });
+</script>
+<script type="text/javascript">
+	setInterval("deco()", 10000);
+
+	function deco(){
+			console.log('test');
+			var checkSession = '<?php echo !isset($_SESSION['user']) ?>';
+		if (checkSession)
+		{
+			alert("You have been idle for a while, please reconnect..");
+			window.location='../index.php';
+		}
+	}
 </script>
 <script src="../js/parallax.js-1.5.0/parallax.js"></script>
 </body>

@@ -173,15 +173,15 @@ if (isset($_POST['action'])) {
 			if (isset($_POST['id_questionnaire'])) {
 
 				$stmt = $conn->prepare("UPDATE questionnaires 
-					SET title = :title, type = :type, link = :link 
+					SET title = :title, statement = :statement, auto_correction = :auto_correction 
 					WHERE id = :id");
 				$stmt->bindParam(':title', $title);
-				$stmt->bindParam(':type', $type);
-				$stmt->bindParam(':link', $link);
+				$stmt->bindParam(':statement', $statement);
+				$stmt->bindParam(':auto_correction', $auto_correction);
 				$stmt->bindParam(':id', $id);
 				$title = $_POST['title'];
-				$type = ($_POST['type'] == 'article') ? 0 : 1;
-				$link = $_POST['data'];
+				$statement = $_POST['statement'];
+				$auto_correction = ($_POST['auto_correction'] == 'manuel') ? 0 : 1;
 				$id = $_POST['id_questionnaire'];
 				$stmt->execute();
 

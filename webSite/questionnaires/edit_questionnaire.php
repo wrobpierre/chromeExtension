@@ -274,28 +274,28 @@ $(document).ready(function(){
 			+'<option value="radio">RADIO</option>'
 			+'</select>');
 		select.change(function(){
-			$(this).parent()..next().empty();
-			var id_parent = $(this).parent()..parent().attr('id');
+			$(this).parent().next().empty();
+			var id_parent = $(this).parent().parent().attr('id');
 			if ( $(this).find(':selected').text() == "" ) {
-				$(this).parent()..next().empty();
+				$(this).parent().next().empty();
 			}
 			else if ( $(this).find(':selected').text() == "TEXT" ) {
 				la = $('<label>Answer&nbsp;(put a list of words separated by a comma without spaces, eg: apple,pear,banana,...):&nbsp;</label><span class="error"></span>');
 				ia = $('<input class="input_question" type="text" name="nq['+id_parent+'][answer]"><br>');
-				$(this).parent()..next().append(la,ia);
+				$(this).parent().next().append(la,ia);
 			}
 			else if ( $(this).find(':selected').text() == "NUMBER" ) {
 				la = $('<label>Answer&nbsp;(put a number):&nbsp;</label><span class="error"></span>');
 				ia = $('<input class="input_question" type="number" step="any" name="nq['+id_parent+'][answer]"><br>');
 				particule_label = $('<label>Particule (eg:3 million instead of 3 000 000):&nbsp;</label>');
 				particule_input = $('<input type="text" name="nq['+id_parent+'][particule]">');
-				$(this).parent()..next().append(la,ia,particule_label,particule_input);
+				$(this).parent().next().append(la,ia,particule_label,particule_input);
 			}
 			else if ( $(this).find(':selected').text() == "INTERVAL" ) {
 				la = $('<label>Answer&nbsp;(put the minimum in the first area and the max in the other. The values are include):&nbsp;</label><span class="error"></span>');
 				min = $('<input class="input_question" type="number" step="any" name="nq['+id_parent+'][min]"><label> to </label>')
 				max = $('<input class="input_question" type="number" step="any" name="nq['+id_parent+'][max]">')
-				$(this).parent()..next().append(la,min,max);
+				$(this).parent().next().append(la,min,max);
 			}
 			else if ( $(this).find(':selected').text() == "RADIO" ) {
 				la = $('<label>Enter the number of possible choices :</label><span class="error"></span>');
@@ -334,17 +334,45 @@ $(document).ready(function(){
 		i += 1;
 	})
 
+	var check_title = true;
+
+	$('input[name="title"]').change(function(){
+		var title = $('input[name="title"]').val();
+		var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'check_title', title:title });
+		post.done(function(data){
+			if (data != 0) {
+				$('input[name="title"]').prev().text('Already exist');
+				check_title = false;
+			}
+			else {
+				$('input[name="title"]').prev().text('');
+				check_title = true;	
+			}		
+		});
+	})
+
 	$('form').submit(function(){
 		$('span.error').text('');
 		valid = true;
 
 		if ($('input[name="title"]').val() == "") {
-			$('input[name="title"] + span.error').text(' Missing title');
+			$('input[name="title"]').prev().text(' Missing title');
+			valid = false;
+		}
+		else {
+			if (!check_title) {
+				$('input[name="title"]').prev().text('Already exist');
+				valid = false;
+			}
+		}
+
+		if ($('textarea[name="statement"]').val() == "") {
+			$('textarea[name="statement"]').prev().text(' Missing statement');
 			valid = false;
 		}
 
-		if ($('input[name="data"]').val() == "") {
-			$('div.selector span.error').text(' Missing link');
+		if ( $('input[type="radio"]:checked').length == 0 ) {
+			$('input[type="radio"][value="auto"]').prev().prev().text('Select the type of correction')
 			valid = false;
 		}
 
@@ -415,8 +443,8 @@ $(document).ready(function(){
 	setInterval("deco()", 10000);
 
 	function deco(){
-			console.log('test');
-			var checkSession = '<?php echo !isset($_SESSION['user']) ?>';
+		console.log('test');
+		var checkSession = '<?php echo !isset($_SESSION['user']) ?>';
 		if (checkSession)
 		{
 			alert("You have been idle for a while, please reconnect..");

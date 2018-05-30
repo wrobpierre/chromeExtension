@@ -302,6 +302,7 @@ function autoStart(url){
 
     var post = $.post(adress+'/dataBase.php', { url:firstUrl, key:"first" });
     post.done(function(data){
+      alert('start');
     });
   }
 }

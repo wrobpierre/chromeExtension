@@ -92,7 +92,7 @@ $_SESSION['timeout']=time();
 
         <ul>
           <li>Download the extension</li>
-          <li>Locate the ZIP file on your computer and unzip it</li>
+          <li>Locate the ZIP file on your computer and unzip it.<br><strong class="w3-text-red"> (IMPORTANT : You have to put the folder "Sharing experience" at the root of "Program Files (x86)" !)</strong></li>
           <li>Go back to the chrome://extensions/ page and click the Load unpacked extension button and select the unzipped folder for your extension to install it</li>
         </ul>
 

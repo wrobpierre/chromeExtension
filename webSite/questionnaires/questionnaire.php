@@ -2,14 +2,6 @@
 session_start();
 if(isset($_SESSION['user'])){
 	$checkUser = $_SESSION['user'];
-	$inactive = 45*60; 
-	$session_life = time() - $_SESSION['timeout'];
-	if($session_life > $inactive){
-		session_destroy(); 
-		header("Location: ../index.php");
-		exit;
-	}
-	$_SESSION['timeout']=time();
 }
 else{
 	$checkUser = null;

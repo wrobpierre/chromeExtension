@@ -67,88 +67,92 @@ if (isset($_POST['action'])) {
 			var_dump($_POST);
 			echo "</pre>";*/
 			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			if ( isset($_POST['title']) && isset($_POST['statement']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
+				$id = uniqid();
 
-			$id = uniqid();
+				$target_dir = "../img/quest_img/".$id;
+				$target_file = "";
 
-			$target_dir = "../img/quest_img/".$id;
-			$target_file = "";
-
-			if (mkdir($target_dir, 0777, true)) {
-				if ($_FILES["image_uploads"]["name"] != "") {
-					$target_file = $target_dir . "/" . basename($_FILES["image_uploads"]["name"]);
-					if (!move_uploaded_file($_FILES["image_uploads"]["tmp_name"], $target_file)) {
-						header('Location: ' . $_SERVER['HTTP_REFERER']);
-						//echo "fail";
-					} 
-				}
-
-				$stmt = $conn->prepare("INSERT INTO firsturl (url)
-					VALUES (:url)");
-				$stmt->bindParam(':url', $url);
-				$url = $adress."/webSite/questionnaires/questionnaire.php?id=".$id;
-				$stmt->execute();
-
-				$stmt = $conn->prepare("INSERT INTO questionnaires (title, statement, link_img, auto_correction, key_user, key_first_url)
-					SELECT :title, :statement, :link_img, :auto_correction, (SELECT u.id FROM users u WHERE u.email LIKE :user_email), fu.id FROM firsturl fu WHERE url like :url");
-				$stmt->bindParam(':title', $title);
-				$stmt->bindParam(':statement', $statement);
-				$stmt->bindParam(':link_img', $link_img);
-				$stmt->bindParam(':auto_correction', $auto_correction);
-				$stmt->bindParam(':url', $url);
-				$stmt->bindParam(':user_email', $user_email);
-				$title = $_POST['title'];
-				$statement = $_POST['statement'];
-				$link_img = $target_file;
-				$auto_correction = ($_POST['auto_correction'] != 'auto') ? 0 : 1;
-				$user_email = $_POST['user_email'];
-				$stmt->execute();
-
-				$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, key_questionnaires)
-					SELECT :question, :type_ques, :answer, q.id 
-					FROM questionnaires q 
-					INNER JOIN firsturl fu ON q.key_first_url = fu.id 
-					WHERE url like :url");
-				$stmt->bindParam(':url', $url);
-				$stmt->bindParam(':question', $question);
-				$stmt->bindParam(':type_ques', $type_ques);
-				$stmt->bindParam(':answer', $answer);
-
-				foreach ($_POST['q'] as $key => $value) {
-					$question = $value['question'];
-
-					if ($auto_correction == 1) {
-						$type_ques = $value['type_ques'];
-
-						if ($type_ques == 'text') {
-							$answer = strtoupper(stripVN($value['answer']));
+				if ($_POST['user_email'] != "") {
+					# code...
+					if (mkdir($target_dir, 0777, true)) {
+						if ($_FILES["image_uploads"]["name"] != "") {
+							$target_file = $target_dir . "/" . basename($_FILES["image_uploads"]["name"]);
+							if (!move_uploaded_file($_FILES["image_uploads"]["tmp_name"], $target_file)) {
+								header('Location: ' . $_SERVER['HTTP_REFERER']);
+								//echo "fail";
+							} 
 						}
-						elseif ($type_ques == 'number') {
-							$answer = $value['answer']."/".$value['particule'];
-						}
-						elseif ($type_ques == 'interval') {
-							$answer = $value['min']."/".$value['max'];
-						}
-						elseif ($type_ques == 'radio') {
-							foreach ($value['choices'] as $k => $v) {
-								if (isset($v['answer'])) {
-									$answer = $k;
-									//echo $answer;
+
+						$stmt = $conn->prepare("INSERT INTO firsturl (url)
+							VALUES (:url)");
+						$stmt->bindParam(':url', $url);
+						$url = $adress."/webSite/questionnaires/questionnaire.php?id=".$id;
+						$stmt->execute();
+
+						$stmt = $conn->prepare("INSERT INTO questionnaires (title, statement, link_img, auto_correction, key_user, key_first_url)
+							SELECT :title, :statement, :link_img, :auto_correction, (SELECT u.id FROM users u WHERE u.email LIKE :user_email), fu.id FROM firsturl fu WHERE url like :url");
+						$stmt->bindParam(':title', $title);
+						$stmt->bindParam(':statement', $statement);
+						$stmt->bindParam(':link_img', $link_img);
+						$stmt->bindParam(':auto_correction', $auto_correction);
+						$stmt->bindParam(':url', $url);
+						$stmt->bindParam(':user_email', $user_email);
+						$title = $_POST['title'];
+						$statement = $_POST['statement'];
+						$link_img = $target_file;
+						$auto_correction = ($_POST['auto_correction'] != 'auto') ? 0 : 1;
+						$user_email = $_POST['user_email'];
+						$stmt->execute();
+
+						$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, key_questionnaires)
+							SELECT :question, :type_ques, :answer, q.id 
+							FROM questionnaires q 
+							INNER JOIN firsturl fu ON q.key_first_url = fu.id 
+							WHERE url like :url");
+						$stmt->bindParam(':url', $url);
+						$stmt->bindParam(':question', $question);
+						$stmt->bindParam(':type_ques', $type_ques);
+						$stmt->bindParam(':answer', $answer);
+
+						foreach ($_POST['q'] as $key => $value) {
+							$question = $value['question'];
+
+							if ($auto_correction == 1) {
+								$type_ques = $value['type_ques'];
+
+								if ($type_ques == 'text') {
+									$answer = strtoupper(stripVN($value['answer']));
 								}
-								$question .= "(/=/)".$v['choice'];
-								echo $question.'<br>';
+								elseif ($type_ques == 'number') {
+									$answer = $value['answer']."/".$value['particule'];
+								}
+								elseif ($type_ques == 'interval') {
+									$answer = $value['min']."/".$value['max'];
+								}
+								elseif ($type_ques == 'radio') {
+									foreach ($value['choices'] as $k => $v) {
+										if (isset($v['answer'])) {
+											$answer = $k;
+									//echo $answer;
+										}
+										$question .= "(/=/)".$v['choice'];
+										echo $question.'<br>';
+									}
+								}
 							}
+							else {
+								$type_ques = "free";
+								$answer = null;							
+							}
+
+							$stmt->execute();
 						}
 					}
 					else {
-						$type_ques = "free";
-						$answer = null;							
+						header('Location: ' . $_SERVER['HTTP_REFERER']);
 					}
-
-					$stmt->execute();
 				}
-			}
-			else {
-				header('Location: ' . $_SERVER['HTTP_REFERER']);
 			}
 		}
 		elseif ($_POST['action'] == 'get_questions_to_edit') {
@@ -169,15 +173,15 @@ if (isset($_POST['action'])) {
 			if (isset($_POST['id_questionnaire'])) {
 
 				$stmt = $conn->prepare("UPDATE questionnaires 
-					SET title = :title, type = :type, link = :link 
+					SET title = :title, statement = :statement, auto_correction = :auto_correction 
 					WHERE id = :id");
 				$stmt->bindParam(':title', $title);
-				$stmt->bindParam(':type', $type);
-				$stmt->bindParam(':link', $link);
+				$stmt->bindParam(':statement', $statement);
+				$stmt->bindParam(':auto_correction', $auto_correction);
 				$stmt->bindParam(':id', $id);
 				$title = $_POST['title'];
-				$type = ($_POST['type'] == 'article') ? 0 : 1;
-				$link = $_POST['data'];
+				$statement = $_POST['statement'];
+				$auto_correction = ($_POST['auto_correction'] == 'manuel') ? 0 : 1;
 				$id = $_POST['id_questionnaire'];
 				$stmt->execute();
 

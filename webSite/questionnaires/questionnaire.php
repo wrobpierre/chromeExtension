@@ -2,7 +2,7 @@
 session_start();
 if(isset($_SESSION['user'])){
 	$checkUser = $_SESSION['user'];
-	$inactive = 600; 
+	$inactive = 45*60; 
 	$session_life = time() - $_SESSION['timeout'];
 	if($session_life > $inactive){
 		session_destroy(); 

@@ -7,14 +7,13 @@ if (!isset($_SESSION['user'])) {
 }
 else{
 	$checkUser = $_SESSION['user'];
-	$inactive = 600; 
+	$inactive = 45*60; 
 	$session_life = time() - $_SESSION['timeout'];
 	if($session_life > $inactive){
 		session_destroy(); 
 		header("Location: ../index.php");
 		exit;
 	}
-	$_SESSION['timeout']=time();
 }
 
 ?>
@@ -403,19 +402,6 @@ $(document).ready(function(){
 });
 }
 });
-</script>
-<script type="text/javascript">
-	setInterval("deco()", 10000);
-
-	function deco(){
-			console.log('test');
-			var checkSession = '<?php echo !isset($_SESSION['user']) ?>';
-		if (checkSession)
-		{
-			alert("You have been idle for a while, please reconnect..");
-			window.location='../index.php';
-		}
-	}
 </script>
 <script src="../js/parallax.js-1.5.0/parallax.js"></script>
 </body>

@@ -137,7 +137,7 @@ if (isset($_POST['action'])) {
 									//echo $answer;
 										}
 										$question .= "(/=/)".$v['choice'];
-										echo $question.'<br>';
+										//echo $question.'<br>';
 									}
 								}
 							}
@@ -169,7 +169,7 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'edit') {
-			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			//header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
 			if (isset($_POST['id_questionnaire'])) {
 
 				$stmt = $conn->prepare("UPDATE questionnaires 
@@ -195,17 +195,34 @@ if (isset($_POST['action'])) {
 
 				foreach ($_POST['q'] as $key => $value) {
 					$id = $key;
-					$type_ques = $value['type_ques'];
 					$question = $value['question'];
 
-					if ($type_ques == 'text') {
-						$answer = strtoupper(stripVN($value['answer']));
+					if ($auto_correction == 1) {
+						$type_ques = $value['type_ques'];
+
+						if ($type_ques == 'text') {
+							$answer = strtoupper(stripVN($value['answer']));
+						}
+						elseif ($type_ques == 'number') {
+							$answer = $value['answer']."/".$value['particule'];
+						}
+						elseif ($type_ques == 'interval') {
+							$answer = $value['min']."/".$value['max'];
+						}
+						elseif ($type_ques == 'radio') {
+							foreach ($value['choices'] as $k => $v) {
+								if (isset($v['answer'])) {
+									$answer = $k;
+									//echo $answer;
+								}
+								$question .= "(/=/)".$v['choice'];
+								//echo $question.'<br>';
+							}
+						}
 					}
-					elseif ($type_ques == 'number') {
-						$answer = $value['answer']."/".$value['particule'];
-					}
-					elseif ($type_ques == 'interval') {
-						$answer = $value['min']."/".$value['max'];
+					else {
+						$type_ques = "free";
+						$answer = null;							
 					}
 
 					$stmt->execute();
@@ -221,17 +238,34 @@ if (isset($_POST['action'])) {
 					$id = $_POST['id_questionnaire'];
 
 					foreach ($_POST['nq'] as $key => $value) {
-						$type_ques = $value['type_ques'];
 						$question = $value['question'];
 
-						if ($type_ques == 'text') {
-							$answer = strtoupper(stripVN($value['answer']));
+						if ($auto_correction == 1) {
+							$type_ques = $value['type_ques'];
+
+							if ($type_ques == 'text') {
+								$answer = strtoupper(stripVN($value['answer']));
+							}
+							elseif ($type_ques == 'number') {
+								$answer = $value['answer']."/".$value['particule'];
+							}
+							elseif ($type_ques == 'interval') {
+								$answer = $value['min']."/".$value['max'];
+							}
+							elseif ($type_ques == 'radio') {
+								foreach ($value['choices'] as $k => $v) {
+									if (isset($v['answer'])) {
+										$answer = $k;
+									//echo $answer;
+									}
+									$question .= "(/=/)".$v['choice'];
+									//echo $question.'<br>';
+								}
+							}
 						}
-						elseif ($type_ques == 'number') {
-							$answer = $value['answer']."/".$value['particule'];
-						}
-						elseif ($type_ques == 'interval') {
-							$answer = $value['min']."/".$value['max'];
+						else {
+							$type_ques = "free";
+							$answer = null;							
 						}
 
 						$stmt->execute();

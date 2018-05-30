@@ -44,7 +44,7 @@ else{
 </head>
 <body>
 	<header class="parallax-window" data-parallax="scroll" data-image-src="../img/edit_question.jpg"></header>
-	<form action="management_questionnaire.php" method="post">
+	<form id="form" action="management_questionnaire.php" method="post">
 		<div id="form-questionnaire">
 			<div id="questionnaire">
 				<h1>Edit questionnaire</h1>
@@ -146,7 +146,7 @@ else{
 				$.each(dataParse, function(index, value){
 					var div = $('<div></div>').attr('class','question').attr('id',value['id']);
 					var lq = $('<label>Question&nbsp;:&nbsp;</label> <span class="error"></span>');
-					var iq = $('<input class="input_question" type="text" name="q['+value['id']+'][question]">').attr('value', value['question']);
+					var iq = $('<input class="input_question" type="text" name="q['+value['id']+'][question]">').attr('value', value['question'].split('(/=/)')[0]);
 
 					var type_answer = $('<div class="type_answer"></div>'); 
 					var lt = $('<br><label>Type of question : </label> <span class="error"></span>');
@@ -229,6 +229,35 @@ else{
 						to = $('<label> to </label>');
 						max = $('<input class="input_question" type="number" step="any" name="q['+value['id']+'][max]">').val(value['answer'].split("/")[1]);
 						answer.append(la,min,to,max);
+					}
+					else if (value['type_ques'] == 'radio') {
+						select.val('radio');
+						la = $('<label>Enter the number of possible choices :</label><span class="error"></span>');
+						number = $('<input type="number">');
+						valid = $('<input type="button" value="create">');
+						valid.click(function(){
+							$(this).next().find('ol').empty();
+							n = $(this).prev().val();
+							for (var j = 0; j < n; j++) {
+								var choice = $('<li id="'+j+'"></li>');
+								var text = $('<input type="text" name="q['+value['id']+'][choices]['+j+'][choice]"><span class="error"></span>');
+								var answer = $('<input type="checkbox" name="q['+value['id']+'][choices]['+j+'][answer]"> <label>answer</label>');
+								choice.append(text,answer);
+								$(this).next().children('ol').append(choice);
+							}
+						});
+						radios = $('<div class="radios"> <ol type="A"></ol> </div>');
+						$.each( value['question'].split('(/=/)').slice(1, value['question'].split('(/=/)').length) , function(id,v){
+							var choice = $('<li id="'+id+'"></li>');
+							var text = $('<input type="text" name="q['+value['id']+'][choices]['+id+'][choice]" value="'+v+'"> <span class="error"></span>');
+							var answer = $('<input type="checkbox" name="q['+value['id']+'][choices]['+id+'][answer]"> <label>answer</label>');
+							if (id == value['answer']) {
+								answer.prop("checked", true);	
+							}
+							choice.append(text,answer);
+							radios.find('ol').append(choice);
+						})
+						answer.append(la,number,valid,radios);
 					}
 
 					var button = $('<input class="button_delete" type="button" value="delete question">');
@@ -386,23 +415,48 @@ $(document).ready(function(){
 					$(this).find('input[name="q['+id+'][question]"]').prev().text('Missing question');
 					valid = false;
 				}
-				if ($(this).find('select').find(':selected').text() == "") {
-					$(this).find('select[name="q['+id+'][type_ques]"]').prev().text('Select the type of the question');
-					valid = false;
-				}
-				else {
-					if ($(this).find('select').find(':selected').text() == "TEXT" || $(this).find('select').find(':selected').text() == "NUMBER") {
-						if ($(this).find('input[name="q['+id+'][answer]"]').val() == "") {
-							$(this).find('input[name="q['+id+'][answer]"]').prev().text('Missing answer');
-							valid = false;
+				if ( $('input[type="radio"]:checked').val() == "auto" ) {
+					if ($(this).find('select').find(':selected').text() == "") {
+						$(this).find('select[name="q['+id+'][type_ques]"]').prev().text('Select the type of the question');
+						valid = false;
+					}
+					else {
+						if ($(this).find('select').find(':selected').text() == "TEXT" || $(this).find('select').find(':selected').text() == "NUMBER") {
+							if ($(this).find('input[name="q['+id+'][answer]"]').val() == "") {
+								$(this).find('input[name="q['+id+'][answer]"]').prev().text('Missing answer');
+								valid = false;
+							}
 						}
-					}
-					else if ($(this).find('select').find(':selected').text() == "INTERVAL") {
-						if ($(this).find('input[name="q['+id+'][min]"]').val() == "" || $(this).find('input[name="q['+id+'][max]"]').val() == "") {
-							$(this).find('input[name="q['+id+'][min]"]').prev().text('Missing min or max');
-							valid = false;
-						}	
-					}
+						else if ($(this).find('select').find(':selected').text() == "INTERVAL") {
+							if ($(this).find('input[name="q['+id+'][min]"]').val() == "" || $(this).find('input[name="q['+id+'][max]"]').val() == "") {
+								$(this).find('input[name="q['+id+'][min]"]').prev().text('Missing min or max');
+								valid = false;
+							}	
+						}
+						else if ($(this).find('select').find(':selected').text() == "RADIO") {
+							if ( $(this).find('.answer > .radios > ol > li').length == 0 ) {
+								$(this).find('.answer > span.error').text('Please add at least one choice');
+								valid = false;
+							}
+							else {
+								if( $(this).find('.answer > .radios > ol > li').find(':checked').length == 0) {
+									$(this).find('.answer > span.error').text('You need to choose the right choice');
+									valid = false;
+								}
+								else if ($(this).find('.answer > .radios > ol > li').find(':checked').length > 1 ) {
+									$(this).find('.answer > span.error').text('There can only be one right choice');
+									valid = false;
+								}	
+
+								$(this).find('.answer > .radios > ol > li').each(function(index,value){
+									if ( $(this).find('input[type=text]').val() == "" ) {
+										$(this).find('span.error').text('Missing choice');
+										valid = false;
+									}
+								});
+							}
+						}
+					}	
 				}
 			});
 
@@ -412,23 +466,48 @@ $(document).ready(function(){
 					$(this).find('input[name="nq['+id+'][question]"]').prev().text('Missing question');
 					valid = false;
 				}
-				if ($(this).find('select').find(':selected').text() == "") {
-					$(this).find('select[name="nq['+id+'][type_ques]"]').prev().text('Select the type of the question');
-					valid = false;
-				}
-				else {
-					if ($(this).find('select').find(':selected').text() == "TEXT" || $(this).find('select').find(':selected').text() == "NUMBER") {
-						if ($(this).find('input[name="nq['+id+'][answer]"]').val() == "") {
-							$(this).find('input[name="nq['+id+'][answer]"]').prev().text('Missing answer');
-							valid = false;
+				if ( $('input[type="radio"]:checked').val() == "auto" ) {
+					if ($(this).find('select').find(':selected').text() == "") {
+						$(this).find('select[name="nq['+id+'][type_ques]"]').prev().text('Select the type of the question');
+						valid = false;
+					}
+					else {
+						if ($(this).find('select').find(':selected').text() == "TEXT" || $(this).find('select').find(':selected').text() == "NUMBER") {
+							if ($(this).find('input[name="nq['+id+'][answer]"]').val() == "") {
+								$(this).find('input[name="nq['+id+'][answer]"]').prev().text('Missing answer');
+								valid = false;
+							}
 						}
-					}
-					else if ($(this).find('select').find(':selected').text() == "INTERVAL") {
-						if ($(this).find('input[name="nq['+id+'][min]"]').val() == "" || $(this).find('input[name="nq['+id+'][max]"]').val() == "") {
-							$(this).find('input[name="nq['+id+'][min]"]').prev().text('Missing min or max');
-							valid = false;
-						}	
-					}
+						else if ($(this).find('select').find(':selected').text() == "INTERVAL") {
+							if ($(this).find('input[name="nq['+id+'][min]"]').val() == "" || $(this).find('input[name="nq['+id+'][max]"]').val() == "") {
+								$(this).find('input[name="nq['+id+'][min]"]').prev().text('Missing min or max');
+								valid = false;
+							}	
+						}
+						else if ($(this).find('select').find(':selected').text() == "RADIO") {
+							if ( $(this).find('.answer > .radios > ol > li').length == 0 ) {
+								$(this).find('.answer > span.error').text('Please add at least one choice');
+								valid = false;
+							}
+							else {
+								if( $(this).find('.answer > .radios > ol > li').find(':checked').length == 0) {
+									$(this).find('.answer > span.error').text('You need to choose the right choice');
+									valid = false;
+								}
+								else if ($(this).find('.answer > .radios > ol > li').find(':checked').length > 1 ) {
+									$(this).find('.answer > span.error').text('There can only be one right choice');
+									valid = false;
+								}	
+
+								$(this).find('.answer > .radios > ol > li').each(function(index,value){
+									if ( $(this).find('input[type=text]').val() == "" ) {
+										$(this).find('span.error').text('Missing choice');
+										valid = false;
+									}
+								});
+							}
+						}
+					}	
 				}
 			});
 		}

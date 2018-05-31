@@ -315,10 +315,10 @@ function autoStop(email){
       //storage.get('uniqId', function(resultId){
         var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, key:'add', email:email });
         post.done(function(data){
-          //alert(data);
           listen = false;
           firstUrl = undefined;
           storage.clear();
+          alert(data);
         });
       //});
     });

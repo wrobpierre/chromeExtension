@@ -21,77 +21,66 @@ else{
 <html>
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="../css/questionnaire.css">
 	<title>Add a questionnaire</title>
-	<style type="text/css">
-	/*.all_questions {
-		margin: 0 0 30px 0;
-	}
-
-	.error {
-		color:red;
-	}
-
-	select {
-		display: block;
-		margin: 20px 0 20px 0;
-	}
-
-	div.selector + p {
-		display: inline;
-		}*/
-
-		form img {
-			height: 64px;
-			order: 1;
-		}
-	</style>
+	<?php include '../layout/includes.php'; ?>
 </head>
 <body>
-	<header class="parallax-window" data-parallax="scroll" data-image-src="../img/header_question.jpg"></header>
-	<form id="form" action="management_questionnaire.php" method="post" enctype="multipart/form-data">
-		<div id="form-questionnaire">
-			<div id="questionnaire">
+	<?php include '../layout/header.php'; ?>
+	<body>
+		<form id="form" action="management_questionnaire.php" method="post" enctype="multipart/form-data">
+			<header class="w3-container w3-red w3-center" style="padding:128px 16px">
 				<h1>Add a questionnaire</h1>
-				<hr>
-				<input type="hidden" name="action" value="add">
-				<input type="hidden" name="user_email" value="<?php echo $checkUser ;?>">
+			</header>
+			<div id="form-questionnaire" class="w3-light-grey w3-center w3-container">
+				<div id="questionnaire">
+					<input type="hidden" name="action" value="add">
+					<input type="hidden" name="user_email" value="<?php echo $checkUser ;?>">
+					<div class="w3-margin">
+						<label>Enter the title of your questionnaire&nbsp;:</label>
+						<span class="error"></span>
+						<input class="input_question" type="text" name="title"><br>
+						
+					</div>
 
-				<label>Enter the title of your questionnaire&nbsp;:</label>
-				<span class="error"></span>
-				<input class="input_question" type="text" name="title"><br>
-
-				<label>Statement of the questionnaire&nbsp;:</label>
-				<span class="error"></span>
-				<textarea form="form" name="statement"></textarea><br><br>
-				
-				<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
-				<span class="error"></span><br>
-				<input type="radio" name="auto_correction" value="auto" checked="checked"><label>Automatic</label><br>
-				<input type="radio" name="auto_correction" value="manuel"><label>Manuel</label><br><br>
-
-				<label for="image_uploads">Select images to upload (PNG, JPG):</label>
-				<span class="error"></span>
-				<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
-				<div class="preview">
-					<p>Aucun fichier sélectionné pour le moment</p>
+					<div class="w3-margin">
+					<label>Statement of the questionnaire&nbsp;:</label>
+					<span class="error"></span>
+					<textarea form="form" name="statement"></textarea>
 				</div>
 
-				<p>Your questions&nbsp;:</p>
-				<input class="button" type="button" value="add question">
-				<span class="error"></span><br>
-				<div class="all_questions">
+
+					<div class="w3-margin">
+					<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
+					<span class="error"></span><br>
+					<input type="radio" name="auto_correction" value="auto" checked="checked"><label>Automatic</label>
+					<input type="radio" name="auto_correction" value="manuel"><label>Manuel</label>
+				</div>
+
+					<div class="w3-margin">
+					<label for="image_uploads">Select images to upload (PNG, JPG):</label>
+					<span class="error"></span>
+					<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
+					<div class="preview">
+						<p>Aucun fichier sélectionné pour le moment</p>
+					</div>
+				</div>
+					<div class="w3-margin">
+					<p>Your questions&nbsp;:</p>
+					<input class="button" type="button" value="add question">
+					<span class="error"></span><br>
+					<div class="all_questions">
+
+					</div>
+				</div>
+					<input class="button_valid" type="submit" value="send">
 
 				</div>
-				<input class="button_valid" type="submit" value="send">
-
 			</div>
-		</div>
-	</form>
+		</form>
 
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-	<script type="text/javascript">
-		var adress = "http://163.172.59.102"
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script type="text/javascript">
+			var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
 
 		var checkUser = '<?php echo $checkUser ;?>';
@@ -365,6 +354,6 @@ else{
 			})
 		});
 	</script>
-<script src="../js/parallax.js-1.5.0/parallax.js"></script>
+	<?php include '../layout/footer.php'; ?>
 </body>
 </html>

@@ -2,6 +2,7 @@ var lastUrl = null;
 var onUpdatedUrl;
 var storage = chrome.storage.local;
 var listen = false;
+var question = 1;
 var firstUrl;
 var adress = "http://163.172.59.102";
 // var adress = "http://localhost/chromeExtension"
@@ -95,7 +96,7 @@ function getCurrentTabUrl(eventUrl) {
           
           //if (hostName != '163.172.59.102') {
             //alert(hostName);
-            var values = {'url':url, 'title':title, 'keywords':keywords, 'firstTime':dateBegin, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'scrollPercent': 0}
+            var values = {'url':url, 'title':title, 'keywords':keywords, 'firstTime':dateBegin, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'question': question}
             saveList(values);
           //}
         });
@@ -238,7 +239,10 @@ chrome.runtime.onMessageExternal.addListener(
     else if (request.action == 'start') {
       autoStart(request.url);      
     }
-    //sendResponse({result: request.openUrlInEditor});
+    else if (request.action == 'change_question') {
+      question += 1;
+      sendResponse({result: question});
+    }
   });
 
 function sendSecondUrl(){
@@ -317,6 +321,7 @@ function autoStop(email){
         post.done(function(data){
           //alert(data);
           listen = false;
+          question = 1;
           firstUrl = undefined;
           storage.clear();
         });

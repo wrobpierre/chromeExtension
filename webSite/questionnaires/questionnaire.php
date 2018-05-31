@@ -7,6 +7,24 @@ else{
 	$checkUser = null;
 }
 
+function getOS() { 
+	$user_agent     =   $_SERVER['HTTP_USER_AGENT'];
+	$os_platform    =   "Unknown OS Platform";
+	$os_array       =   array(
+		'/windows nt/i'     =>  'Windows',
+		'/macintosh|mac os|mac_powerpc/i' =>  'Mac',
+		'/linux/i'              =>  'Linux',
+		'/ubuntu/i'             =>  'Ubuntu',
+	);
+
+	foreach ($os_array as $regex => $value) { 
+
+		if (preg_match($regex, $user_agent)) {
+			$os_platform    =   $value;
+		}
+	}   
+	return $os_platform;
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,8 +51,23 @@ else{
 	<script type="text/javascript">
 
 		// The ID of the extension we want to talk to.
-		var editorExtensionId = "ocknihfeinjoffpckboadjhgenhojpgk";
-
+		var editorExtensionId = null;
+		var os = '<?php echo getOS(); ?>';
+		console.log(os);
+		if (os == 'Windows') {
+			editorExtensionId = "ocknihfeinjoffpckboadjhgenhojpgk";			
+		}
+		else if (os == 'Mac') {
+			editorExtensionId = "fkjmjhcdmdgenkkabahncdhapanknlcl";
+		}
+		else if (os == 'Linux') {
+			editorExtensionId = "";
+		}
+		else if (os == 'Ubuntu') {
+			editorExtensionId = "";
+		}
+		console.log(editorExtensionId)
+		
 		var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
 
@@ -245,6 +278,13 @@ else{
 					$('div.question > input[type="button"]').click(function(){
 						$(this).parent().css('display','none');
 						$(this).parent().next().css('display','block');
+					})
+
+					$('div.question > input[type="button"][value="valid"]').click(function(){
+						chrome.runtime.sendMessage(editorExtensionId, {action: 'change_question'},
+							function(response) {
+								//alert(response.result);
+							});
 					})
 
 					$('form').submit(function(){

@@ -8,7 +8,7 @@ $_SESSION['timeout']=time();
 <title>ChromeExtension</title>
 <?php include './layout/includes.php'; ?>
 <body>
-<?php include './layout/header.php'; ?>
+  <?php include './layout/header.php'; ?>
   <!-- Header -->
   <header class="w3-container w3-red w3-center" style="padding:128px 16px">
     <h1 class="w3-margin w3-jumbo">ChromeExtension</h1>

@@ -259,6 +259,15 @@ function getOS() {
 
 					user_opinion.append(question,rank);
 				}
+				var label_knowledge = $('<p>What is your level of knowledge on the subject of this questionnaire?</p>');
+				var knowledge = $('<select name="knowledge">'
+					+'<option value=""></option>'
+					+'<option value="novice">NOVICE</option>'
+					+'<option value="medium">MEDIUM</option>'
+					+'<option value="expert">EXPERT</option>'
+					+'</select>');
+				user_opinion.append(label_knowledge,knowledge);
+
 				var submit = $('<input class="button_valid" type="submit" value="send">');
 				lastDiv.css("margin", "5%")
 

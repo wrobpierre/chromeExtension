@@ -66,14 +66,16 @@ if (isset($_POST['user_email'])) {
 		echo "</pre>";*/
 
 		header("Location: ".$adress."/webSite/questionnaires/result.html");			
-		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, key_user)
-			SELECT :key_question, :answer, :result, :rank, id FROM users WHERE email like :email");
+		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, knowledge, key_user)
+			SELECT :key_question, :answer, :result, :rank, :knowledge, id FROM users WHERE email like :email");
 		$stmt->bindParam(':key_question', $key_question);
 		$stmt->bindParam(':answer', $answer);
 		$stmt->bindParam(':result', $result);
 		$stmt->bindParam(':rank', $rank);
+		$stmt->bindParam(':knowledge', $knowledge);
 		$stmt->bindParam(':email', $email);
 		$email = $_POST['user_email'];
+		$knowledge = $_POST['knowledge'];
 
 		foreach ($_POST['q'] as $key => $value) {
 			$key_question = $key;

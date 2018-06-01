@@ -113,15 +113,16 @@ post.done(function(data) {
     var questionFilter = document.getElementById('questionFilter');
     var li = document.createElement("li");
     var input = document.createElement("input");
+    var label = document.createElement("label");
     input.setAttribute("class", "questionFilter");
-    input.setAttribute("type", "button");
-    input.setAttribute("value", "question "+(i+1));
+    input.setAttribute("type", "checkbox");
+    input.setAttribute("checked", "checked");
+    label.innerHTML = "question "+(i+1);
     li.appendChild(input);
+    li.appendChild(label);
     questionFilter.appendChild(li);
   }
   nb_site = tabData.length;
-
-  console.log(document.getElementsByClassName('questionFilter'));
 
   tabData.sort(function(a,b) {
     return a.first_time - b.first_time;
@@ -1107,16 +1108,18 @@ if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/
   // $j("#nytg-error").show();
 }
 
-  $j('.questionFilter').click(function() {
+$j('.questionFilter').click(function() {
   jQuery.noConflict();
   var $j = jQuery;
   nytg.c.circle.remove(nytg.c.circle[0])
-  $('svg').remove()
+  $j('svg').remove()
   nytg.budget_array_data = [];
   for (var i = 0; i < tabData.length; i++) {
-    if(tabData[i]['question'] == $j('.questionFilter').index($j(this))){
-      nytg.budget_array_data.push(tabData[i]);
-    }
+    $j('.questionFilter').each(function(index) {
+      if( this.checked && tabData[i]['question'] == index){
+        nytg.budget_array_data.push(tabData[i]);
+      }
+    });
   }
   if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
     $j(document).ready($j.proxy(nytg.ready, this));
@@ -1124,5 +1127,7 @@ if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/
     $j("#nytg-chartFrame").hide();
   // $j("#nytg-error").show();
 }
+
 });
+
 });

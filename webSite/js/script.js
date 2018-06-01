@@ -4,6 +4,8 @@ var nb_question = null;
 var nb_site = null;
 var errorImg = false;
 var adress = "http://163.172.59.102"
+var tabData = [];
+var tabSave = [];
 // var adress = "http://localhost/chromeExtension"
 
 function getUrlParameter(sParam) {
@@ -25,7 +27,7 @@ var user = getUrlParameter('user');
 if (id !== undefined && user !== undefined) {
   //console.log(id);
   //console.log(user);
-  var post = $.post(adress+'/dataBase.php', { key:"load", id:id });
+  var post = $.post(adress+'/dataBase.php', { key:"load", id:id});
 }
 else if (id !== undefined) {
   //console.log(id);
@@ -40,11 +42,13 @@ else {
 post.done(function(data) {
   var nytg = nytg || {}; 
   var time = 0;
-  var tabData = [];
+  
   var alreadySave = false;
+
+  var maxQuestion = 0;
+
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
-  console.log(dataParse);
   dataParse.forEach(function(element){
     nb_question = element['nb_question'];
     if (!tabData.find(function(elem){ return elem.url === element.url; })) {
@@ -57,6 +61,11 @@ post.done(function(data) {
       var tabMedianeTime = [];
       var tabMedianeView = [];
       var tabMedianeFirstTime = [];
+
+      if (maxQuestion < element['question']) {
+        maxQuestion = element['question']
+      }
+
       tmp.forEach(function(elem){
         views += parseInt(elem['view']);
         note += parseInt(elem['note']);
@@ -94,16 +103,30 @@ post.done(function(data) {
       element['first_time'] = tabMedianeFirstTime[Math.ceil(parseInt(tabMedianeTime.length/2))];
 
       if ( element['host_name'].indexOf('www.google.') == -1 ) {
-        tabData.push(element);      
+        tabData.push(element);
+        tabSave.push(element);
       }
     }
   });
+  
+  for (var i = 0; i < maxQuestion; i++) {
+    var questionFilter = document.getElementById('questionFilter');
+    var li = document.createElement("li");
+    var input = document.createElement("input");
+    var label = document.createElement("label");
+    input.setAttribute("class", "questionFilter");
+    input.setAttribute("type", "checkbox");
+    input.setAttribute("checked", "checked");
+    label.innerHTML = "question "+(i+1);
+    li.appendChild(input);
+    li.appendChild(label);
+    questionFilter.appendChild(li);
+  }
   nb_site = tabData.length;
 
   tabData.sort(function(a,b) {
     return a.first_time - b.first_time;
   });
-  console.log(tabData);
   // var minAvg = tabData[0]['avg'];
   // var maxAvg = 0;
   tabData.forEach(function(element){
@@ -843,7 +866,7 @@ nytg.test2 = [0,nb_question];
           }
           return;
         }*/
-              
+
         /*if (d.discretion === "Discretionary") {
           targetY = that.changeScale(d.change);
           targetX = 100 + that.groupScale(d.group)*(that.width - 120);
@@ -1018,7 +1041,7 @@ $j("#save").click(function(){
 })
 
 nytg.ready = function() {
-  var that = this;
+  var that = this;    
   nytg.c = new nytg.Chart();
   nytg.c.init();
   nytg.c.start();
@@ -1084,5 +1107,27 @@ if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/
   $j("#nytg-chartFrame").hide();
   // $j("#nytg-error").show();
 }
+
+$j('.questionFilter').click(function() {
+  jQuery.noConflict();
+  var $j = jQuery;
+  nytg.c.circle.remove(nytg.c.circle[0])
+  $j('svg').remove()
+  nytg.budget_array_data = [];
+  for (var i = 0; i < tabData.length; i++) {
+    $j('.questionFilter').each(function(index) {
+      if( this.checked && tabData[i]['question'] == index){
+        nytg.budget_array_data.push(tabData[i]);
+      }
+    });
+  }
+  if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
+    $j(document).ready($j.proxy(nytg.ready, this));
+  } else {
+    $j("#nytg-chartFrame").hide();
+  // $j("#nytg-error").show();
+}
+
+});
 
 });

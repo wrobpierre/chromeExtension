@@ -15,7 +15,7 @@ $(document).ready(function(){
                 function(data){
                     console.log(data);
                     if(data == 'Success'){
-                       alert("Your account is create !")
+                       alert("Your account is created !")
                        document.location.href="../index.php";
                    }
                    else if(data == 'Failed'){
@@ -43,7 +43,7 @@ $(document).ready(function(){
                 $("#resultat").html("<p>Your password must be at least 8 characters.</p>");
             }
             else{
-                $("#resultat").html("<p>A problem accured please try later.</p>");
+                $("#resultat").html("<p>A problem occured please try later.</p>");
             }
         }
     });

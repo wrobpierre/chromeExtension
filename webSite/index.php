@@ -5,8 +5,10 @@ $_SESSION['timeout']=time();
 
 <!DOCTYPE html>
 <html>
-<title>ChromeExtension</title>
-<?php include './layout/includes.php'; ?>
+<head>
+  <title>ChromeExtension</title>
+  <?php include './layout/includes.php'; ?>
+</head>
 <body>
   <?php include './layout/header.php'; ?>
   <!-- Header -->

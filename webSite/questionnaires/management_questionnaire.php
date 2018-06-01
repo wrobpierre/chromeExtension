@@ -67,7 +67,7 @@ if (isset($_POST['action'])) {
 			var_dump($_POST);
 			echo "</pre>";*/
 			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
-			if ( isset($_POST['title']) && isset($_POST['statement']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
+			if ( isset($_POST['title']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
 				$id = uniqid();
 
 				$target_dir = "../img/quest_img/".$id;
@@ -169,7 +169,7 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'edit') {
-			//header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
 			if (isset($_POST['id_questionnaire'])) {
 
 				$stmt = $conn->prepare("UPDATE questionnaires 
@@ -309,7 +309,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_questions') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, q.question, q.type_ques, q.id, SPLIT_STRING(q.answer, '/', 2)particule
+				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, q.question, q.image, q.type_ques, q.id, SPLIT_STRING(q.answer, '/', 2)particule
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");

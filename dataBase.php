@@ -75,7 +75,7 @@ if (isset($_POST['key'])) {
 						$view = $value['views'];
 						$hostName = $value['hostName'];
 						$first_time = $value['firstTime'];
-						$question = $value['question'];
+						$question = json_encode($value['question']);
 						if ( $value['timeOnPage']['hours'] > 0 || $value['timeOnPage']['minutes'] > 0 || $value['timeOnPage']['secondes'] > 2 ) {
 							$timer = json_encode($value['timeOnPage']);
 							$stmt->execute();

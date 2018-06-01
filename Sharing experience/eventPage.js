@@ -96,7 +96,7 @@ function getCurrentTabUrl(eventUrl) {
           
           //if (hostName != '163.172.59.102') {
             //alert(hostName);
-            var values = {'url':url, 'title':title, 'keywords':keywords, 'firstTime':dateBegin, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'question': question}
+            var values = {'url':url, 'title':title, 'keywords':keywords, 'firstTime':dateBegin, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'question': [{question: question, date:dateBegin}] }
             saveList(values);
           //}
         });
@@ -156,6 +156,10 @@ function saveList(values) {
           dateBegin = dateBegin.toJSON();
 
           result.data[result.data.indexOf(find)].dateBegin = dateBegin;
+
+          if ( result.data[result.data.indexOf(find)].question.find(val => val.question == question) == undefined ) {
+            result.data[result.data.indexOf(find)].question.push({question: question, date:dateBegin});
+          }
         }
         else {
           result.data.push(values);
@@ -319,11 +323,11 @@ function autoStop(email){
       //storage.get('uniqId', function(resultId){
         var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, key:'add', email:email });
         post.done(function(data){
-          //alert(data);
           listen = false;
           question = 1;
           firstUrl = undefined;
           storage.clear();
+          alert(data);
         });
       //});
     });

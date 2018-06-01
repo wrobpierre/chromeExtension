@@ -188,7 +188,7 @@ function getOS() {
 					$(this).parent().next().css('display','block');
 					
 					if (dataParse[0]['link_img'] != "") {
-						link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link']);
+						link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link_img']);
 						link.insertAfter('#content > h1 + p');
 					}
 
@@ -204,12 +204,23 @@ function getOS() {
 
 				for (var i = 0; i < dataParse.length; i++) {
 					var div = $('<div class="question" id="'+(i+1)+'"></div>');
-					var number = $('<p>'+(i+1)+'/'+dataParse.length+'</p>');
+					if (dataParse.length != 1) {
+						var number = $('<p>'+(i+1)+'/'+dataParse.length+'</p>');
+						div.append(number);
+					}
+					
+					if (dataParse[i]['image'] != '') {
+						var img = $('<img>').attr('src', dataParse[i]['image']).attr('alt', dataParse[i]['image']);
+						div.append(img);
+					}
+
 					var p = $('<p>'+dataParse[i]['question'].split('(/=/)')[0]+'</p>');
+					div.append(p);
+					
 					if (dataParse[i]['type_ques'] == 'text') {
 						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+'][answer]">');
 						var valid = $('<input class="button" type="button" value="valid">');
-						div.append(number,p,input,valid);
+						div.append(input,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'number') {
 						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+'][answer]">');
@@ -217,12 +228,12 @@ function getOS() {
 							var particule = $('<label>'+dataParse[i]['particule']+'</label>')
 						}
 						var valid = $('<input class="button" type="button" value="valid">');
-						div.append(number,p,input,particule,valid);
+						div.append(input,particule,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'interval') {
 						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+'][answer]">');
 						var valid = $('<input class="button" type="button" value="valid">');
-						div.append(number,p,input,valid);
+						div.append(input,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'radio') {
 						var ol = $('<ol type="A"></ol>');
@@ -232,12 +243,12 @@ function getOS() {
 							ol.append(input);
 						}
 						var valid = $('<input class="button" type="button" value="valid">');
-						div.append(number,p,ol,valid);
+						div.append(ol,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'free') {
 						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+'][answer]">');
 						var valid = $('<input class="button" type="button" value="valid">');
-						div.append(number,p,input,valid);
+						div.append(input,valid);
 					}
 
 					div.css("margin", "5%");

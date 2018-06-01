@@ -4,6 +4,8 @@ var adress = "http://163.172.59.102"
 function generateList(data) {
   if (data != undefined) {
 
+    console.log(data);
+
     data.sort(function(a,b){
       return b.views - a.views;
     });

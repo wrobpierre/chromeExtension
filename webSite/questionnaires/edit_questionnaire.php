@@ -56,7 +56,7 @@ else{
 				<input class="input_question" type="text" name="title"><br>
 				
 				<label>Statement of the questionnaire&nbsp;:</label>
-				<span class="error"></span>
+				<!--<span class="error"></span>-->
 				<textarea form="form" name="statement"></textarea><br><br>
 
 				<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
@@ -394,10 +394,10 @@ $(document).ready(function(){
 			}
 		}
 
-		if ($('textarea[name="statement"]').val() == "") {
+		/*if ($('textarea[name="statement"]').val() == "") {
 			$('textarea[name="statement"]').prev().text(' Missing statement');
 			valid = false;
-		}
+		}*/
 
 		if ( $('input[type="radio"]:checked').length == 0 ) {
 			$('input[type="radio"][value="auto"]').prev().prev().text('Select the type of correction')

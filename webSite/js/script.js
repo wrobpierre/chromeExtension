@@ -631,17 +631,129 @@ nytg.test2 = [0,nb_question];
         var win = window.open(d.url, '_blank');
         win.focus();
       });
-      
 
-      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})     
+      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
     },
 
     update: function(){
+      //alert('update');
       var that = this;
 
+      this.data = nytg.budget_array_data;
       this.nodes = [];
       this.svg = {};
       this.circle = {};
+
+      var maxView = null;
+      var minView = null;
+      var percent = 0;
+
+      for (var i=0; i < this.data.length; i++) {
+        if (maxView == null || maxView < parseInt(this.data[i].view)) {
+          maxView = this.data[i].view;
+        }
+        if (minView == null || minView > parseInt(this.data[i].view)) {
+          minView = this.data[i].view;
+        }
+      }
+
+      percent = maxView/100;
+      // Builds the nodes data array from the original data
+      for (var i=0; i < this.data.length; i++) {
+        var n = this.data[i];
+
+        var res = Math.exp((this.data[i].view/5)/percent);
+        var out = {
+          sid: n['id'],
+          radius: this.radiusScale(res),
+          group: n['host_name'],
+          change: n['timer'],
+          changeCategory: this.categorizeChange(n['timer']),
+          value: n['view'],
+          url: n['url'],
+          avg: n['avg'],
+          positions: n.positions,
+          x:Math.random() * 100,
+          y:Math.random() * 100
+        }
+        if (n.positions.total) {
+          out.x = n.positions.total.x + (n.positions.total.x - (that.width / 2)) * 0.5;
+          out.y = n.positions.total.y + (n.positions.total.y - (150)) * 0.5;
+        };
+        this.nodes.push(out)
+      };
+
+      this.nodes.sort(function(a, b){  
+        return Math.abs(b.value) - Math.abs(a.value);  
+      });
+      
+      this.svg = d3.select("#nytg-chartCanvas").append("svg:svg")
+      .attr("width", this.width);
+      
+      for (var i=0; i < this.changeTickValues.length; i++) {
+        d3.select("#nytg-discretionaryOverlay").append("div")
+        .html("<p>"+this.changeTickValues[i]+"/"+this.changeTickValues.length+"</p>")
+        .style("top", this.changeScale(this.changeTickValues[i])+'px')
+        .classed('nytg-discretionaryTick', true)
+        .classed('nytg-discretionaryZeroTick', (this.changeTickValues[i] === 0) )
+      };
+
+      d3.select("#nytg-discretionaryOverlay").append("div")
+      .html("<p></p>")
+      .style("top", this.changeScale(0)+'px')
+      .classed('nytg-discretionaryTick', true)
+      .classed('nytg-discretionaryZeroTick', true)
+      
+      // This is the every circle
+      this.circle = this.svg.selectAll("circle")
+      .data(this.nodes, function(d) { return d.sid; });
+
+      this.circle.enter().append("svg:circle")
+      .attr("r", function(d) { return 0; } )
+      .style("fill", function(d) { return that.getFillColor(d); } )
+      .style("stroke-width", 1)
+      .attr('id',function(d){ return 'nytg-circle'+d.sid })
+      .style("stroke", function(d){ return that.getStrokeColor(d); })
+      .on("mouseover",function(d,i) { 
+        var el = d3.select(this)
+        var xpos = Number(el.attr('cx'))
+        var ypos = (el.attr('cy') - d.radius - 10)
+        el.style("stroke","#000").style("stroke-width",3);
+        d3.select("#nytg-tooltip").style('top',ypos+"px").style('left',xpos+"px").style('display','block')
+        .classed('nytg-plus', (d.changeCategory > 0))
+        .classed('nytg-minus', (d.changeCategory < 0));
+        
+        var $j = jQuery;
+
+        d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
+        d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
+        //console.log(d.group);
+        d3.select("#nytg-tooltip .nytg-domain").text(d.group)
+        var url = new URL(d.url)
+
+        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
+
+        if (d.value == 1) {
+          d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' view') 
+        }
+        else{
+          d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views')
+        }
+      })
+
+      .on("mouseout",function(d,i) { 
+        d3.select(this)
+        .style("stroke-width",1)
+        .style("stroke", function(d){ return that.getStrokeColor(d); })
+        d3.select("#nytg-tooltip").style('display','none')})
+
+      .on("click", function(d) {
+        //document.location.href=that.nameFormat(d.url)
+        var win = window.open(d.url, '_blank');
+        win.focus();
+      });
+
+      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
 
     },
 
@@ -1020,7 +1132,7 @@ nytg.ChooseList.prototype.selectByElement = function(el) {
  ** FILE: base.js
  ********************************/
 
- var $j = jQuery;
+ /*var $j = jQuery;
 
  nytg.filename = function(index){
   var tabs = [
@@ -1040,7 +1152,7 @@ $j("#save").click(function(){
     }
   });
   
-})
+})*/
 
 nytg.ready = function() {
   var that = this;    
@@ -1074,30 +1186,35 @@ nytg.ready = function() {
     };
     if (tabIndex === 0) {
       nytg.c.totalLayout();
+      console.log('totalLayout');
       this.currentOverlay = $j("#nytg-totalOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
     } else if (tabIndex === 1){
       nytg.c.mandatoryLayout();
+      console.log('mandatoryLayout');
       this.currentOverlay = $j("#nytg-mandatoryOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
     } else if (tabIndex === 2){
       nytg.c.discretionaryLayout();
+      console.log('discretionaryLayout');
       this.currentOverlay = $j("#nytg-discretionaryOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':650});
-    } else if (tabIndex === 4){
+    }/* else if (tabIndex === 4){
       nytg.c.comparisonLayout();
+      console.log('comparisonLayout');
       this.currentOverlay = $j("#nytg-comparisonOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':650});
     } else if (tabIndex === 3){
       nytg.c.departmentLayout();
+      console.log('departmentLayout');
       this.currentOverlay = $j("#nytg-departmentOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':850});
-    }
+    }*/
     
   }
 
@@ -1113,9 +1230,10 @@ if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/
 $j('.sorts').click(function() {
   jQuery.noConflict();
   var $j = jQuery;
-  nytg.c.circle.remove(nytg.c.circle[0])
   $j('svg').remove()
+  console.log(nytg.budget_array_data);
   nytg.budget_array_data = [];
+  console.log(nytg.budget_array_data);
   var checkedQuestions = [];
   var checkedNotes = [];
 
@@ -1135,12 +1253,12 @@ $j('.sorts').click(function() {
     var questionNum = JSON.parse(tabData[indexData]['question']);
     $j.each(questionNum, function(indexQuestNum) {
       if (checkedQuestions.length > 0) {
-        console.log(checkedNotes);
+        //console.log(checkedNotes);
         if (checkedNotes.length > 0) {
           $j.each(checkedQuestions, function(indexQuestions) {
             if(JSON.parse(questionNum[indexQuestNum]['question']) == (checkedQuestions[indexQuestions]+1)){
               $j.each(checkedNotes, function(indexNotes) {
-                console.log(tabData[indexData]['avg']);
+                //console.log(tabData[indexData]['avg']);
                 if((tabData[indexData]['avg'] >= checkedNotes[indexNotes]+minAvg && tabData[indexData]['avg'] < (checkedNotes[indexNotes]+1+minAvg ))){
                   check = true;
                 }
@@ -1158,7 +1276,7 @@ $j('.sorts').click(function() {
       }
       else{
         $j.each(checkedNotes, function(indexNotes) {
-          console.log(tabData[indexData]['avg']);
+          //console.log(tabData[indexData]['avg']);
           if((tabData[indexData]['avg'] >= checkedNotes[indexNotes]+minAvg && tabData[indexData]['avg'] < (checkedNotes[indexNotes]+1+minAvg ))){
             check = true;
           }
@@ -1172,7 +1290,10 @@ $j('.sorts').click(function() {
   });
 
   if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
-    $j(document).ready($j.proxy(nytg.ready, this));
+    //$j(document).ready($j.proxy(nytg.ready, this));
+    nytg.c.update();
+    nytg.c.start();
+    nytg.c.totalLayout();
   } else {
     $j("#nytg-chartFrame").hide();
   // $j("#nytg-error").show();

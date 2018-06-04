@@ -63,7 +63,7 @@ if (isset($_POST['key'])) {
 				$first_url = $_POST['url']['firstUrl'];
 
 				foreach ($_POST['d']['data'] as $key => $value) {
-					if ( $value['hostName'] != '163.172.59.102'/* && strpos($value['hostName'], 'www.google.') === false*/ ) {
+					//if ( $value['hostName'] != '163.172.59.102' && strpos($value['hostName'], 'www.google.') === false ) {
 						$url = $value['url'];
 						$title = $value['title'];
 						if (isset($value['keywords'])) {
@@ -80,7 +80,7 @@ if (isset($_POST['key'])) {
 							$timer = json_encode($value['timeOnPage']);
 							$stmt->execute();
 						}
-					}
+					//}
 				}
 			}
 			if (!isset($_POST['d'])) {

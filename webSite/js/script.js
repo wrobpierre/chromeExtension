@@ -6,6 +6,7 @@ var errorImg = false;
 var adress = "http://163.172.59.102"
 var tabData = [];
 var maxAvg = 0;
+var minAvg;
 // var adress = "http://localhost/chromeExtension"
 
 function getUrlParameter(sParam) {
@@ -50,6 +51,7 @@ post.done(function(data) {
 
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
+  console.log(dataParse);
   dataParse.forEach(function(element){
     nb_question = element['nb_question'];
     if (!tabData.find(function(elem){ return elem.url === element.url; })) {
@@ -128,7 +130,7 @@ post.done(function(data) {
   tabData.sort(function(a,b) {
     return a.first_time - b.first_time;
   });
-  var minAvg = tabData[0]['avg'];
+  minAvg = tabData[0]['avg'];
   tabData.forEach(function(element){
     element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
     //element["timer"] = JSON.parse(element["timer"]);
@@ -1114,34 +1116,61 @@ $j('.sorts').click(function() {
   nytg.c.circle.remove(nytg.c.circle[0])
   $j('svg').remove()
   nytg.budget_array_data = [];
-  for (var i = 0; i < tabData.length; i++) {
-    var questionNum = JSON.parse(tabData[i]['question']);
-    var alreadySave = true;
-    var checkedQuestion = true;
-    var checkedNotes = true;
-    var checkAll = true;
+  var checkedQuestions = [];
+  var checkedNotes = [];
 
-    // Si pas de check pour questionnaire n'affiche pas les notes 
-    $j('.questionFilter').each(function(index) {
-      checkedQuestion = this.checked;
-      if( !this.checked){
-        checkAll = false;
-      }
-      $j.each(questionNum, function(indexQuestionnaire) {
-        if( checkedQuestion && JSON.parse(questionNum[indexQuestionnaire]['question']) == (index+1) && alreadySave){
-          nytg.budget_array_data.push(tabData[i]);
-          alreadySave = false;
+  $j('.questionFilter').each(function(index) {
+    if (this.checked) {
+      checkedQuestions.push(index);
+    }
+  });
+  $j('.notesFilter').each(function(index) {
+    if (this.checked) {
+      checkedNotes.push(index);
+    }
+  });
+
+  $j.each(tabData, function(indexData) {
+    var check = false;
+    var questionNum = JSON.parse(tabData[indexData]['question']);
+    $j.each(questionNum, function(indexQuestNum) {
+      if (checkedQuestions.length > 0) {
+        console.log(checkedNotes);
+        if (checkedNotes.length > 0) {
+          $j.each(checkedQuestions, function(indexQuestions) {
+            if(JSON.parse(questionNum[indexQuestNum]['question']) == (checkedQuestions[indexQuestions]+1)){
+              $j.each(checkedNotes, function(indexNotes) {
+                console.log(tabData[indexData]['avg']);
+                if((tabData[indexData]['avg'] >= checkedNotes[indexNotes]+minAvg && tabData[indexData]['avg'] < (checkedNotes[indexNotes]+1+minAvg ))){
+                  check = true;
+                }
+              });
+            }
+          });
         }
-      });
-    });
-    $j('.notesFilter').each(function(indexNotes) {
-      checkedNotes = this.checked;
-      if(checkAll && checkedNotes && tabData[i]['avg'] >= indexNotes && tabData[i]['avg'] < (indexNotes+1) && alreadySave){
-        nytg.budget_array_data.push(tabData[i]);
-        alreadySave = false;
+        else{
+          $j.each(checkedQuestions, function(indexQuestions) {
+            if(JSON.parse(questionNum[indexQuestNum]['question']) == (checkedQuestions[indexQuestions]+1)){
+              check = true;
+            }
+          });
+        }
+      }
+      else{
+        $j.each(checkedNotes, function(indexNotes) {
+          console.log(tabData[indexData]['avg']);
+          if((tabData[indexData]['avg'] >= checkedNotes[indexNotes]+minAvg && tabData[indexData]['avg'] < (checkedNotes[indexNotes]+1+minAvg ))){
+            check = true;
+          }
+        });
       }
     });
-  }
+
+    if (check) {
+      nytg.budget_array_data.push(tabData[indexData]);
+    }
+  });
+
   if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
     $j(document).ready($j.proxy(nytg.ready, this));
   } else {

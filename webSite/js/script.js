@@ -631,8 +631,16 @@ nytg.test2 = [0,nb_question];
       });
       
 
-      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
-      
+      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})     
+    },
+
+    update: function(){
+      var that = this;
+
+      this.nodes = [];
+      this.svg = {};
+      this.circle = {};
+
     },
 
     getCirclePositions: function(){
@@ -660,7 +668,6 @@ nytg.test2 = [0,nb_question];
       //console.log(this.circle)
 
       // this.circle.call(this.force.drag)
-      
     },
     
     totalLayout: function() {
@@ -676,8 +683,7 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();
-      
+      .start();      
     },
 
     mandatoryLayout: function() {
@@ -693,8 +699,7 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();
-      
+      .start();    
     },
 
     discretionaryLayout: function() {
@@ -745,8 +750,7 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();
-      
+      .start();      
     },
     
     // ----------------------------------------------------------------------------------------
@@ -782,9 +786,6 @@ nytg.test2 = [0,nb_question];
       };
     },
     
-    // 
-    // 
-    // 
     buoyancy: function(alpha) {
       var that = this;
       return function(d){
@@ -967,9 +968,7 @@ nytg.test2 = [0,nb_question];
           || y2 < ny1;
         });
       };
-
     }
-    
   }
 };
 

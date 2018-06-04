@@ -292,7 +292,6 @@ nytg.test2 = [0,nb_question];
     charge          : null,
     changeTickValues: nytg.test1,
     categorizeChange: function(c){
-
       var time = parseInt(c['hours'])*3600 + parseInt(c['minutes'])*60 + parseInt(c['secondes']);
       var nbSecondesMax = parseInt(maxTime['hours'])*3600 + parseInt(maxTime['minutes'])*60 + parseInt(maxTime['secondes']);
       var nbSecondesMin = parseInt(minTime['hours'])*3600 + parseInt(minTime['minutes'])*60 + parseInt(minTime['secondes']);
@@ -1136,7 +1135,6 @@ $j('.sorts').click(function() {
     var questionNum = JSON.parse(tabData[indexData]['question']);
     $j.each(questionNum, function(indexQuestNum) {
       if (checkedQuestions.length > 0) {
-        console.log(checkedNotes);
         if (checkedNotes.length > 0) {
           $j.each(checkedQuestions, function(indexQuestions) {
             if(JSON.parse(questionNum[indexQuestNum]['question']) == (checkedQuestions[indexQuestions]+1)){
@@ -1159,7 +1157,6 @@ $j('.sorts').click(function() {
       }
       else{
         $j.each(checkedNotes, function(indexNotes) {
-          console.log(tabData[indexData]['avg']);
           if((tabData[indexData]['avg'] >= checkedNotes[indexNotes]+minAvg && tabData[indexData]['avg'] < (checkedNotes[indexNotes]+1+minAvg ))){
             check = true;
           }
@@ -1174,11 +1171,11 @@ $j('.sorts').click(function() {
 
   if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
     $j(document).ready($j.proxy(nytg.ready, this));
+    console.log('test');
   } else {
     $j("#nytg-chartFrame").hide();
   // $j("#nytg-error").show();
 }
 
 });
-
 });

@@ -112,7 +112,7 @@ function getOS() {
 
 						var do_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
 
-						var graph_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/graph.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
+						var graph_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/graph.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
 						
 						if(checkUser != ""){
 							var option = $('<div class="option"></div>')

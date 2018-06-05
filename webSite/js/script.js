@@ -48,7 +48,7 @@ post.done(function(data) {
 
   var maxQuestion = 0;
 
-
+  console.log(data);
   nytg.budget_array_data = [];
   dataParse = JSON.parse(data);
   console.log(dataParse);
@@ -76,11 +76,11 @@ post.done(function(data) {
         tabMedianeView.push(parseInt(elem['view']));
         tabMedianeTime.push(parseInt(timer.hours)*3600+parseInt(timer.minutes)*60+parseInt(timer.secondes));
         tabMedianeFirstTime.push(new Date(elem['first_time']).getTime());
+      console.log("elem : "+parseInt(elem['note']));
       });
       tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
       element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
       element['avg'] = note/tmp.length;
-      //console.log(element['avg']);
       delete element['note'];
       delete element['nb_question'];
       tabMedianeTime = tabMedianeTime.sort(function compareNombres(a, b) {return a - b;});
@@ -292,7 +292,6 @@ nytg.test2 = [0,nb_question];
     charge          : null,
     changeTickValues: nytg.test1,
     categorizeChange: function(c){
-
       var time = parseInt(c['hours'])*3600 + parseInt(c['minutes'])*60 + parseInt(c['secondes']);
       var nbSecondesMax = parseInt(maxTime['hours'])*3600 + parseInt(maxTime['minutes'])*60 + parseInt(maxTime['secondes']);
       var nbSecondesMin = parseInt(minTime['hours'])*3600 + parseInt(minTime['minutes'])*60 + parseInt(minTime['secondes']);
@@ -782,6 +781,7 @@ nytg.test2 = [0,nb_question];
       //console.log(this.circle)
 
       // this.circle.call(this.force.drag)
+      
     },
     
     totalLayout: function() {
@@ -797,7 +797,8 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();      
+      .start();
+      
     },
 
     mandatoryLayout: function() {
@@ -813,7 +814,8 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();    
+      .start();
+      
     },
 
     discretionaryLayout: function() {
@@ -864,7 +866,8 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();      
+      .start();
+      
     },
     
     // ----------------------------------------------------------------------------------------
@@ -900,6 +903,9 @@ nytg.test2 = [0,nb_question];
       };
     },
     
+    // 
+    // 
+    // 
     buoyancy: function(alpha) {
       var that = this;
       return function(d){
@@ -1082,7 +1088,9 @@ nytg.test2 = [0,nb_question];
           || y2 < ny1;
         });
       };
+
     }
+    
   }
 };
 
@@ -1300,5 +1308,4 @@ $j('.sorts').click(function() {
 }
 
 });
-
 });

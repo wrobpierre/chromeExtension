@@ -214,17 +214,17 @@ document.addEventListener('DOMContentLoaded', function () {
             var a = document.createElement('a');
             a.target = "_blank";
             if (dataParse.length == 0) {
-              a.href = adress+"/webSite/graph.html";
-              a.textContent = adress+"/webSite/graph.html";
-              // a.href = "http://localhost/chromeExtension/webSite/graph.html";
-              // a.textContent = "http://localhost/chromeExtension/webSite/graph.html";
+              a.href = adress+"/webSite/graph.php";
+              a.textContent = adress+"/webSite/graph.php";
+              // a.href = "http://localhost/chromeExtension/webSite/graph.php";
+              // a.textContent = "http://localhost/chromeExtension/webSite/graph.php";
 
             }
             else {
-              a.href = adress+"/webSite/graph.html?id="+dataParse[0].id;
-              a.textContent = adress+"/webSite/graph.html?id="+dataParse[0].id;
-              // a.href = "http://localhost/chromeExtension/webSite/graph.html?id="+dataParse[0].id;
-              // a.textContent = "http://localhost/chromeExtension/webSite/graph.html?id="+dataParse[0].id;
+              a.href = adress+"/webSite/graph.php?id="+dataParse[0].id;
+              a.textContent = adress+"/webSite/graph.php?id="+dataParse[0].id;
+              // a.href = "http://localhost/chromeExtension/webSite/graph.php?id="+dataParse[0].id;
+              // a.textContent = "http://localhost/chromeExtension/webSite/graph.php?id="+dataParse[0].id;
 
             }
             document.getElementById('data-overlay').appendChild(a);

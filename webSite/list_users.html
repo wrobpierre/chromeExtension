@@ -31,7 +31,7 @@
 			$.each(dataParse, function(index,value){
 				console.log($('ul#users > li#'+value['user_id']));
 				if ($('ul#users > li#'+value['user_id']).length) {
-					var link = adress+'/webSite/graph.html?id='+value['id']+'&user='+value['user_id'];
+					var link = adress+'/webSite/graph.php?id='+value['id']+'&user='+value['user_id'];
 					if (value['title'] == "") {
 						var li_questionnaire = $('<li><input type="button" value="'+link+'" class="button_link" onclick="window:location.href=\''+link+'\'"></input></li>');
 					}
@@ -44,7 +44,7 @@
 					var li = $('<li id="'+value['user_id']+'"></li>');
 					var p = $('<p>User '+value['user_id']+'</p>');
 					var ul = $('<ul></ul>');
-					var link = adress+'/webSite/graph.html?id='+value['id']+'&user='+value['user_id'];
+					var link = adress+'/webSite/graph.php?id='+value['id']+'&user='+value['user_id'];
 					if (value['title'] == "") {
 						var li_questionnaire = $('<li><input type="button" value="'+link+'" class="button_link" onclick="window:location.href=\''+link+'\'"></input></li>');
 					}

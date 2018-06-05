@@ -31,71 +31,75 @@ else{
 			<header class="w3-container w3-red w3-center" style="padding:128px 16px">
 				<h1>Add a questionnaire</h1>
 			</header>
-			//CSS est décalé
+			<div id="form-questionnaire" class="w3-light-grey w3-container w3-padding-64">
+				<div class="w3-col m3 w3-margin"></div>
+				<div class="questionnaire">
+					<div class="w3-col m6 w3-border w3-white">
+						<input type="hidden" name="action" value="add">
+						<input type="hidden" name="user_email" value="<?php echo $checkUser ;?>">
+						<div class="w3-container w3-red">
+							<h2>Questionnaire information</h2>
+						</div>
+						<div class="w3-row w3-margin">
+							<div class="w3-section">
+								<label>Title of the questionnaire&nbsp;:</label>
+								<input class="input_question w3-input" type="text" name="title"><br>							
+								<span class="error"></span>	
+							</div>
+						</div>
+						<div class="w3-row w3-margin">
+							<div class="w3-section">
+								<label>Statement of the questionnaire&nbsp;:</label><br>
+								<textarea form="form" name="statement" style="width: 100%;"></textarea>							
+							</div>
 
-			<div id="form-questionnaire" class="w3-light-grey w3-center w3-container">
-				<div id="w3-center w3-col m6 questionnaire">
-					<input type="hidden" name="action" value="add">
-					<input type="hidden" name="user_email" value="<?php echo $checkUser ;?>">
-					<div class="w3-row w3-margin">
-						<div class="w3-col m3">
-							<label>Enter the title of your questionnaire&nbsp;:</label>
-							<span class="error"></span>
 						</div>
-						<div class="w3-col m3">
-							<input class="input_question" type="text" name="title"><br>							
+						<div class="w3-row w3-margin">
+							<div class="w3-section">
+								<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
+								<span class="error"></span><br>
+								<div>
+									<input type="radio" name="auto_correction" value="auto" checked="checked" class="w3-radio"><label>Automatic</label><br>
+									<input type="radio" name="auto_correction" value="manuel" class="w3-radio"><label>Manuel</label>
+								</div>
+							</div>
 						</div>
+
+						<div class="w3-row w3-margin">
+							<div class="w3-col m3 w3-center">
+								<label for="image_uploads">Select images to upload (PNG, JPG):</label>
+								<span class="error"></span>
+							</div>
+							<div class="w3-col m3 w3-center">
+								<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
+							</div>
+							<div class="w3-row preview w3-center">
+								<p>No files selected</p>
+							</div>
+						</div>
+
+						<div class="w3-row w3-margin"></div>
+					</div>
+					<div class="w3-col m3 w3-margin"></div>
+					<div class="w3-col m6 w3-border w3-white w3-margin-top">
+							<div class="w3-container w3-red">
+								<h2>Your Questions</h2>
+							</div>
+						<div class="w3-row w3-margin">
+							<div class="w3-row">
+								<input class="w3-button w3-large w3-circle w3-red" title="Add a question" type="button" value="+">
+								<span class="error"></span><br>
+								<div class="all_questions">
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="w3-col m3 w3-margin"></div>
+					<div class="w3-row w3-center">
 						
+						<input class="w3-btn w3-green w3-round w3-xlarge" type="submit" value="send">
 					</div>
-
-					<div class="w3-row w3-margin">
-						<div class="w3-col m3">
-							<label>Statement of the questionnaire&nbsp;:</label>
-						</div>
-						<!--<span class="error"></span>-->
-						<div class="w3-col m3">
-							<textarea form="form" name="statement"></textarea>
-						</div>
-					</div>
-
-
-					<div class="w3-row w3-margin">
-						<div class="w3-col m3">
-							<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
-							<span class="error"></span><br>
-						</div>
-						<div class="w3-col m3">
-							<input type="radio" name="auto_correction" value="auto" checked="checked"><label>Automatic</label>
-							<input type="radio" name="auto_correction" value="manuel"><label>Manuel</label>
-						</div>
-					</div>
-
-					<div class="w3-row w3-margin">
-						<div class="w3-col m3">
-							<label for="image_uploads">Select images to upload (PNG, JPG):</label>
-							<span class="error"></span>
-						</div>
-						<div class="w3-col m3">
-							<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
-						</div>
-						<div class="w3-row preview w3-center">
-							<p>No files selected</p>
-						</div>
-					</div>
-					<div class="w3-row w3-margin">
-						<div class="w3-col m3">
-						<p>Your questions&nbsp;:</p>
-					</div>
-					<div class="w3-row w3-col m3">
-						<input class="button" type="button" value="add question">
-						<span class="error"></span><br>
-						<div class="all_questions">
-
-						</div>
-					</div>
-					</div>
-					<input class="button_valid" type="submit" value="send">
-
 				</div>
 			</div>
 		</form>
@@ -188,14 +192,14 @@ else{
 				}
 			})
 
-			$('input[value="add question"]').click(function(){
-				var div = $('<div id="'+i+'"></div>').attr('class','question');
+			$('input[value="+"]').click(function(){
+				var div = $('<div id="'+i+'"></div>').attr('class','question w3-section w3-col m12');
 				var lq = $('<label>Question&nbsp;:&nbsp;</label> <span class="error"></span>');
-				var iq = $('<input class="input_question" type="text" name="q['+i+'][question]"><br>');
+				var iq = $('<input class="input_question w3-input" type="text" name="q['+i+'][question]"><br>');
 
 				var type_answer = $('<div class="type_answer"></div>'); 
-				var lt = $('<label>Type of question : </label> <span class="error"></span>');
-				var select = $('<select class="select_type" name="q['+i+'][type_ques]">'
+				var lt = $('<label>Type of question : </label> <span class="error"></span><br>');
+				var select = $('<select class="select_type w3-select" name="q['+i+'][type_ques]">'
 					+'<option></option>'
 					+'<option value="text">TEXT</option>'
 					+'<option value="number">NUMBER</option>'
@@ -210,38 +214,38 @@ else{
 					}
 					else if ( $(this).find(':selected').text() == "TEXT" ) {
 						la = $('<label>Answer&nbsp;(put a list of words separated by a comma without spaces, eg: apple,pear,banana,...):&nbsp;</label><span class="error"></span>');
-						ia = $('<input class="input_question" type="text" name="q['+id_parent+'][answer]"><br>');
+						ia = $('<input class="input_question w3-input" type="text" name="q['+id_parent+'][answer]"><br>');
 						$(this).parent().next().append(la,ia);
 					}
 					else if ( $(this).find(':selected').text() == "NUMBER" ) {
 						la = $('<label>Answer&nbsp;(put a number):&nbsp;</label><span class="error"></span>');
-						ia = $('<input class="input_question" type="number" step="any" name="q['+id_parent+'][answer]"><br>');
+						ia = $('<input class="input_question w3-input" type="number" step="any" name="q['+id_parent+'][answer]"><br>');
 						particule_label = $('<label>Particule (eg:3 million instead of 3 000 000):&nbsp;</label>');
-						particule_input = $('<input type="text" name="q['+id_parent+'][particule]">');
+						particule_input = $('<input class="w3-input" type="text" name="q['+id_parent+'][particule]">');
 						$(this).parent().next().append(la,ia,particule_label,particule_input);
 					}
 					else if ( $(this).find(':selected').text() == "INTERVAL" ) {
 						la = $('<label>Answer&nbsp;(put the minimum in the first area and the max in the other. The values are include):&nbsp;</label><span class="error"></span>');
-						min = $('<input class="input_question" type="number" step="any" name="q['+id_parent+'][min]"><label> to </label>')
-						max = $('<input class="input_question" type="number" step="any" name="q['+id_parent+'][max]">')
+						min = $('<input class="input_question w3-input" type="number" step="any" name="q['+id_parent+'][min]"><label> to </label>')
+						max = $('<input class="input_question w3-input" type="number" step="any" name="q['+id_parent+'][max]">')
 						$(this).parent().next().append(la,min,max);
 					}
 					else if ( $(this).find(':selected').text() == "RADIO" ) {
-						la = $('<label>Enter the number of possible choices :</label><span class="error"></span>');
-						number = $('<input type="number">');
-						valid = $('<input type="button" value="create">');
+						la = $('<label>Enter the number of possible choices :</label><span class="error"></span><div class="w3-row"></div>');
+						number = $('<input class="w3-input w3-col m8 w3-margin-right" type="number">');
+						valid = $('<input class="w3-btn w3-red w3-round w3-large" type="button" value="create">');
 						valid.click(function(){
 							$(this).next().find('ol').empty();
 							n = $(this).prev().val();
 							for (var j = 0; j < n; j++) {
-								var choice = $('<li id="'+j+'"></li>');
-								var text = $('<input type="text" name="q['+id_parent+'][choices]['+j+'][choice]"><span class="error"></span>');
-								var answer = $('<input type="checkbox" name="q['+id_parent+'][choices]['+j+'][answer]"> <label>answer</label>');
+								var choice = $('<li id="'+j+' class="w3-col m12"></li>');
+								var text = $('<input class="w3-input w3-col m8" type="text" name="q['+id_parent+'][choices]['+j+'][choice]"><span class="error"></span>');
+								var answer = $('<input class="w3-radio" type="checkbox" name="q['+id_parent+'][choices]['+j+'][answer]"> <label>answer</label><div class="w3-row"></div>');
 								choice.append(text,answer);
 								$(this).next().children('ol').append(choice);
 							}
 						});
-						radios = $('<div class="radios"> <ol type="A"></ol> </div>');
+						radios = $('<div class="radios w3-col m12"> <ol type="A"></ol> </div>');
 						$(this).parent().next().append(la,number,valid,radios);
 					}
 				});
@@ -252,7 +256,7 @@ else{
 
 				var answer = $('<div class="answer"></div>');
 
-				var button = $('<input class="button_delete" type="button" value="delete question"><br>');
+				var button = $('<div class="w3-row"><input class="w3-button w3-large w3-circle w3-red w3-margin" type="button" value="x" title="Delete this question"></div>');
 				button.click(function(){
 					$(this).parent().remove();
 				});
@@ -316,7 +320,7 @@ else{
 				}
 
 				if( $('.all_questions')[0].children.length == 0 ) {
-					$('input[value="add question"]').next().text('Please add at least one question');
+					$('input[value="+"]').next().text('Please add at least one question');
 					valid = false;
 				}
 				else {

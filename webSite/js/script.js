@@ -80,6 +80,7 @@ post.done(function(data) {
       tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
       element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
       element['avg'] = note/tmp.length;
+      console.log(element['avg']);
       //console.log(element['avg']);
       delete element['note'];
       delete element['nb_question'];
@@ -632,16 +633,8 @@ nytg.test2 = [0,nb_question];
       });
       
 
-      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})     
-    },
-
-    update: function(){
-      var that = this;
-
-      this.nodes = [];
-      this.svg = {};
-      this.circle = {};
-
+      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
+      
     },
 
     getCirclePositions: function(){
@@ -669,6 +662,7 @@ nytg.test2 = [0,nb_question];
       //console.log(this.circle)
 
       // this.circle.call(this.force.drag)
+      
     },
     
     totalLayout: function() {
@@ -684,7 +678,8 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();      
+      .start();
+      
     },
 
     mandatoryLayout: function() {
@@ -700,7 +695,8 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();    
+      .start();
+      
     },
 
     discretionaryLayout: function() {
@@ -751,7 +747,8 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();      
+      .start();
+      
     },
     
     // ----------------------------------------------------------------------------------------
@@ -787,6 +784,9 @@ nytg.test2 = [0,nb_question];
       };
     },
     
+    // 
+    // 
+    // 
     buoyancy: function(alpha) {
       var that = this;
       return function(d){
@@ -969,7 +969,9 @@ nytg.test2 = [0,nb_question];
           || y2 < ny1;
         });
       };
+
     }
+    
   }
 };
 
@@ -1170,7 +1172,6 @@ $j('.sorts').click(function() {
 
   if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
     $j(document).ready($j.proxy(nytg.ready, this));
-    console.log('test');
   } else {
     $j("#nytg-chartFrame").hide();
   // $j("#nytg-error").show();

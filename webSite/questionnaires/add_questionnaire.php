@@ -31,46 +31,68 @@ else{
 			<header class="w3-container w3-red w3-center" style="padding:128px 16px">
 				<h1>Add a questionnaire</h1>
 			</header>
+			//CSS est décalé
+
 			<div id="form-questionnaire" class="w3-light-grey w3-center w3-container">
-				<div id="questionnaire">
+				<div id="w3-center w3-col m6 questionnaire">
 					<input type="hidden" name="action" value="add">
 					<input type="hidden" name="user_email" value="<?php echo $checkUser ;?>">
-					<div class="w3-margin">
-						<label>Enter the title of your questionnaire&nbsp;:</label>
-						<span class="error"></span>
-						<input class="input_question" type="text" name="title"><br>
+					<div class="w3-row w3-margin">
+						<div class="w3-col m3">
+							<label>Enter the title of your questionnaire&nbsp;:</label>
+							<span class="error"></span>
+						</div>
+						<div class="w3-col m3">
+							<input class="input_question" type="text" name="title"><br>							
+						</div>
 						
 					</div>
 
-					<div class="w3-margin">
-						<label>Statement of the questionnaire&nbsp;:</label>
+					<div class="w3-row w3-margin">
+						<div class="w3-col m3">
+							<label>Statement of the questionnaire&nbsp;:</label>
+						</div>
 						<!--<span class="error"></span>-->
-						<textarea form="form" name="statement"></textarea>
-					</div>
-
-
-					<div class="w3-margin">
-						<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
-						<span class="error"></span><br>
-						<input type="radio" name="auto_correction" value="auto" checked="checked"><label>Automatic</label>
-						<input type="radio" name="auto_correction" value="manuel"><label>Manuel</label>
-					</div>
-
-					<div class="w3-margin">
-						<label for="image_uploads">Select images to upload (PNG, JPG):</label>
-						<span class="error"></span>
-						<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
-						<div class="preview">
-							<p>Aucun fichier sélectionné pour le moment</p>
+						<div class="w3-col m3">
+							<textarea form="form" name="statement"></textarea>
 						</div>
 					</div>
-					<div class="w3-margin">
+
+
+					<div class="w3-row w3-margin">
+						<div class="w3-col m3">
+							<label>Choose if you want correct questionnaires by yourself&nbsp;:</label>
+							<span class="error"></span><br>
+						</div>
+						<div class="w3-col m3">
+							<input type="radio" name="auto_correction" value="auto" checked="checked"><label>Automatic</label>
+							<input type="radio" name="auto_correction" value="manuel"><label>Manuel</label>
+						</div>
+					</div>
+
+					<div class="w3-row w3-margin">
+						<div class="w3-col m3">
+							<label for="image_uploads">Select images to upload (PNG, JPG):</label>
+							<span class="error"></span>
+						</div>
+						<div class="w3-col m3">
+							<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
+						</div>
+						<div class="w3-row preview w3-center">
+							<p>No files selected</p>
+						</div>
+					</div>
+					<div class="w3-row w3-margin">
+						<div class="w3-col m3">
 						<p>Your questions&nbsp;:</p>
+					</div>
+					<div class="w3-row w3-col m3">
 						<input class="button" type="button" value="add question">
 						<span class="error"></span><br>
 						<div class="all_questions">
 
 						</div>
+					</div>
 					</div>
 					<input class="button_valid" type="submit" value="send">
 

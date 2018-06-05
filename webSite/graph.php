@@ -12,7 +12,7 @@
 	<?php include './layout/includes.php'; ?>
 	<style>
 	.w3-bar-item.w3-button.w3-hide-small.w3-padding-large.w3-hover-white{color: white; text-decoration: none;}
-	</style>
+</style>
 </head>
 <body id="interactiveABC">
 	<?php include './layout/header.php'; ?>
@@ -22,13 +22,19 @@
 	<div id="list_questionnaire">
 		
 	</div>
-	<div id="shell">
-		<div id="questionFilter" style="float: right; margin-right: 50px;">
-			<h5>Sort by question</h5>
+	<div class="sort w3-right w3-col m3 w3-margin w3-border">
+		<div class="w3-container w3-red">
+			<h2>Sort</h2>
 		</div>
-		<div id="notes" style="float: right; margin-right: 50px;">
-			
+		<div id="questionFilter" class="w3-col m6 w3-center">
+			<h5>By question</h5>
 		</div>
+		<div id="notes" class="w3-col m6 w3-center">
+			<h5>By notes</h5>
+		</div>
+
+	</div>
+	<div id="shell" class="w3-col m9 w3-margin">
 		<div id="page" class="tabContent active">                   
 			<div id="main">
 				<div id="interactiveShell">

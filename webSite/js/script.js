@@ -116,7 +116,7 @@ post.done(function(data) {
     var li = document.createElement("li");
     var input = document.createElement("input");
     var label = document.createElement("label");
-    input.setAttribute("class", "sorts questionFilter");
+    input.setAttribute("class", "sorts questionFilter w3-radio");
     input.setAttribute("type", "checkbox");
     input.setAttribute("checked", "checked");
     label.innerHTML = "question "+(i+1);
@@ -164,7 +164,7 @@ post.done(function(data) {
     var li = document.createElement("li");
     var input = document.createElement("input");
     var label = document.createElement("label");
-    input.setAttribute("class", "sorts notesFilter");
+    input.setAttribute("class", "sorts notesFilter w3-radio");
     input.setAttribute("type", "checkbox");
     label.innerHTML = "note : "+i;
     li.appendChild(input);

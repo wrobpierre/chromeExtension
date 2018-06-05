@@ -174,8 +174,9 @@ function getOS() {
 				console.log(dataParse);
 				document.title = dataParse[0]['title'];
 				$('h1').text(dataParse[0]['title']);
+				rules = $('<p></p>').text('If you are not sure of the answer, put that you don\'t know or don\'t answer')
 				statement = $('<p></p>').text(dataParse[0]['statement']);
-				$('#content').append(statement);
+				$('#content').append(rules,statement);
 
 				var form = $('<form method="post" action="checkAnswers.php"></form>');
 				var user_email = $('<input type="hidden" name="user_email" value="'+checkUser+'">');
@@ -184,19 +185,48 @@ function getOS() {
 				var start = $('<div></div>');
 				var valid = $('<button class="button">Start questionnaire</button>');
 				valid.click(function(){
-					$(this).parent().css('display','none');
-					$(this).parent().next().css('display','block');
-					
-					if (dataParse[0]['link_img'] != "") {
-						link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link_img']);
-						link.insertAfter('#content > h1 + p');
-					}
+					var that = $(this);
+					var already_done = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"already_done", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'] })
 
-					var url = window.location.href; 
-					chrome.runtime.sendMessage(editorExtensionId, {action: 'start', url: url},
-						function(response) {
-							console.log(response);
-						});
+					already_done.done(function(data){
+						console.log(data);
+						if (data != 0) {
+							var r = confirm("You have already answered this questionnaire, if you continue all your previous data will be deleted");
+							if (r == true) {
+								var reset_user_research = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"reset_user_research", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'] });
+								reset_user_research.done(function(data){
+									that.parent().css('display','none');
+									that.parent().next().css('display','block');
+
+									if (dataParse[0]['link_img'] != "") {
+										link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link_img']);
+										link.insertAfter('#content > h1 + p');
+									}
+
+									var url = window.location.href; 
+									chrome.runtime.sendMessage(editorExtensionId, {action: 'start', url: url},
+										function(response) {
+											console.log(response);
+										});
+								});
+							}
+						}
+						else {
+							that.parent().css('display','none');
+							that.parent().next().css('display','block');
+
+							if (dataParse[0]['link_img'] != "") {
+								link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link_img']);
+								link.insertAfter('#content > h1 + p');
+							}
+
+							var url = window.location.href; 
+							chrome.runtime.sendMessage(editorExtensionId, {action: 'start', url: url},
+								function(response) {
+									console.log(response);
+								});
+						}
+					})
 				});
 
 				start.append(valid);

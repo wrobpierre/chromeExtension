@@ -352,11 +352,11 @@ nytg.test2 = [0,nb_question];
 
     bigFormat       : function(n){return nytg.formatNumber(n)},
     nameFormat      : function(n){return n},
-    discretionFormat: function(d){
+    /*discretionFormat: function(d){
       if (d == 'Discretionary' || d == 'Mandatory') {
         return d + " spending"
       } else {return d}
-    },  
+    },*/
     
     rScale          : d3.scale.pow().exponent(0.15).domain([0,10000000000]).range([1,100]),
     radiusScale     : null,
@@ -605,7 +605,7 @@ nytg.test2 = [0,nb_question];
         var $j = jQuery;
 
         d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
-        d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
+        //d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
         //console.log(d.group);
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
@@ -726,7 +726,7 @@ nytg.test2 = [0,nb_question];
         var $j = jQuery;
 
         d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
-        d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
+        //d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
         //console.log(d.group);
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)

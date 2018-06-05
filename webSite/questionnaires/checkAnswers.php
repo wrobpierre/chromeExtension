@@ -93,7 +93,7 @@ if (isset($_POST['user_email'])) {
 				}
 			}
 			elseif ($answers[$key]['type'] == "number") {
-				if ($value['answer'] != $answers[$key]['answer']) {
+				if ($value['answer'] != explode("/", $answers[$key]['answer'])[0]) {
 					$result = false;
 				}
 			}

@@ -309,7 +309,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_questions') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, q.question, q.image, q.type_ques, q.id, SPLIT_STRING(q.answer, '/', 2)particule
+				$stmt = $conn->prepare("SELECT (qtn.id)id_questionnaire, qtn.title, qtn.statement, qtn.link_img, q.question, q.image, q.type_ques, q.id, SPLIT_STRING(q.answer, '/', 2)particule
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");
@@ -340,9 +340,6 @@ if (isset($_POST['action'])) {
 
 				echo count($stmt->fetchAll());
 			}
-		}
-		elseif ($_POST['action'] == 'check_file') {
-				# code...
 		}
 		elseif ($_POST['action'] == 'get_user_result') {
 			if (isset($_POST['id'])) {
@@ -380,6 +377,36 @@ if (isset($_POST['action'])) {
 						$stmt->execute();
 					}
 				}
+			}
+		}
+		elseif ($_POST['action'] == 'already_done') {
+			if ( isset($_POST['user']) && isset($_POST['id_questionnaire']) ) {
+				$stmt = $conn->prepare("SELECT COUNT(*) 
+					FROM answers a
+					INNER JOIN questions q ON a.key_question = q.id
+					WHERE a.key_user = (SELECT id FROM users u WHERE u.email LIKE :user) and q.key_questionnaires = :id_questionnaire");
+				$stmt->bindParam(':user', $user);
+				$stmt->bindParam(':id_questionnaire', $id_questionnaire);
+				$user = $_POST['user'];
+				$id_questionnaire = $_POST['id_questionnaire'];
+
+				$stmt->execute();
+
+				echo count($stmt->fetchAll());
+			}
+		}
+		elseif ($_POST['reset_user_research'] == 'reset_user_research') {
+			if ( isset($_POST['user']) && isset($_POST['id_questionnaire']) ) {
+				$stmt = $$conn->prepare("DELETE a
+					FROM `answers` a
+					INNER JOIN questions q ON a.key_question = q.id
+					WHERE a.key_user = (SELECT id FROM users u WHERE u.email LIKE :user) and q.key_questionnaires = :id_questionnaire");
+				$stmt->bindParam(':user', $user);
+				$stmt->bindParam(':id_questionnaire', $id_questionnaire);
+				$user = $_POST['user'];
+				$id_questionnaire = $_POST['id_questionnaire'];
+
+				$stmt->execute();
 			}
 		}
 	}

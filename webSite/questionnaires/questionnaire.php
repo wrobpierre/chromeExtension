@@ -195,6 +195,7 @@ function getOS() {
 							if (r == true) {
 								var reset_user_research = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"reset_user_research", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'] });
 								reset_user_research.done(function(data){
+									console.log(data);
 									that.parent().css('display','none');
 									that.parent().next().css('display','block');
 

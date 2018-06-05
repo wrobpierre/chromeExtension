@@ -381,7 +381,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'already_done') {
 			if ( isset($_POST['user']) && isset($_POST['id_questionnaire']) ) {
-				$stmt = $conn->prepare("SELECT COUNT(*) 
+				$stmt = $conn->prepare("SELECT * 
 					FROM answers a
 					INNER JOIN questions q ON a.key_question = q.id
 					WHERE a.key_user = (SELECT id FROM users u WHERE u.email LIKE :user) and q.key_questionnaires = :id_questionnaire");
@@ -395,9 +395,9 @@ if (isset($_POST['action'])) {
 				echo count($stmt->fetchAll());
 			}
 		}
-		elseif ($_POST['reset_user_research'] == 'reset_user_research') {
+		elseif ($_POST['action'] == 'reset_user_research') {
 			if ( isset($_POST['user']) && isset($_POST['id_questionnaire']) ) {
-				$stmt = $$conn->prepare("DELETE a
+				$stmt = $conn->prepare("DELETE a
 					FROM `answers` a
 					INNER JOIN questions q ON a.key_question = q.id
 					WHERE a.key_user = (SELECT id FROM users u WHERE u.email LIKE :user) and q.key_questionnaires = :id_questionnaire");

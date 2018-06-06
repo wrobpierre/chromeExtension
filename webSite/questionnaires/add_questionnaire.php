@@ -71,7 +71,7 @@ else{
 								<span class="error"></span>
 							</div>
 							<div class="w3-col m3 w3-center">
-								<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
+								<input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" style="display: none;">
 							</div>
 							<div class="w3-row preview w3-center">
 								<p>No files selected</p>

@@ -66,6 +66,10 @@ if (isset($_POST['action'])) {
 			/*echo "<pre>";
 			var_dump($_POST);
 			echo "</pre>";*/
+
+			echo "<pre>";
+			var_dump($_FILES);
+			echo "</pre>";
 			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
 			if ( isset($_POST['title']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
 				$id = uniqid();
@@ -76,9 +80,9 @@ if (isset($_POST['action'])) {
 				if ($_POST['user_email'] != "") {
 					# code...
 					if (mkdir($target_dir, 0777, true)) {
-						if ($_FILES["image_uploads"]["name"] != "") {
-							$target_file = $target_dir . "/" . basename($_FILES["image_uploads"]["name"]);
-							if (!move_uploaded_file($_FILES["image_uploads"]["tmp_name"], $target_file)) {
+						if ($_FILES["questionnaire"]["name"] != "") {
+							$target_file = $target_dir . "/" . basename($_FILES["questionnaire"]["name"]);
+							if (!move_uploaded_file($_FILES["questionnaire"]["tmp_name"], $target_file)) {
 								header('Location: ' . $_SERVER['HTTP_REFERER']);
 								//echo "fail";
 							} 
@@ -105,8 +109,8 @@ if (isset($_POST['action'])) {
 						$user_email = $_POST['user_email'];
 						$stmt->execute();
 
-						$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, key_questionnaires)
-							SELECT :question, :type_ques, :answer, q.id 
+						$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, image, key_questionnaires)
+							SELECT :question, :type_ques, :answer, :image, q.id 
 							FROM questionnaires q 
 							INNER JOIN firsturl fu ON q.key_first_url = fu.id 
 							WHERE url like :url");
@@ -114,8 +118,21 @@ if (isset($_POST['action'])) {
 						$stmt->bindParam(':question', $question);
 						$stmt->bindParam(':type_ques', $type_ques);
 						$stmt->bindParam(':answer', $answer);
+						$stmt->bindParam(':image', $image);
 
 						foreach ($_POST['q'] as $key => $value) {
+
+							if ($_FILES["question"]["name"][$key] != "") {
+								$target_file = $target_dir . "/" . basename($_FILES["question"]["name"][$key]);
+								if (!move_uploaded_file($_FILES["question"]["tmp_name"][$key], $target_file)) {
+									header('Location: ' . $_SERVER['HTTP_REFERER']);
+								}
+								else {
+									$image = $target_file;	
+								}
+							} else {
+								$image = null;
+							}
 							$question = $value['question'];
 
 							if ($auto_correction == 1) {
@@ -134,10 +151,8 @@ if (isset($_POST['action'])) {
 									foreach ($value['choices'] as $k => $v) {
 										if (isset($v['answer'])) {
 											$answer = $k;
-									//echo $answer;
 										}
 										$question .= "(/=/)".$v['choice'];
-										//echo $question.'<br>';
 									}
 								}
 							}
@@ -300,7 +315,7 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'all') {
-			$stmt = $conn->prepare("SELECT q.title, q.statement, q.link_img, q.auto_correction, fu.url
+			$stmt = $conn->prepare("SELECT q.title, q.statement, q.link_img, q.auto_correction, q.key_user, fu.url
 				FROM questionnaires q 
 				INNER JOIN firsturl fu ON q.key_first_url = fu.id");
 			$stmt->execute();

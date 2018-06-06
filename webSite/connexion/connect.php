@@ -38,7 +38,7 @@
             </div>
             <div id="resultat" class="w3-container w3-red"></div>
             <div class="w3-padding-16">
-                Not register yet ? <a href="./regist.php">Click ir !</a>
+                Not register yet ? <a href="./regist.php">Click here !</a>
             </div>
         </p>
     </form>

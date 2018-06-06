@@ -28,7 +28,7 @@ else{
 	<?php include '../layout/header.php'; ?>
 	<body>
 		<form id="form" action="management_questionnaire.php" method="post" enctype="multipart/form-data">
-			<header class="w3-container w3-red w3-center" style="padding:128px 16px">
+			<header class="w3-container w3-red w3-center" style="padding:128px 16px;">
 				<h1>Add a questionnaire</h1>
 			</header>
 			<div id="form-questionnaire" class="w3-light-grey w3-container w3-padding-64">

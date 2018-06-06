@@ -137,6 +137,7 @@ else{
 						fileName = curFiles[i].name;
 						para.textContent = 'File name ' + curFiles[i].name + ', file size ' + returnFileSize(curFiles[i].size) + '.';
 						var image = document.createElement('img');
+						image.style.maxWidth = "15%";
 						image.src = window.URL.createObjectURL(curFiles[i]);
 
 						listItem.appendChild(image);

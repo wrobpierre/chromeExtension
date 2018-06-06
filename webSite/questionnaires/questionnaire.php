@@ -30,17 +30,28 @@ function getOS() {
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="../css/questionnaire.css">
+	<!-- <link rel="stylesheet" type="text/css" href="../css/questionnaire.css"> -->
 	<meta charset="utf-8">
 	<title></title>
+	<?php include '../layout/includes.php'; ?>
 </head>
 <body>
-	<header class="parallax-window" data-parallax="scroll" data-image-src="../img/select_question.jpg"></header>
-	<div id="form-questionnaire">
-		<div id="questionnaire">
-			<div id="content">
-				
-				<h1></h1>
+	<?php include '../layout/header.php'; ?>
+	<!-- <header class="parallax-window" data-parallax="scroll" data-image-src="../img/select_question.jpg"></header> -->
+	<header class="w3-container w3-red w3-center" style="padding:128px 16px;">
+		<h1></h1>
+	</header>
+	<div id="form-questionnaire" class="w3-light-grey w3-container">
+		<div class="w3-col m3 w3-margin"></div>
+		<div id="questionnaire" class="w3-col m6 w3-border w3-white w3-margin">
+			<div id="content" >
+				<div >
+					<div class="w3-container w3-red">
+						<h1></h1>
+					</div>
+						<div id="addQuestionnaire"></div>
+					
+				</div>
 
 
 			</div>
@@ -97,27 +108,40 @@ function getOS() {
 					var dataParse = JSON.parse(data);
 					console.log(dataParse);
 					document.title = 'Questionnaires';
-					$('h1').text('List of questionnaires');
+					$('h1').text('The questionnaires');
 					var ul = $('<ul></ul>');
 					ul.css("list-style", "none")
+					ul.css("padding", "0")
 					$.each(dataParse, function(index, value){
-						var li = $('<li class="list_question"></li>');
-						var title = $('<h2></h2>').text(value['title']);
+						if (index%2 == 0){
+							var li = $('<li class="list_question w3-col m12 w3-white"></li>');
+							
+						}
+						else{
+							var li = $('<li class="list_question w3-col m12" style="background: #f5f6fa;"></li>');
+						}
+						var titleDiv = $('<div class="w3-row w3-margin"></div>')
+						var title = $('<h2 class="w3-col s12 w3-col m8 w3-margin"></h2>').text(value['title']);
 						
 						var info = $('<div></div>');
-						var img = $('<img src="'+value['link_img']+'">').css('width', '50px');
-						var statement = $('<p>'+value['statement']+'</p>')
+						if(value['link_img'] != null){
+							var img = $('<img src="'+value['link_img']+'" class="w3-round w3-col s12 w3-col m3">');
+						}
+						else{
+							var img = $('<img src="../img/question-mark.png" class="w3-rounded w3-col s12 w3-col m3">');
+						}
+						var statement = $('<p class="w3-margin">'+value['statement']+'</p>')
 
 						var always_visible = $('<div></div>');
 
-						var do_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
+						var do_ques = $('<input type="button" class="w3-btn w3-ripple w3-blue w3-margin w3-col m12 w3-col l5" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
 
-						var graph_ques = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/graph.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
+						var graph_ques = $('<input type="button" class="w3-btn w3-ripple w3-blue w3-margin w3-col m12 w3-col l5" onclick="window:location.href=\''+adress+'/webSite/graph.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
 						
 						if(checkUser != ""){
-							var option = $('<div class="option"></div>')
-							var edit = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
-							var del = $('<button class="button_delete">Delete</button>').click(function(){
+							var option = $('<div class="option w3-col m12"></div>')
+							var edit = $('<input type="button" class="w3-btn w3-ripple w3-blue w3-col l3 w3-col m12 w3-margin" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
+							var del = $('<button class="w3-btn w3-ripple w3-red w3-col l3 w3-col s12 w3-margin">Delete</button>').click(function(){
 								var r = confirm("Are you sure to delete this questionnaire ?");
 								if (r == true) {
 									var postDel = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
@@ -127,15 +151,12 @@ function getOS() {
 									});
 								}
 							});
-							var edit_result = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_results.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value','Edit users\' results');
+							var edit_result = $('<input type="button" class="w3-btn w3-ripple w3-indigo w3-col l3 w3-col m12  w3-margin" style="white-space: normal;"  onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_results.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value','Edit users\' results');
 
 						}
-						if (value['link_img'] != null) {
-							info.append(img,statement);
-						}
-						else {
-							info.append(statement);
-						}
+						titleDiv.append(img, title);
+						info.append(statement);
+
 
 						always_visible.append(do_ques,graph_ques);
 						if(checkUser != ""){
@@ -149,15 +170,15 @@ function getOS() {
 
 						}
 
-						li.append(title,info,always_visible,option);
+						li.append(titleDiv,info,always_visible,option);
 						ul.append(li);
 						$('#content').append(ul);
 					})
 					if (checkUser != "") {
-						var add = $('<input type="button" class="button_link" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire.php\'"></input>').attr('value', 'Add a questionnaire');
+						var add = $('<input type="button" class="w3-btn w3-ripple w3-green w3-margin w3-col l12 w3-col m12 w3-center" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire.php\'"></input>').attr('value', 'Add a questionnaire');
 						add.css("background-color", "#00B16A");
 						add.css("height", "40px");
-						$('#content').append(add);
+						$('#addQuestionnaire').append(add);
 					}
 				}
 			});
@@ -183,7 +204,7 @@ function getOS() {
 				form.append(user_email);
 
 				var start = $('<div></div>');
-				var valid = $('<button class="button">Start questionnaire</button>');
+				var valid = $('<button class="w3-btn w3-ripple w3-blue w3-margin">Start questionnaire</button>');
 				valid.click(function(){
 					var that = $(this);
 					var already_done = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"already_done", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'] })
@@ -249,36 +270,36 @@ function getOS() {
 					div.append(p);
 					
 					if (dataParse[i]['type_ques'] == 'text') {
-						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+'][answer]">');
-						var valid = $('<input class="button" type="button" value="valid">');
+						var input = $('<input class="w3-input" type="text" name="q['+dataParse[i]['id']+'][answer]">');
+						var valid = $('<div class="w3-center"><input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 w3-margin" type="button" value="valid"></div>');
 						div.append(input,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'number') {
-						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+'][answer]">');
+						var input = $('<input class="w3-input" step="any" type="number" name="q['+dataParse[i]['id']+'][answer]">');
 						if (dataParse[i]['particule'] != '') {
 							var particule = $('<label>'+dataParse[i]['particule']+'</label>')
 						}
-						var valid = $('<input class="button" type="button" value="valid">');
+						var valid = $('<input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 w3-margin w3-center" type="button" value="valid">');
 						div.append(input,particule,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'interval') {
-						var input = $('<input class="input_question" step="any" type="number" name="q['+dataParse[i]['id']+'][answer]">');
-						var valid = $('<input class="button" type="button" value="valid">');
+						var input = $('<input class="w3-input" step="any" type="number" name="q['+dataParse[i]['id']+'][answer]">');
+						var valid = $('<div class="w3-center"><input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 w3-margin" type="button" value="valid"></div>');
 						div.append(input,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'radio') {
 						var ol = $('<ol type="A"></ol>');
 						var choices = dataParse[i]['question'].split('(/=/)');
 						for (var j = 1; j < choices.length; j++) {
-							var input = $('<li> <input type="radio" name="q['+dataParse[i]['id']+'][answer]" value="'+(j-1)+'"> <label>'+choices[j]+'</label> </li>');
+							var input = $('<li> <input type="radio" class="w3-radio" name="q['+dataParse[i]['id']+'][answer]" value="'+(j-1)+'"> <label>'+choices[j]+'</label> </li>');
 							ol.append(input);
 						}
-						var valid = $('<input class="button" type="button" value="valid">');
+						var valid = $('<div class="w3-center"><input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 w3-margin" type="button" value="valid"></div>');
 						div.append(ol,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'free') {
-						var input = $('<input class="input_question" type="text" name="q['+dataParse[i]['id']+'][answer]">');
-						var valid = $('<input class="button" type="button" value="valid">');
+						var input = $('<input class="w3-input" type="text" name="q['+dataParse[i]['id']+'][answer]">');
+						var valid = $('<div class="w3-center"><input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 w3-margin" type="button" value="valid"></div>');
 						div.append(input,valid);
 					}
 
@@ -292,7 +313,7 @@ function getOS() {
 				var user_opinion = $('<div></div>');
 				for (var i = 0; i < dataParse.length; i++) {
 					var question = $('<p>'+dataParse[i]['question'].split('(/=/)')[0]+'</p>');
-					var rank = $('<select name="q['+dataParse[i]['id']+'][rank]">'
+					var rank = $('<select class="w3-select" name="q['+dataParse[i]['id']+'][rank]">'
 						+'<option value=""></option>'
 						+'<option value="easy">EASY</option>'
 						+'<option value="medium">MEDIUM</option>'
@@ -302,7 +323,7 @@ function getOS() {
 					user_opinion.append(question,rank);
 				}
 				var label_knowledge = $('<p>What is your level of knowledge on the subject of this questionnaire?</p>');
-				var knowledge = $('<select name="knowledge">'
+				var knowledge = $('<select class="w3-select" name="knowledge">'
 					+'<option value=""></option>'
 					+'<option value="novice">NOVICE</option>'
 					+'<option value="medium">MEDIUM</option>'
@@ -310,7 +331,7 @@ function getOS() {
 					+'</select>');
 				user_opinion.append(label_knowledge,knowledge);
 
-				var submit = $('<input class="button_valid" type="submit" value="send">');
+				var submit = $('<input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 w3-margin" type="submit" value="send">');
 				lastDiv.css("margin", "5%")
 
 				lastDiv.append(p,user_opinion,submit);
@@ -360,6 +381,5 @@ function getOS() {
 			});
 }
 </script>
-<script src="../js/parallax.js-1.5.0/parallax.js"></script>
 </body>
 </html>

@@ -134,9 +134,9 @@ function getOS() {
 						var statement = $('<p class="">'+value['statement']+'</p>')
 
 						var always_visible = $('<div></div>');
-						var space = '<div class="w3-col l1 w3-col m1 w3-white"></div>';
+						var space = '<div class="w3-col l1 w3-col m1 w3-white w3-margin"></div>';
 
-						var do_ques = $('<input type="button" class="w3-btn w3-ripple w3-blue  w3-col m12 w3-col l5" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
+						var do_ques = $('<input type="button" class="w3-btn w3-ripple w3-blue w3-col m12 w3-col l5" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
 
 						var graph_ques = $('<input type="button" class="w3-btn w3-ripple w3-blue  w3-col m12 w3-col l5" onclick="window:location.href=\''+adress+'/webSite/graph.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
 						
@@ -160,7 +160,7 @@ function getOS() {
 						info.append(statement);
 
 
-						always_visible.append(do_ques,graph_ques);
+						always_visible.append(space, do_ques,space, graph_ques);
 						if(checkUser != ""){
 
 							if (value['auto_correction'] == 0) {
@@ -296,7 +296,7 @@ function getOS() {
 							var input = $('<li> <input type="radio" class="w3-radio" name="q['+dataParse[i]['id']+'][answer]" value="'+(j-1)+'"> <label>'+choices[j]+'</label> </li>');
 							ol.append(input);
 						}
-						var valid = $('<input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 " type="button" value="valid">');
+						var valid = $('<div class="w3-center"><input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 " type="button" value="valid"></div>');
 						div.append(ol,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'free') {

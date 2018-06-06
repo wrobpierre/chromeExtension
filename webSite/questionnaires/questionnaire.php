@@ -116,7 +116,6 @@ function getOS() {
 					$.each(dataParse, function(index, value){
 						if (index%2 == 0){
 							var li = $('<li class="list_question w3-col m12 w3-white"></li>');
-							
 						}
 						else{
 							var li = $('<li class="list_question w3-col m12" style="background: #f5f6fa;"></li>');
@@ -346,9 +345,9 @@ function getOS() {
 				$(document).ready(function(){
 
 					$('div.question').css('display','none');
-					$('form div:last-child').css('display','none');
+					$('form > div:last-child').css('display','none');
 
-					$('div.question > input[type="button"]').click(function(){
+					$('div.question > div.w3-center > input[type="button"]').click(function(){
 						$(this).parent().parent().css('display','none');
 						$(this).parent().parent().next().css('display','block');
 					})

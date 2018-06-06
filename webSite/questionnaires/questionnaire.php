@@ -281,7 +281,7 @@ function getOS() {
 						if (dataParse[i]['particule'] != '') {
 							var particule = $('<label>'+dataParse[i]['particule']+'</label>')
 						}
-						var valid = $('<input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12  w3-center" type="button" value="valid">');
+						var valid = $('<div class="w3-center"> <input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12  w3-center" type="button" value="valid"> </div>');
 						div.append(input,particule,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'interval') {
@@ -296,12 +296,12 @@ function getOS() {
 							var input = $('<li> <input type="radio" class="w3-radio" name="q['+dataParse[i]['id']+'][answer]" value="'+(j-1)+'"> <label>'+choices[j]+'</label> </li>');
 							ol.append(input);
 						}
-						var valid = $('<input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 " type="button" value="valid">');
+						var valid = $('<div class="w3-center"> <input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 " type="button" value="valid"> </div>');
 						div.append(ol,valid);
 					}
 					else if (dataParse[i]['type_ques'] == 'free') {
 						var input = $('<input class="w3-input" type="text" name="q['+dataParse[i]['id']+'][answer]">');
-						var valid = $('<div class="w3-center"><input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12 " type="button" value="valid"></div>');
+						var valid = $('<div class="w3-center"> <input class="w3-btn w3-ripple w3-blue w3-col l3 w3-col s12" type="button" value="valid"> </div>');
 						div.append(input,valid);
 					}
 
@@ -350,11 +350,11 @@ function getOS() {
 					$('form div:last-child').css('display','none');
 
 					$('div.question > input[type="button"]').click(function(){
-						$(this).parent().css('display','none');
-						$(this).parent().next().css('display','block');
+						$(this).parent().parent().css('display','none');
+						$(this).parent().parent().next().css('display','block');
 					})
 
-					$('div.question > input[type="button"][value="valid"]').click(function(){
+					$('div.question > div.w3-center > input[type="button"][value="valid"]').click(function(){
 						chrome.runtime.sendMessage(editorExtensionId, {action: 'change_question'},
 							function(response) {
 								//alert(response.result);

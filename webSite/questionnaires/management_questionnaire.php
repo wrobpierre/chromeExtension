@@ -66,7 +66,11 @@ if (isset($_POST['action'])) {
 			/*echo "<pre>";
 			var_dump($_POST);
 			echo "</pre>";*/
-			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+
+			echo "<pre>";
+			var_dump($_FILES);
+			echo "</pre>";
+			/*header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
 			if ( isset($_POST['title']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
 				$id = uniqid();
 
@@ -153,7 +157,7 @@ if (isset($_POST['action'])) {
 						header('Location: ' . $_SERVER['HTTP_REFERER']);
 					}
 				}
-			}
+			}*/
 		}
 		elseif ($_POST['action'] == 'get_questions_to_edit') {
 			if (isset($_POST['id'])) {
@@ -300,7 +304,7 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'all') {
-			$stmt = $conn->prepare("SELECT q.title, q.statement, q.link_img, q.auto_correction, fu.url
+			$stmt = $conn->prepare("SELECT q.title, q.statement, q.link_img, q.auto_correction, q.key_user, fu.url
 				FROM questionnaires q 
 				INNER JOIN firsturl fu ON q.key_first_url = fu.id");
 			$stmt->execute();

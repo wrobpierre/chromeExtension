@@ -27,14 +27,13 @@ else{
 <body>
 	<?php include '../layout/header.php'; ?>
 	<body>
-		<form id="form" action="management_questionnaire.php" method="post" enctype="multipart/form-data">
-			<header class="w3-container w3-red w3-center" style="padding:128px 16px;">
-				<h1>Add a questionnaire</h1>
-			</header>
-			<div id="form-questionnaire" class="w3-light-grey w3-container w3-padding-64">
+		<header class="parallax-window" data-parallax="scroll" style="height: 300px;" data-image-src="../img/header_question.jpg"></header>
+
+		<div id="form-questionnaire" class="w3-light-grey w3-container w3-padding-64">
+			<form id="form" action="management_questionnaire.php" method="post" enctype="multipart/form-data">
 				<div class="w3-col m3 w3-margin"></div>
 				<div class="questionnaire">
-					<div class="w3-col m6 w3-border w3-white">
+					<div class="w3-col m6 w3-border w3-white" style="margin-top:-140px;">
 						<input type="hidden" name="action" value="add">
 						<input type="hidden" name="user_email" value="<?php echo $checkUser ;?>">
 						<div class="w3-container w3-red">
@@ -87,7 +86,7 @@ else{
 						</div>
 						<div class="w3-row w3-margin">
 							<div class="w3-row">
-								<input class="w3-button w3-large w3-circle w3-red" title="Add a question" type="button" value="+">
+								<input class="w3-button w3-large w3-circle w3-blue" title="Add a question" type="button" value="+">
 								<span class="error"></span><br>
 								<div class="all_questions">
 
@@ -101,8 +100,8 @@ else{
 						<input class="w3-btn w3-green w3-round w3-xlarge" type="submit" value="send">
 					</div>
 				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 		<script type="text/javascript">
@@ -399,5 +398,6 @@ $('form').submit(function(){
 });
 </script>
 <?php include '../layout/footer.php'; ?>
+<script src="../js/parallax.js-1.5.0/parallax.js" type="text/javascript"></script>
 </body>
 </html>

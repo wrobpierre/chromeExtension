@@ -65,11 +65,11 @@ if (isset($_POST['action'])) {
 		if ($_POST['action'] == 'add') {
 			/*echo "<pre>";
 			var_dump($_POST);
-			echo "</pre>";*/
+			echo "</pre>";
 
 			echo "<pre>";
 			var_dump($_FILES);
-			echo "</pre>";
+			echo "</pre>";*/
 			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
 			if ( isset($_POST['title']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
 				$id = uniqid();
@@ -84,8 +84,12 @@ if (isset($_POST['action'])) {
 							$target_file = $target_dir . "/" . basename($_FILES["questionnaire"]["name"]);
 							if (!move_uploaded_file($_FILES["questionnaire"]["tmp_name"], $target_file)) {
 								header('Location: ' . $_SERVER['HTTP_REFERER']);
-								//echo "fail";
-							} 
+								exit;
+							}
+							chmod($target_file, 0777);
+						}
+						else {
+							$target_file = null;
 						}
 
 						$stmt = $conn->prepare("INSERT INTO firsturl (url)
@@ -130,7 +134,9 @@ if (isset($_POST['action'])) {
 								else {
 									$image = $target_file;	
 								}
-							} else {
+								chmod($target_file, 0777);
+							}
+							else {
 								$image = null;
 							}
 							$question = $value['question'];
@@ -172,7 +178,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_questions_to_edit') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, qtn.auto_correction, q.question, q.type_ques, q.answer, q.id, q.key_questionnaires
+				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, qtn.auto_correction, q.question, q.type_ques, q.image, q.answer, q.id, q.key_questionnaires
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");
@@ -184,31 +190,99 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'edit') {
-			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
-			if (isset($_POST['id_questionnaire'])) {
+			/*echo "<pre>";
+			var_dump($_POST);
+			echo "</pre>";
+
+			echo "<pre>";
+			var_dump($_FILES);
+			echo "</pre>";*/
+			//header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			if (isset($_POST['id_questionnaire']) && isset($_POST['param_id'])) {
+
+				$target_dir = "../img/quest_img/".$_POST['param_id'];
+				$target_file = "";
+
+				if ($_FILES["questionnaire"]["name"] != "" && $_FILES["questionnaire"]["name"] != $_POST['current_img']) {
+					if ($_POST['current_img'] != "") {
+						if ( unlink($target_dir . "/" . $_POST['current_img']) ) {
+							$target_file = $target_dir . "/" . basename($_FILES["questionnaire"]["name"]);
+							if (!move_uploaded_file($_FILES["questionnaire"]["tmp_name"], $target_file)) {
+								header('Location: ' . $_SERVER['HTTP_REFERER']);
+								exit;
+							}
+							chmod($target_file, 0777);
+						}
+					}
+					else {
+						$target_file = $target_dir . "/" . basename($_FILES["questionnaire"]["name"]);
+						if (!move_uploaded_file($_FILES["questionnaire"]["tmp_name"], $target_file)) {
+							header('Location: ' . $_SERVER['HTTP_REFERER']);
+							exit;
+						}
+						chmod($target_file, 0777);
+					}
+				}
+				elseif ($_POST['current_img'] != "") {
+					$target_file = $target_dir . "/" . $_POST['current_img'];
+				}
+				else {
+					$target_file = null;
+				}
 
 				$stmt = $conn->prepare("UPDATE questionnaires 
-					SET title = :title, statement = :statement, auto_correction = :auto_correction 
+					SET title = :title, statement = :statement, auto_correction = :auto_correction, link_img = :link_img
 					WHERE id = :id");
 				$stmt->bindParam(':title', $title);
 				$stmt->bindParam(':statement', $statement);
 				$stmt->bindParam(':auto_correction', $auto_correction);
+				$stmt->bindParam(':link_img', $link_img);
 				$stmt->bindParam(':id', $id);
 				$title = $_POST['title'];
 				$statement = $_POST['statement'];
 				$auto_correction = ($_POST['auto_correction'] == 'manuel') ? 0 : 1;
+				$link_img = $target_file;
 				$id = $_POST['id_questionnaire'];
 				$stmt->execute();
 
 				$stmt = $conn->prepare("UPDATE questions 
-					SET question = :question, type_ques = :type_ques ,answer = :answer
+					SET question = :question, type_ques = :type_ques ,answer = :answer, image = :image
 					WHERE id = :id");
 				$stmt->bindParam(':id', $id);
 				$stmt->bindParam(':question', $question);
 				$stmt->bindParam(':type_ques', $type_ques);
 				$stmt->bindParam(':answer', $answer);
+				$stmt->bindParam(':image', $image);
 
 				foreach ($_POST['q'] as $key => $value) {
+					if ($_FILES["question"]["name"][$key] != "" && $_FILES["question"]["name"][$key] != $value['current_img']) {
+						if ($value['current_img'] != "") {
+							if ( unlink($target_dir . "/" . $value['current_img']) ) {
+								$target_file = $target_dir . "/" . basename($_FILES["question"]["name"][$key]);
+								if (!move_uploaded_file($_FILES["question"]["tmp_name"][$key], $target_file)) {
+									header('Location: ' . $_SERVER['HTTP_REFERER']);
+									exit;
+								}
+								chmod($target_file, 0777);
+							}
+						}
+						else {
+							$target_file = $target_dir . "/" . basename($_FILES["question"]["name"][$key]);
+							if (!move_uploaded_file($_FILES["question"]["tmp_name"][$key], $target_file)) {
+								header('Location: ' . $_SERVER['HTTP_REFERER']);
+								exit;
+							}
+							chmod($target_file, 0777);
+						}
+					}
+					elseif ($value['current_img'] != "") {
+						$target_file = $target_dir . "/" . $value['current_img'];
+					}
+					else {
+						$target_file = null;
+					}
+
+					$image = $target_file;
 					$id = $key;
 					$question = $value['question'];
 
@@ -228,10 +302,8 @@ if (isset($_POST['action'])) {
 							foreach ($value['choices'] as $k => $v) {
 								if (isset($v['answer'])) {
 									$answer = $k;
-									//echo $answer;
 								}
 								$question .= "(/=/)".$v['choice'];
-								//echo $question.'<br>';
 							}
 						}
 					}
@@ -244,15 +316,30 @@ if (isset($_POST['action'])) {
 				}
 
 				if (isset($_POST['nq'])) {
-					$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, key_questionnaires)
-						VALUES(:question, :type_ques, :answer, :id)");
+					$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, image, key_questionnaires)
+						VALUES(:question, :type_ques, :answer, :image, :id)");
 					$stmt->bindParam(':question', $question);
 					$stmt->bindParam(':type_ques', $type_ques);
 					$stmt->bindParam(':answer', $answer);
+					$stmt->bindParam(':image', $image);
 					$stmt->bindParam(':id', $id);
 					$id = $_POST['id_questionnaire'];
 
 					foreach ($_POST['nq'] as $key => $value) {
+						if ($_FILES["new_question"]["name"][$key] != "") {
+							$target_file = $target_dir . "/" . basename($_FILES["new_question"]["name"][$key]);
+							if (!move_uploaded_file($_FILES["new_question"]["tmp_name"][$key], $target_file)) {
+								header('Location: ' . $_SERVER['HTTP_REFERER']);
+							}
+							else {
+								$image = $target_file;	
+							}
+							chmod($target_file, 0777);
+						}
+						else {
+							$image = null;
+						}
+
 						$question = $value['question'];
 
 						if ($auto_correction == 1) {

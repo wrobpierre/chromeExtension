@@ -114,7 +114,6 @@ else{
 		var fileName = "";
 		
 		function updateImageDisplay() {
-			//test = document.querySelector('#image_upload');
 			input = $(this)[0];
 			preview = $(this).parent().next()[0];
 			while(preview.firstChild) {
@@ -331,10 +330,10 @@ $('form').submit(function(){
 					}
 				})
 
-				/*if ( $('input[type="radio"]:checked').length == 0 ) {
+				if ( $('input[type="radio"]:checked').length == 0 ) {
 					$('input[type="radio"][value="auto"]').prev().prev().text('Select the type of correction')
 					valid = false;
-				}*/
+				}
 
 				if( $('.all_questions')[0].children.length == 0 ) {
 					$('input[value="+"]').next().text('Please add at least one question');

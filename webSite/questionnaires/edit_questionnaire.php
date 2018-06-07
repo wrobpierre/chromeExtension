@@ -44,12 +44,13 @@ else{
 </head>
 <body>
 	<header class="parallax-window" data-parallax="scroll" data-image-src="../img/edit_question.jpg"></header>
-	<form id="form" action="management_questionnaire.php" method="post">
+	<form id="form" action="management_questionnaire.php" method="post" enctype="multipart/form-data">
 		<div id="form-questionnaire">
 			<div id="questionnaire">
 				<h1>Edit questionnaire</h1>
 				<input class="input_question" type="hidden" name="action" value="edit">
 				<input class="input_question" type="hidden" name="id_questionnaire">
+				<input class="input_question" type="hidden" name="param_id">
 
 				<label>Enter the title of your questionnaire&nbsp;:&nbsp;</label>
 				<span class="error"></span>
@@ -64,11 +65,18 @@ else{
 				<input type="radio" name="auto_correction" value="auto"><label>Automatic</label><br>
 				<input type="radio" name="auto_correction" value="manuel"><label>Manuel</label><br><br>
 				
-				<label for="image_uploads">Select images to upload (PNG, JPG):</label>
-				<span class="error"></span>
-				<input type="file" name="image_uploads" accept=".jpg, .jpeg, .png">
-				<div class="preview">
-					<p>Aucun fichier sélectionné pour le moment</p>
+				<div class="w3-row w3-margin">
+					<div class="w3-col m3 w3-center">
+						<label for="image_upload">Select images to upload (PNG, JPG):</label>
+						<span class="error"></span>
+					</div>
+					<div class="w3-col m3 w3-center">
+						<input type="file" id="image_upload" name="questionnaire" accept=".jpg, .jpeg, .png" style="display: none;">
+						<input type="hidden" name="current_img">
+					</div>
+					<div class="w3-row preview w3-center">
+						<p>No files selected</p>
+					</div>
 				</div>
 
 				<!--<label>Choose the type of your questionnaire&nbsp;:&nbsp;</label>
@@ -107,6 +115,66 @@ else{
 		var checkUser = '<?php echo $checkUser ;?>';
 		// var adress = "http://localhost/chromeExtension";
 
+		var fileTypes = ['image/jpeg','image/pjpeg','image/png'];
+		var fileName = "";
+		
+		function updateImageDisplay() {
+			input = $(this)[0];
+			preview = $(this).parent().next()[0];
+			while(preview.firstChild) {
+				preview.removeChild(preview.firstChild);
+			}
+
+			var curFiles = input.files;
+			if(curFiles.length === 0) {
+				var para = document.createElement('p');
+				para.textContent = 'No files currently selected for upload';
+				preview.appendChild(para);
+			} else {
+				var list = document.createElement('ol');
+				preview.appendChild(list);
+				for(var i = 0; i < curFiles.length; i++) {
+					var listItem = document.createElement('li');
+					var para = document.createElement('p');
+					if(validFileType(curFiles[i])) {
+						fileName = curFiles[i].name;
+						para.textContent = 'File name ' + curFiles[i].name + ', file size ' + returnFileSize(curFiles[i].size) + '.';
+						var image = document.createElement('img');
+						image.style.maxWidth = "15%";
+						image.src = window.URL.createObjectURL(curFiles[i]);
+
+						listItem.appendChild(image);
+						listItem.appendChild(para);
+
+					} else {
+						para.textContent = 'File name ' + curFiles[i].name + ': Not a valid file type. Update your selection.';
+						listItem.appendChild(para);
+					}
+
+					list.appendChild(listItem);
+				}
+			}
+		}
+
+		function validFileType(file) {
+			for(var i = 0; i < fileTypes.length; i++) {
+				if(file.type === fileTypes[i]) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function returnFileSize(number) {
+			if(number < 1024) {
+				return number + ' octets';
+			} else if(number >= 1024 && number < 1048576) {
+				return (number/1024).toFixed(1) + ' Ko';
+			} else if(number >= 1048576) {
+				return (number/1048576).toFixed(1) + ' Mo';
+			}
+		}
+
 		function getUrlParameter(sParam) {
 			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
@@ -120,8 +188,11 @@ else{
 					return sParameterName[1] === undefined ? true : sParameterName[1];
 				}
 			}
-		};
+		}
+
 		var param = getUrlParameter('id');
+
+		$('input[name="param_id"]').val(param);
 
 		var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_questions_to_edit", id:param });
 
@@ -143,10 +214,43 @@ else{
 					$('input[type="radio"][value="auto"]').prop("checked", true);
 				}
 
+				$('#image_upload')[0].addEventListener('change', updateImageDisplay);
+
+				if (dataParse[0]['link_img'] != undefined) {
+					$('#image_upload').parent().next().empty();
+					$('#image_upload').parent().next().append('<label>Current image:</label> <img src="'+dataParse[0]['link_img']+'" alt="Error" style="max-width:15%;">');
+					tmp = dataParse[0]['link_img'].split('/');
+					$('input[name="current_img"]').val(tmp[tmp.length-1]);
+				}
+
 				$.each(dataParse, function(index, value){
 					var div = $('<div></div>').attr('class','question').attr('id',value['id']);
 					var lq = $('<label>Question&nbsp;:&nbsp;</label> <span class="error"></span>');
 					var iq = $('<input class="input_question" type="text" name="q['+value['id']+'][question]">').attr('value', value['question'].split('(/=/)')[0]);
+
+					var div_img = $('<div class="w3-row w3-margin">'
+						+'<div class="w3-col m3 w3-center">'
+						+'<label for="image_question_'+value['id']+'">Select images to upload (PNG, JPG):</label>'
+						+'<span class="error"></span>'
+						+'</div>'
+						+'<div class="w3-col m3 w3-center">'
+						+'</div>'
+						+'<div class="w3-row preview w3-center">'
+						+'<p>No files selected</p>'
+						+'</div>'
+						+'</div>');
+
+					var input_img = $('<input type="file" id="image_question_'+value['id']+'" name="question['+value['id']+']" accept=".jpg, .jpeg, .png" style="display: none;">');
+					var current_img = $('<input type="hidden" name="q['+value['id']+'][current_img]" value="">');
+					input_img[0].addEventListener('change', updateImageDisplay);
+					div_img.find('.preview').prev().append(input_img,current_img);
+
+					if (value['image'] != undefined) {
+						div_img.find('.preview').empty();
+						div_img.find('.preview').append('<label>Current image:</label> <img src="'+value['image']+'" alt="Error" style="max-width:15%;">');
+						tmp = value['image'].split('/');
+						current_img.val(tmp[tmp.length-1]);
+					}
 
 					var type_answer = $('<div class="type_answer"></div>'); 
 					var lt = $('<br><label>Type of question : </label> <span class="error"></span>');
@@ -269,11 +373,9 @@ else{
 						}
 					});
 					var error = $('<span class="error"></span>');
-					div.append(lq,iq,type_answer,answer,button,error,'<hr>');
+					div.append(lq,iq,div_img,type_answer,answer,button,error,'<hr>');
 					$('div#current > div.all_questions').append(div);
 				});
-
-
 $(document).ready(function(){
 	var i = 0;
 	$('input[type=radio][name=auto_correction]').change(function(){
@@ -291,6 +393,22 @@ $(document).ready(function(){
 		var div = $('<div id="'+i+'"></div>').attr('class','question');
 		var lq = $('<label>Question&nbsp;:&nbsp;</label> <span class="error"></span>');
 		var iq = $('<input class="input_question" type="text" name="nq['+i+'][question]"><br>');
+
+		var div_img = $('<div class="w3-row w3-margin">'
+			+'<div class="w3-col m3 w3-center">'
+			+'<label for="image_new_question_'+i+'">Select images to upload (PNG, JPG):</label>'
+			+'<span class="error"></span>'
+			+'</div>'
+			+'<div class="w3-col m3 w3-center">'
+			+'</div>'
+			+'<div class="w3-row preview w3-center">'
+			+'<p>No files selected</p>'
+			+'</div>'
+			+'</div>');
+
+		var input_img = $('<input type="file" id="image_new_question_'+i+'" name="new_question['+i+']" accept=".jpg, .jpeg, .png" style="display: none;">');
+		input_img[0].addEventListener('change', updateImageDisplay);
+		div_img.find('.preview').prev().append(input_img);
 
 		var type_answer = $('<div class="type_answer"></div>'); 
 		var lt = $('<label>Type of question : </label> <span class="error"></span>');
@@ -357,47 +475,60 @@ $(document).ready(function(){
 			$(this).parent().remove();
 		});
 		var error = $('<span class="error"></span>');
-		div.append(lq,iq,type_answer,answer,button,error,'<hr>');
+		div.append(lq,iq,div_img,type_answer,answer,button,error,'<hr>');
 		$('div#new > div.all_questions').append(div);
 		i += 1;
 	})
 
-	var check_title = true;
+var check_title = true;
 
-	$('input[name="title"]').change(function(){
-		var title = $('input[name="title"]').val();
-		var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'check_title', title:title });
-		post.done(function(data){
-			if (data != 0) {
-				$('input[name="title"]').prev().text('Already exist');
-				check_title = false;
-			}
-			else {
-				$('input[name="title"]').prev().text('');
-				check_title = true;	
-			}		
-		});
-	})
-
-	$('form').submit(function(){
-		$('span.error').text('');
-		valid = true;
-
-		if ($('input[name="title"]').val() == "") {
-			$('input[name="title"]').prev().text(' Missing title');
-			valid = false;
+$('input[name="title"]').change(function(){
+	var title = $('input[name="title"]').val();
+	var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'check_title', title:title });
+	post.done(function(data){
+		if (data != 0) {
+			$('input[name="title"]').prev().text('Already exist');
+			check_title = false;
 		}
 		else {
-			if (!check_title) {
-				$('input[name="title"]').prev().text('Already exist');
-				valid = false;
-			}
+			$('input[name="title"]').prev().text('');
+			check_title = true;	
+		}		
+	});
+})
+
+$('form').submit(function(){
+	$('span.error').text('');
+	valid = true;
+
+	if ($('input[name="title"]').val() == "") {
+		$('input[name="title"]').prev().text(' Missing title');
+		valid = false;
+	}
+	else {
+		if (!check_title) {
+			$('input[name="title"]').prev().text('Already exist');
+			valid = false;
 		}
+	}
 
 		/*if ($('textarea[name="statement"]').val() == "") {
 			$('textarea[name="statement"]').prev().text(' Missing statement');
 			valid = false;
 		}*/
+
+		var input = document.querySelector('input[type=file]');
+		$('input[type=file]').each(function(){
+			var curFiles = $(this)[0].files;	
+			if (curFiles.length !== 0) {
+				for(var i = 0; i < curFiles.length; i++) {
+					if (curFiles[i].size > 500000) {
+						$(this).parent().prev().find('span.error').text(' Your file is too large');
+						valid = false;
+					}
+				}
+			}
+		})
 
 		if ( $('input[type="radio"]:checked').length == 0 ) {
 			$('input[type="radio"][value="auto"]').prev().prev().text('Select the type of correction')

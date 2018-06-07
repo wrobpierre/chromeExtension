@@ -9,7 +9,7 @@
     <?php include '../layout/header.php'; ?>
 
     <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-        <div class="w3-content w3-center">
+        <div class="w3-content w3-center" style="width:300px;">
 
             <h1>Sign In</h1>
 
@@ -20,7 +20,7 @@
                             Email :
                         </div>
                         <div >
-                         <input class="input_question" type="email" id="email" />
+                         <input class="w3-input" type="email" id="email" />
                      </div>
 
                  </div>
@@ -29,12 +29,12 @@
                         Password :
                     </div>
                     <div>
-                     <input class="input_question" type="password" id="password" />
+                     <input class="w3-input" type="password" id="password" />
                  </div>
 
              </div>
              <div class="w3-row-padding w3-row-padding w3-light-grey w3-padding-16">
-                <input type="submit" id="submit" value="Sign in !" />
+                <input type="submit" id="submit" value="Sign in !" class="w3-button w3-green" />
             </div>
             <div id="resultat" class="w3-container w3-red"></div>
             <div class="w3-padding-16">

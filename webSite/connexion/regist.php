@@ -10,7 +10,7 @@
     <?php include '../layout/header.php'; ?>
 
     <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-        <div class="w3-content w3-center">
+        <div class="w3-content w3-center" style="width:300px;">
 
             <h1>Sign Up</h1>
 
@@ -22,7 +22,7 @@
                                 Email :
                             </div>
                             <div >
-                                <input type="email" id="email" />
+                                <input type="email" id="email" class="w3-input" />
                             </div>
                             
                         </div>
@@ -31,7 +31,7 @@
                                 Re-enter your email:
                             </div>
                             <div >
-                                <input type="email" id="emailCheck" />
+                                <input type="email" id="emailCheck" class="w3-input" />
                             </div>
                             
                         </div>
@@ -40,7 +40,7 @@
                                 Password :
                             </div>
                             <div >
-                                <input type="password" id="password" />
+                                <input type="password" id="password" class="w3-input" />
                             </div>
                             
                         </div>
@@ -49,7 +49,7 @@
                                 Re-enter your password :
                             </div>
                             <div>
-                                <input type="password" id="passwordCheck" />
+                                <input type="password" id="passwordCheck" class="w3-input" />
                             </div>
                             
                         </div>
@@ -58,7 +58,7 @@
                                 Name :
                             </div>
                             <div>
-                                <input type="text" id="name" />
+                                <input type="text" id="name" class="w3-input" />
                             </div>
                             
                         </div>
@@ -67,13 +67,13 @@
                                 Job :
                             </div>
                             <div >
-                                <input type="text" id="job" />
+                                <input type="text" id="job" class="w3-input" />
                             </div>
                             
                         </div>
                     </div>
                     <div class="w3-row-padding w3-row-padding w3-light-grey w3-padding-16">
-                        <input type="submit" id="submit" value="Register !" />
+                        <input type="submit" id="submit" class="w3-button w3-green" value="Register !" />
                     </div>
                     <div id="resultat" class="w3-container w3-red"></div>
 

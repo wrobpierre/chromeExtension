@@ -28,11 +28,13 @@ header('Access-Control-Allow-Origin: *');
         $stmtCheck->execute();
         $user = $stmtCheck->fetchAll();
 
+        $id = $user[0]['id'];        
         $email = $user[0]['email'];
-        $pwdCheck = $user[0]['password'];        
+        $pwdCheck = $user[0]['password'];
 
         if($_POST['email'] == $email && $pwdSalt == $pwdCheck){
             session_start();
+            $_SESSION['id'] = $id;
             $_SESSION['user'] = $email;
             $_SESSION['timeout']= time();
             echo "Success";

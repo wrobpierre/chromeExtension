@@ -138,14 +138,14 @@ function getOS() {
 						// var spaceOfThree = '<div class="w3-col l3 w3-padding"></div>';
 
 
-						var do_ques = $('<input type="button" class="w3-button w3-blue w3-col l6 w3-section" style="white-space: normal;" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
+						var do_ques = $('<input type="button" class="w3-button w3-blue w3-col l6 w3-section" style="white-space: normal; border: solid white;" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
 
-						var graph_ques = $('<input type="button" class="w3-button w3-blue w3-col l6 w3-section" onclick="window:location.href=\''+adress+'/webSite/graph.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
+						var graph_ques = $('<input type="button" class="w3-button w3-blue w3-col l6 w3-section" style="white-space: normal; border: solid white;" onclick="window:location.href=\''+adress+'/webSite/graph.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
 						
 						if(checkUser != ""){
 							var option = $('<div class="option w3-col m12"></div>')
-							var edit = $('<input type="button" class="w3-button w3-blue w3-col l4 w3-section" onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
-							var del = $('<button class="w3-button w3-red w3-col l4 w3-section">Delete</button>').click(function(){
+							var edit = $('<input type="button" class="w3-button w3-blue w3-col l4 w3-section" style="white-space: normal; border: solid white;"onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
+							var del = $('<button class="w3-button w3-red w3-col l4 w3-section" style="white-space: normal; border: solid white;">Delete</button>').click(function(){
 								var r = confirm("Are you sure to delete this questionnaire ?");
 								if (r == true) {
 									var postDel = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
@@ -155,7 +155,7 @@ function getOS() {
 									});
 								}
 							});
-							var edit_result = $('<input type="button" class="w3-button w3-indigo w3-col l4 w3-section" style="white-space: normal;"  onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_results.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value','Edit users\' results');
+							var edit_result = $('<input type="button" class="w3-button w3-indigo w3-col l4 w3-section" style="white-space: normal; border: solid white;" style="white-space: normal;"  onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_results.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value','Edit users\' results');
 
 						}
 						titleDiv.append(img, title);

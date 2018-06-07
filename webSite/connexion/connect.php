@@ -34,7 +34,7 @@
 
              </div>
              <div class="w3-row-padding w3-row-padding w3-light-grey w3-padding-16">
-                <input type="submit" id="submit" value="Sign in !" class="w3-button w3-green" />
+                <input type="submit" id="submit" value="Sign in !" class="w3-button w3-blue" />
             </div>
             <div id="resultat" class="w3-container w3-red"></div>
             <div class="w3-padding-16">

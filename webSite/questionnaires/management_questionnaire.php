@@ -197,7 +197,7 @@ if (isset($_POST['action'])) {
 			echo "<pre>";
 			var_dump($_FILES);
 			echo "</pre>";*/
-			//header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
 			if (isset($_POST['id_questionnaire']) && isset($_POST['param_id'])) {
 
 				$target_dir = "../img/quest_img/".$_POST['param_id'];

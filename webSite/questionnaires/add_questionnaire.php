@@ -37,7 +37,7 @@ else{
 						<input type="hidden" name="action" value="add">
 						<input type="hidden" name="user_email" value="<?php echo $checkUser ;?>">
 						<div class="w3-container w3-red">
-							<h2>Questionnaire information</h2>
+							<h2>Questionnaire informations</h2>
 						</div>
 						<div class="w3-row w3-margin">
 							<div class="w3-section">
@@ -84,9 +84,9 @@ else{
 						<div class="w3-container w3-red">
 							<h2>Your Questions</h2>
 						</div>
-						<div class="w3-row w3-margin">
+						<div class="w3-row">
 							<div class="w3-row">
-								<input class="w3-button w3-large w3-circle w3-blue" title="Add a question" type="button" value="+">
+								<input class="w3-input w3-blue" style="width: 150px;" type="button" value="Add a question">
 								<span class="error"></span><br>
 								<div class="all_questions">
 
@@ -190,8 +190,14 @@ else{
 				}
 			})
 
-			$('input[value="+"]').click(function(){
-				var div = $('<div id="'+i+'"></div>').attr('class','question w3-section w3-col m12');
+			$('input[value="Add a question"]').click(function(){
+				var div = $('<div id="'+i+'"></div>').attr('class','question w3-section w3-col m12 w3-padding');
+				if(i%2){
+						div.css('background', '#f5f6fa');
+					}
+					else{
+						div.css('background', '#FFFFFF');
+					}
 				var lq = $('<label>Question&nbsp;:&nbsp;</label> <span class="error"></span>');
 				var iq = $('<input class="input_question w3-input" type="text" name="q['+i+'][question]"><br>');
 
@@ -270,7 +276,7 @@ else{
 
 				var answer = $('<div class="answer"></div>');
 
-				var button = $('<div class="w3-row"><input class="w3-button w3-large w3-circle w3-red w3-margin" type="button" value="x" title="Delete this question"></div>');
+				var button = $('<div class="w3-row"><input class="w3-input w3-red w3-section" type="button" value="Delete" style="width: 150px;"></div>');
 				button.click(function(){
 					$(this).parent().remove();
 				});

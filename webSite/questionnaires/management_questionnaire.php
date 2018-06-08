@@ -178,7 +178,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_questions_to_edit') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, qtn.auto_correction, q.question, q.type_ques, q.image, q.answer, q.id, q.key_questionnaires
+				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, qtn.auto_correction, qtn.key_user, q.question, q.type_ques, q.image, q.answer, q.id, q.key_questionnaires
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");

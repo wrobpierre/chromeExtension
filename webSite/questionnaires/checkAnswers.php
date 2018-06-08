@@ -3,6 +3,9 @@ header('Access-Control-Allow-Origin: *');
 $adress = "http://163.172.59.102";
 // $adress = "http://localhost/chromeExtension";
 
+ini_set('display_errors',1);
+error_reporting(E_ALL);
+
 class answer{}
 
 function stripVN($str) {
@@ -66,16 +69,18 @@ if (isset($_POST['user_email'])) {
 		echo "</pre>";*/
 
 		header("Location: ".$adress."/webSite/questionnaires/result.html");			
-		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, knowledge, key_user)
-			SELECT :key_question, :answer, :result, :rank, :knowledge, id FROM users WHERE email like :email");
+		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, knowledge, use_graph, key_user)
+			SELECT :key_question, :answer, :result, :rank, :knowledge, :use_graph, id FROM users WHERE email like :email");
 		$stmt->bindParam(':key_question', $key_question);
 		$stmt->bindParam(':answer', $answer);
 		$stmt->bindParam(':result', $result);
 		$stmt->bindParam(':rank', $rank);
 		$stmt->bindParam(':knowledge', $knowledge);
+		$stmt->bindParam(':use_graph', $use_graph);
 		$stmt->bindParam(':email', $email);
 		$email = $_POST['user_email'];
 		$knowledge = $_POST['knowledge'];
+		$use_graph = (!isset($_POST['use_graph'])) ? 0 : 1;
 
 		foreach ($_POST['q'] as $key => $value) {
 			$key_question = $key;
@@ -119,7 +124,6 @@ if (isset($_POST['user_email'])) {
 			}
 			$stmt->execute();
 		}
-
 	}
 	catch(PDOException $e)
 	{

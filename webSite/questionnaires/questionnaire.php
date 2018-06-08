@@ -43,15 +43,11 @@ function getOS() {
 	<div id="form-questionnaire" class="w3-container w3-light-grey">
 		<div class="w3-col l3 w3-padding"></div>
 		<div id="questionnaire" class="w3-col l6 w3-col s12 w3-border w3-white w3-margin-bottom" style="margin-top:-80px;">
-				<div id="content" >
-					<div class="w3-container w3-red">
-						<h1></h1>
-					</div>
-					<div id="addQuestionnaire" class="w3-padding"></div>
-					
-
-
-				
+			<div id="content" >
+				<div class="w3-container w3-red">
+					<h1></h1>
+				</div>
+				<div id="addQuestionnaire" class="w3-padding"></div>
 			</div>
 		</div>
 	</div>
@@ -186,11 +182,11 @@ function getOS() {
 					}
 				}
 			});
-		}
-		else {
-			if (checkUser == "") {
-				document.location.href="../connexion/connect.php"
-			}
+}
+else {
+	if (checkUser == "") {
+		document.location.href="../connexion/connect.php"
+	}
 			//console.log(param);
 			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
 

@@ -86,7 +86,7 @@ else{
 						</div>
 						<div class="w3-row">
 							<div class="w3-row">
-								<input class="w3-input w3-blue" style="width: 150px;" type="button" value="Add a question">
+								<input class="w3-input w3-blue w3-margin" style="width: 150px;" type="button" value="Add a question">
 								<span class="error"></span><br>
 								<div class="all_questions">
 
@@ -102,7 +102,7 @@ else{
 				</div>
 			</form>
 		</div>
-
+		
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 		<script type="text/javascript">
 			var adress = "http://163.172.59.102"

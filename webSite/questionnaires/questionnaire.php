@@ -8,25 +8,6 @@ else{
 	$checkUser = null;
 	$checkIdUser = null;
 }
-
-function getOS() { 
-	$user_agent     =   $_SERVER['HTTP_USER_AGENT'];
-	$os_platform    =   "Unknown OS Platform";
-	$os_array       =   array(
-		'/windows nt/i'     =>  'Windows',
-		'/macintosh|mac os|mac_powerpc/i' =>  'Mac',
-		'/linux/i'              =>  'Linux',
-		'/ubuntu/i'             =>  'Ubuntu',
-	);
-
-	foreach ($os_array as $regex => $value) { 
-
-		if (preg_match($regex, $user_agent)) {
-			$os_platform    =   $value;
-		}
-	}   
-	return $os_platform;
-}
 ?>
 
 <!DOCTYPE html>
@@ -60,22 +41,7 @@ function getOS() {
 	<script type="text/javascript">
 
 		// The ID of the extension we want to talk to.
-		var editorExtensionId = null;
-		var os = '<?php echo getOS(); ?>';
-		console.log(os);
-		if (os == 'Windows') {
-			editorExtensionId = "ocknihfeinjoffpckboadjhgenhojpgk";			
-		}
-		else if (os == 'Mac') {
-			editorExtensionId = "fkjmjhcdmdgenkkabahncdhapanknlcl";
-		}
-		else if (os == 'Linux') {
-			editorExtensionId = "";
-		}
-		else if (os == 'Ubuntu') {
-			editorExtensionId = "";
-		}
-		console.log(editorExtensionId)
+		var editorExtensionId = "lelffhnbkddkijndbkdjkaoaeljhbcij";			
 		
 		var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
@@ -334,7 +300,10 @@ function getOS() {
 					+'<option value="medium">MEDIUM</option>'
 					+'<option value="expert">EXPERT</option>'
 					+'</select>');
-				user_opinion.append(label_knowledge,knowledge);
+				
+				var use_graph = $('<input class="w3-radio" type="checkbox" name="use_graph"> <label>Did you use the graph to answer the questionnaires?</label>');
+				
+				user_opinion.append(label_knowledge,knowledge,use_graph);
 
 				var submit = $('<input class="w3-button w3-green w3-section w3-margin" style="width: 200px;" type="submit" value="send">');
 				lastDiv.css("margin", "5%")

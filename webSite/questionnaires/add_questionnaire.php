@@ -37,7 +37,7 @@ else{
 						<input type="hidden" name="action" value="add">
 						<input type="hidden" name="user_email" value="<?php echo $checkUser ;?>">
 						<div class="w3-container w3-red">
-							<h2>Questionnaire information</h2>
+							<h2>Questionnaire informations</h2>
 						</div>
 						<div class="w3-row w3-margin">
 							<div class="w3-section">

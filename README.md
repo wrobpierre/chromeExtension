@@ -2,16 +2,16 @@
   <img width="100" height="100" src="http://163.172.59.102/opu_blank.png">
 </p>
 
-#ChromeExtension
+#SharedOn
 
-## What is ChromeExtension ?
+## What is SharedOn ?
 Do you often use your internet to answer a question?
 
 But you do not always understand the author's explanations and spend a lot of time learning about other sites.
 
 So our extension is done for you !
 
-With chromeExtension, you can use the experience of previous users to find the information you need as quickly as possible. If you activate the extension, you can also share your experience and future users can benefit from it.
+With SharedOn, you can use the experience of previous users to find the information you need as quickly as possible. If you activate the extension, you can also share your experience and future users can benefit from it.
 
 This project was done as part of an internship.
 

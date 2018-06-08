@@ -6,14 +6,14 @@ $_SESSION['timeout']=time();
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ChromeExtension</title>
+  <title>SharedOn</title>
   <?php include './layout/includes.php'; ?>
 </head>
 <body>
   <?php include './layout/header.php'; ?>
   <!-- Header -->
   <header class="w3-container w3-red w3-center" style="padding:128px 16px">
-    <h1 class="w3-margin w3-jumbo">ChromeExtension</h1>
+    <h1 class="w3-margin w3-jumbo">SharedOn</h1>
     <p class="w3-xlarge">Answer easier and faster.</p>
     <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" onclick="window:location.href='./questionnaires/questionnaire.php'">Get Started</button>
   </header>
@@ -22,13 +22,13 @@ $_SESSION['timeout']=time();
   <div class="w3-row-padding w3-padding-64 w3-container">
     <div class="w3-content">
       <div class="w3-twothird">
-        <h1>What is ChromeExtension ?</h1>
+        <h1>What is SharedOn ?</h1>
 
         <p class="w3-text-grey">
         Do you often use your internet to answer a question?</p>
         <p class="w3-text-grey">But you do not always understand the author's explanations and spend a lot of time learning about other sites.</p>
         <p class="w3-text-grey">So our extension is done for you !</p>
-        <p class="w3-text-grey">With chromeExtension, you can use the experience of previous users to find the information you need as quickly as possible.
+        <p class="w3-text-grey">With SharedOn, you can use the experience of previous users to find the information you need as quickly as possible.
         If you activate the extension, you can also share your experience and future users can benefit from it.</p>
       </div>
 

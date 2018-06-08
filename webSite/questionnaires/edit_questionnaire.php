@@ -7,6 +7,7 @@ if (!isset($_SESSION['user'])) {
 }
 else{
 	$checkUser = $_SESSION['user'];
+	$checkIdUser = $_SESSION['id'];
 	$inactive = 45*60; 
 	$session_life = time() - $_SESSION['timeout'];
 	if($session_life > $inactive){
@@ -49,7 +50,7 @@ else{
 	<div id="form-questionnaire" class="w3-container w3-light-grey">
 		<form id="form" action="management_questionnaire.php" method="post" enctype="multipart/form-data">
 			<div class="w3-col l3 w3-margin"></div>
-			<div id="questionnaire" class=" w3-row w3-col l6 w3-col s12 w3-border w3-white w3-margin-top w3-margin-bottom">
+			<div id="questionnaire" class=" w3-row w3-col l6 w3-col s12 w3-border w3-white w3-margin-bottom" style="margin-top: -80px;">
 				<div class="w3-container w3-red">
 					<h1>Questionnaire informations</h1>
 				</div>
@@ -138,6 +139,7 @@ else{
 <script type="text/javascript">
 	var adress = "http://163.172.59.102";
 	var checkUser = '<?php echo $checkUser ;?>';
+	var checkIdUser = '<?php echo $checkIdUser ;?>';
 		// var adress = "http://localhost/chromeExtension";
 
 		var fileTypes = ['image/jpeg','image/pjpeg','image/png'];
@@ -225,6 +227,10 @@ else{
 			if (data != '') {
 				var dataParse = JSON.parse(data);
 				console.log(dataParse);
+				console.log(dataParse[0]);
+				if(dataParse[0]['key_user'] != checkIdUser){
+					document.location.href="/index.php"
+				}
 
 				$('input[name="id_questionnaire"]').val(dataParse[0]['key_questionnaires']);
 

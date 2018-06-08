@@ -40,9 +40,9 @@ function getOS() {
 <body>
 	<?php include '../layout/header.php'; ?>
 	<header class="parallax-window" data-parallax="scroll" style="height: 300px;" data-image-src="../img/select_question.jpg"></header>		
-	<div id="form-questionnaire" class="w3-container w3-light-grey" style="margin-top:-100px;">
+	<div id="form-questionnaire" class="w3-container w3-light-grey">
 		<div class="w3-col l3 w3-padding"></div>
-		<div id="questionnaire" class="w3-col l6 w3-col s12 w3-border w3-white w3-margin-top w3-margin-bottom">
+		<div id="questionnaire" class="w3-col l6 w3-col s12 w3-border w3-white w3-margin-bottom" style="margin-top:-80px;">
 				<div id="content" >
 					<div class="w3-container w3-red">
 						<h1></h1>

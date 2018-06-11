@@ -26,16 +26,18 @@ try {
 		$pwd = $_POST['password'];
 		$pwd = md5($salt.$pwd);
 
-		$stmid = $conn->prepare("INSERT INTO users (check_id,name,email,job, password) VALUES (:checkId, :name, :email, :job, :password)");
+		$stmid = $conn->prepare("INSERT INTO users (check_id,name,email,job,lang,password) VALUES (:checkId, :name, :email, :job, :lang, :password)");
 		$stmid->bindParam(':password', $password);
 		$stmid->bindParam(':name', $name);
 		$stmid->bindParam(':email', $email);
 		$stmid->bindParam(':job', $job);
+		$stmid->bindParam(':lang', $lang);
 		$stmid->bindParam(':checkId', $checkId);
 		$createId = uniqid();
 		$name = $_POST['name'];
 		$email = $_POST['email'];
 		$job = $_POST['job'];
+		$lang = $_POST['lang'];
 		$password = $pwd;
 		$checkId = uniqid();
 

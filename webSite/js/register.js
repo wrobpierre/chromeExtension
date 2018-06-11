@@ -1,52 +1,54 @@
 $(document).ready(function(){
+  $("#country").countrySelect();
 
-     $("#submit").click(function(e){
-        e.preventDefault();
-        if($("#email").val() == $("#emailCheck").val() && $("#password").val() == $("#passwordCheck").val() && $("#password").val().length >= 8 && validateEmail($("#email").val())){
-            $.post(
-                '../connexion/register.php',
-                {
-                    email : $("#email").val(),
-                    password : md5($("#password").val()),
-                    job : $("#job").val(),
-                    name : $("#name").val()
-                },
+  $("#submit").click(function(e){
+    e.preventDefault();
+    if($("#email").val() == $("#emailCheck").val() && $("#password").val() == $("#passwordCheck").val() && $("#password").val().length >= 8 && validateEmail($("#email").val())){
+      $.post(
+        '../connexion/register.php',
+        {
+          email : $("#email").val(),
+          password : md5($("#password").val()),
+          job : $("#job").val(),
+          name : $("#name").val(),
+          lang : $('#country').next().find('.selected-flag').find('.flag')[0].classList[1]
+        },
 
-                function(data){
-                    console.log(data);
-                    if(data == 'Success'){
-                       alert("Your account is created !")
-                       document.location.href="../index.php";
-                   }
-                   else if(data == 'Failed'){
-                       $("#resultat").html("<p>Bad email or password.</p>");
-                   }
-                   else if(data == 'Exist'){
-                    $("#resultat").html("<p>Your mail address is already used.</p>");
-                   }
-
-               },
-               'text'
-               );
+        function(data){
+          console.log(data);
+          if(data == 'Success'){
+           alert("Your account is created !")
+           document.location.href="../index.php";
+         }
+         else if(data == 'Failed'){
+           $("#resultat").html("<p>Bad email or password.</p>");
+         }
+         else if(data == 'Exist'){
+          $("#resultat").html("<p>Your mail address is already used.</p>");
         }
-        else{
-            if($("#email").val() != $("#emailCheck").val()){
-                $("#resultat").html("<p>The two email are not the same.</p>");
-            }
-            else if($("#password").val() != $("#passwordCheck").val()){
-                $("#resultat").html("<p>The two password are not the same.</p>");
-            }
-            else if(!validateEmail($("#email").val())){
-                $("#resultat").html("<p>Your email is not valid.</p>");
-            }
-            else if($("#password").val().length < 8){
-                $("#resultat").html("<p>Your password must be at least 8 characters.</p>");
-            }
-            else{
-                $("#resultat").html("<p>A problem occured please try later.</p>");
-            }
-        }
-    });
+
+      },
+      'text'
+      );
+    }
+    else{
+      if($("#email").val() != $("#emailCheck").val()){
+        $("#resultat").html("<p>The two email are not the same.</p>");
+      }
+      else if($("#password").val() != $("#passwordCheck").val()){
+        $("#resultat").html("<p>The two password are not the same.</p>");
+      }
+      else if(!validateEmail($("#email").val())){
+        $("#resultat").html("<p>Your email is not valid.</p>");
+      }
+      else if($("#password").val().length < 8){
+        $("#resultat").html("<p>Your password must be at least 8 characters.</p>");
+      }
+      else{
+        $("#resultat").html("<p>A problem occured please try later.</p>");
+      }
+    }
+  });
 });
 
 function validateEmail(email) 

@@ -5,6 +5,8 @@
     <title>ChromeExtension</title>
 </head>
 
+<link rel="stylesheet" href="../plugin/country-select-js-master/build/css/countrySelect.css">
+
 <?php include '../layout/includes.php'; ?>
 <body>
     <?php include '../layout/header.php'; ?>
@@ -71,6 +73,14 @@
                             </div>
                             
                         </div>
+                        <div class="w3-padding-16">
+                            <div>
+                                Language :
+                            </div>
+                            <div>
+                                <input class="w3-input" type="text" id="country">
+                            </div>
+                        </div>
                     </div>
                     <div class="w3-row-padding w3-row-padding w3-light-grey w3-padding-16">
                         <input type="submit" id="submit" class="w3-button w3-green" value="Register !" />
@@ -84,8 +94,9 @@
 
     <?php include '../layout/footer.php'; ?>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="../js/md5.min.js" type="text/javascript"></script>
+    <script src="../plugin/country-select-js-master/build/js/countrySelect.min.js"></script>
     <script src="../js/register.js" type="text/javascript"></script>
 </body>
 </html>

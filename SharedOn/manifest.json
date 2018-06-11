@@ -1,9 +1,9 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 1,
 
   "name": "SharedOn",
   "description": "This extension allows the user to change the background color of the current page.",
-  "version": "1.0",
+  "version": "1.5",
 
   "background": {
     "scripts": ["jquery.js", "eventPage.js"],

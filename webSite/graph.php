@@ -2,7 +2,7 @@
 <html>
 <head>
 	
-	<title>Chrome extension</title>
+	<title>SharedOn</title>
 
 	<link rel="stylesheet" type="text/css" href="https://static01.nyt.com/css/0.1/screen/build/interactive/us/politics/styles.css">
 	<link rel="stylesheet" type="text/css" media="print" href="https://static01.nyt.com/css/0.1/print/styles.css">

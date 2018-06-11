@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>ChromeExtension</title>
+    <title>SharedOn</title>
 </head>
 
 <link rel="stylesheet" href="../plugin/country-select-js-master/build/css/countrySelect.css">

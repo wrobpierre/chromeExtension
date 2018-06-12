@@ -24,7 +24,7 @@
 	</div>
 	<div class="sort w3-right w3-col m3 w3-margin w3-border">
 		<div class="w3-container w3-red">
-			<h2>Sort</h2>
+			<h2 class="w3-text-white">Sort</h2>
 		</div>
 		<div id="questionFilter" class="w3-col m6 w3-center">
 			<h5>By question</h5>
@@ -84,9 +84,9 @@
 													<div id="nytg-colorKey">
 														<p>Circles are sized according to the number of views.</p>
 														<div id="nytg-sizeKey">
-															<div style="left:52px;top:10px;width:20px;" class="nytg-circleKeyLabel"><span style="left:25px;">1 million viewers</span></div>
-															<div style="left:32px;top:28px;" class="nytg-circleKeyLabel"><span>100,000 viewers</span></div>
-															<div style="left:32px;top:40px;" class="nytg-circleKeyLabel"><span>10,000 viewers</span></div>
+															<div style="left:52px;top:10px;width:20px;" class="nytg-circleKeyLabel"><span style="left:25px;"></span></div>
+															<div style="left:32px;top:28px;" class="nytg-circleKeyLabel"><span></span></div>
+															<div style="left:32px;top:40px;" class="nytg-circleKeyLabel"><span></span></div>
 															<svg id="nytg-scaleKey"></svg>
 														</div>
 														<p>Color shows the time spent on a web site.</p>
@@ -310,8 +310,6 @@
 	<noscript>
 		<div><img alt="DCSIMG" id="DCSIMG" width="1" height="1" src="http://wt.o.nytimes.com/dcsym57yw10000s1s8g0boozt_9t1x/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=1.0.7"/></div>
 	</noscript>
-
-
 </body>
 </html>
 

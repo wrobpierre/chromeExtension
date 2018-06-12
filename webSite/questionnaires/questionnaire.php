@@ -87,7 +87,7 @@ else{
 						
 						var info = $('<div></div>');
 						if(value['link_img'] != null){
-							var img = $('<img src="'+value['link_img']+'" class="w3-round w3-col l3" style="max-width: 300px;">');
+							var img = $('<img src="'+value['link_img']+'" class="w3-round w3-col l3" style="max-width: 250px;">');
 						}
 						else{
 							var img = $('<img src="../img/question-mark.png" class="w3-round w3-col l3" style="max-width: 300px;">');
@@ -151,8 +151,12 @@ else{
 }
 else {
 	if (checkUser == "") {
-		document.location.href="../connexion/connect.php"
+		document.location.href="../connexion/connect.php";
 	}
+	window.onbeforeunload = function(){
+		chrome.runtime.sendMessage(editorExtensionId, {action: 'stop'});
+		return "You will leave the questionnaire, all your data will be lost. Are you sure you want to leave this page?";
+	};
 			//console.log(param);
 			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
 
@@ -352,5 +356,6 @@ else {
 }
 </script>
 <script src="../js/parallax.js-1.5.0/parallax.js" type="text/javascript"></script>
+<?php include '../layout/footer.php'; ?>
 </body>
 </html>

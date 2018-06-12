@@ -2,99 +2,99 @@ var adress = "http://163.172.59.102"
 // var adress = "http://localhost/chromeExtension"
 
 function generateList(data) {
-  if (data != undefined) {
+  // if (data != undefined) {
 
-    console.log(data);
+  //   console.log(data);
 
-    data.sort(function(a,b){
-      return b.views - a.views;
-    });
+  //   data.sort(function(a,b){
+  //     return b.views - a.views;
+  //   });
 
-    var table = document.querySelector('table>tbody');
-    for (var i = 0; i < data.length; i++) {
-      var tr = document.createElement('tr');
-      var rank = document.createElement('td');
-      rank.textContent = i+1;
+  //   var table = document.querySelector('table>tbody');
+  //   for (var i = 0; i < data.length; i++) {
+  //     var tr = document.createElement('tr');
+  //     var rank = document.createElement('td');
+  //     rank.textContent = i+1;
       
-      var url = document.createElement('td');
-      url.textContent = data[i]['url'];
+  //     var url = document.createElement('td');
+  //     url.textContent = data[i]['url'];
       
-      var title = document.createElement('td');
-      title.textContent = data[i]['title'];
+  //     var title = document.createElement('td');
+  //     title.textContent = data[i]['title'];
 
-      var keywords = document.createElement('td');
-      if (data[i]['keywords'] != null) {
-        keywords.textContent = data[i]['keywords'].join(', '); 
-      }
-      else {
-        keywords.textContent = "nothing..."; 
-      }
+  //     var keywords = document.createElement('td');
+  //     if (data[i]['keywords'] != null) {
+  //       keywords.textContent = data[i]['keywords'].join(', '); 
+  //     }
+  //     else {
+  //       keywords.textContent = "nothing..."; 
+  //     }
 
-      var views = document.createElement('td');
-      views.textContent = data[i]['views'];
+  //     var views = document.createElement('td');
+  //     views.textContent = data[i]['views'];
 
-      var time = document.createElement('td');
-      time.textContent = data[i]['timeOnPage']['hours']+":"+data[i]['timeOnPage']['minutes']+":"+data[i]['timeOnPage']['secondes'];
+  //     var time = document.createElement('td');
+  //     time.textContent = data[i]['timeOnPage']['hours']+":"+data[i]['timeOnPage']['minutes']+":"+data[i]['timeOnPage']['secondes'];
 
-      var scroll = document.createElement('td');
-      scroll.textContent = data[i]['scrollPourcent'];
+  //     var scroll = document.createElement('td');
+  //     scroll.textContent = data[i]['scrollPourcent'];
 
-      tr.appendChild(rank);
-      tr.appendChild(url);
-      tr.appendChild(title);
-      tr.appendChild(keywords);
-      tr.appendChild(views);
-      tr.appendChild(time);
-      tr.appendChild(scroll);
-      table.appendChild(tr);
-    }
+  //     tr.appendChild(rank);
+  //     tr.appendChild(url);
+  //     tr.appendChild(title);
+  //     tr.appendChild(keywords);
+  //     tr.appendChild(views);
+  //     tr.appendChild(time);
+  //     tr.appendChild(scroll);
+  //     table.appendChild(tr);
+  //   }
 
 
-    var liste = document.getElementById('dropdown');
-    var ol = document.createElement('ol');
-    var li, p, em, code, title, keywords, numReq;
-    for (var i = 0; i < data.length; i++) {
-      li = document.createElement('li');
-      p = document.createElement('p');
+  //   var liste = document.getElementById('dropdown');
+  //   var ol = document.createElement('ol');
+  //   var li, p, em, code, title, keywords, numReq;
+  //   for (var i = 0; i < data.length; i++) {
+  //     li = document.createElement('li');
+  //     p = document.createElement('p');
 
-      em = document.createElement('em');
-      em.textContent = i+1;
-      p.appendChild(em);
+  //     em = document.createElement('em');
+  //     em.textContent = i+1;
+  //     p.appendChild(em);
 
-      code = document.createElement('code');
-      code.textContent = data[i]['url'];
-      p.appendChild(code);
+  //     code = document.createElement('code');
+  //     code.textContent = data[i]['url'];
+  //     p.appendChild(code);
 
-      numReq = document.createElement('p');
-      numReq.textContent = "Views: "+data[i]['views'];
-      p.appendChild(numReq);
+  //     numReq = document.createElement('p');
+  //     numReq.textContent = "Views: "+data[i]['views'];
+  //     p.appendChild(numReq);
 
-      title = document.createElement('p');
-      title.textContent = "Title: "+data[i]['title'];
-      p.appendChild(title);
+  //     title = document.createElement('p');
+  //     title.textContent = "Title: "+data[i]['title'];
+  //     p.appendChild(title);
 
-      keywords = document.createElement('p');
-      keywords.textContent = "Keywords: "; 
+  //     keywords = document.createElement('p');
+  //     keywords.textContent = "Keywords: "; 
 
-      if (data[i]['keywords'] != null) {
-        data[i]['keywords'].forEach( function(element) {
-          keywords.textContent += element+","; 
-        });   
-      }
-      else {
-        keywords.textContent += "nothing"; 
-      }
-      p.appendChild(keywords);
+  //     if (data[i]['keywords'] != null) {
+  //       data[i]['keywords'].forEach( function(element) {
+  //         keywords.textContent += element+","; 
+  //       });   
+  //     }
+  //     else {
+  //       keywords.textContent += "nothing"; 
+  //     }
+  //     p.appendChild(keywords);
 
-      li.appendChild(p);
-      ol.appendChild(li);
-    }
-    liste.innerHTML = '';
-    liste.appendChild(ol);
-  }
-  else {
-    console.log('fail data')
-  }
+  //     li.appendChild(p);
+  //     ol.appendChild(li);
+  //   }
+  //   liste.innerHTML = '';
+  //   liste.appendChild(ol);
+  // }
+  // else {
+  //   console.log('fail data')
+  // }
 }
 
 function loadList() {

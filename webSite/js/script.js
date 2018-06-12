@@ -525,21 +525,21 @@ nytg.test2 = [0,nb_question];
 
       // $ 100 billion
       d3.select("#nytg-scaleKey").append("circle")
-      .attr('r', this.radiusScale(1000000))
+      .attr('r', this.radiusScale(10000000))
       .attr('class',"nytg-scaleKeyCircle")
       .attr('cx', 30)
       .attr('cy', 40);
 
       // $ 10 billion
       d3.select("#nytg-scaleKey").append("circle")
-      .attr('r', this.radiusScale(100000))
+      .attr('r', this.radiusScale(1000000))
       .attr('class',"nytg-scaleKeyCircle")
       .attr('cx', 30)
       .attr('cy', 50);
 
       // $ 1 billion
       d3.select("#nytg-scaleKey").append("circle")
-      .attr('r', this.radiusScale(10000))
+      .attr('r', this.radiusScale(100000))
       .attr('class',"nytg-scaleKeyCircle")
       .attr('cx', 30)
       .attr('cy', 55);

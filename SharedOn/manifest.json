@@ -11,7 +11,7 @@
   },
 
   "browser_action": {
-    "default_icon": "cherry.png",
+    "default_icon": "lantern.png",
     "default_popup": "popup.html"
   },
 

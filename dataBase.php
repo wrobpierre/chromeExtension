@@ -64,22 +64,22 @@ if (isset($_POST['key'])) {
 
 				foreach ($_POST['d']['data'] as $key => $value) {
 					//if ( $value['hostName'] != '163.172.59.102' && strpos($value['hostName'], 'www.google.') === false ) {
-						$url = $value['url'];
-						$title = $value['title'];
-						if (isset($value['keywords'])) {
-							$keywords = implode(", ", $value['keywords']);
-						}
-						else {
-							$keywords = "nothing...";	
-						}
-						$view = $value['views'];
-						$hostName = $value['hostName'];
-						$first_time = $value['firstTime'];
-						$question = json_encode($value['question']);
-						if ( $value['timeOnPage']['hours'] > 0 || $value['timeOnPage']['minutes'] > 0 || $value['timeOnPage']['secondes'] > 2 ) {
-							$timer = json_encode($value['timeOnPage']);
-							$stmt->execute();
-						}
+					$url = $value['url'];
+					$title = $value['title'];
+					if (isset($value['keywords'])) {
+						$keywords = implode(", ", $value['keywords']);
+					}
+					else {
+						$keywords = "nothing...";	
+					}
+					$view = $value['views'];
+					$hostName = $value['hostName'];
+					$first_time = $value['firstTime'];
+					$question = json_encode($value['question']);
+					if ( $value['timeOnPage']['hours'] > 0 || $value['timeOnPage']['minutes'] > 0 || $value['timeOnPage']['secondes'] > 2 ) {
+						$timer = json_encode($value['timeOnPage']);
+						$stmt->execute();
+					}
 					//}
 				}
 			}
@@ -104,11 +104,18 @@ if (isset($_POST['key'])) {
 				WHERE u.id = ".$_POST['user']." AND fu.id = ".$_POST['id'];
 			}
 			elseif (isset($_POST['id'])) {
-				$requete = "SELECT distinct s.*, (SELECT distinct SUM(a.result) FROM answers a WHERE a.key_user = s.key_user)note, (SELECT distinct COUNT(*) FROM questions WHERE questions.key_questionnaires = q.id)nb_question
+				$requete = "SELECT s.*,
+				(SELECT distinct SUM(a.result)
+				FROM firsturl fu2
+				INNER JOIN questionnaires qts ON fu2.id = qts.key_first_url
+				INNER JOIN questions q ON qts.id = q.key_questionnaires
+				INNER JOIN answers a ON q.id = a.key_question
+				WHERE a.key_user = s.key_user and fu2.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.php?id=".$_POST['id']."')note, 
+				(SELECT distinct COUNT(*) FROM questions WHERE questions.key_questionnaires = questionnaires.id)nb_question
 				FROM sites s
-				INNER JOIN firsturl fu ON s.key_first_url = fu.id
-				INNER JOIN questionnaires q ON fu.id = q.key_first_url
-				WHERE fu.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.php?id=".$_POST['id']."'";
+				INNER JOIN firsturl fu1 ON s.key_first_url = fu1.id
+				INNER JOIN questionnaires ON fu1.id = questionnaires.key_first_url
+				WHERE fu1.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.php?id=".$_POST['id']."'";
 			}
 			else {
 				$requete = "SELECT * FROM sites";

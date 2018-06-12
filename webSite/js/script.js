@@ -43,13 +43,12 @@ else {
 post.done(function(data) {
   var nytg = nytg || {}; 
   var time = 0;
-  
   var alreadySave = false;
-
   var maxQuestion = 0;
 
-  console.log(data);
-  nytg.budget_array_data = [];
+  nytg.array_webSites = [];
+  nytg.array_best_median = [];
+  
   dataParse = JSON.parse(data);
   console.log(dataParse);
   dataParse.forEach(function(element){
@@ -76,7 +75,7 @@ post.done(function(data) {
         tabMedianeView.push(parseInt(elem['view']));
         tabMedianeTime.push(parseInt(timer.hours)*3600+parseInt(timer.minutes)*60+parseInt(timer.secondes));
         tabMedianeFirstTime.push(new Date(elem['first_time']).getTime());
-      console.log("elem : "+parseInt(elem['note']));
+        //console.log("elem : "+parseInt(elem['note']));
       });
       tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
       element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
@@ -149,7 +148,7 @@ post.done(function(data) {
       }
     }
 
-    nytg.budget_array_data.push(element);
+    nytg.array_webSites.push(element);
 
     if (minAvg > element['avg'] ) {
       minAvg = element['avg'];
@@ -172,7 +171,7 @@ post.done(function(data) {
     notes.appendChild(li);
   }
 
-  nytg.category_data = [{"label":"Health and Human Services","total":921605000,"num_children":26,"short_label":"Health and Human Services"},{"label":"State","total":31608000,"num_children":8,"short_label":"State"},{"label":"Judicial Branch","total":7502000,"num_children":13,"short_label":"Judicial Branch"},{"label":"International Assistance Programs","total":37399000,"num_children":16,"short_label":"International"},{"label":"Agriculture","total":154667000,"num_children":45,"short_label":"Agriculture"},{"label":"Treasury","total":519490000,"num_children":15,"short_label":"Treasury"},{"label":"Other Defense Civil Programs","total":57416000,"num_children":9,"short_label":"Defense Civil Programs"},{"label":"Appalachian Regional Commission","total":64000,"num_children":2,"short_label":"Appalachian Commission"},{"label":"Legislative Branch","total":4789000,"num_children":20,"short_label":"Legislative Branch"},{"label":"Veterans Affairs","total":137381000,"num_children":9,"short_label":"Veterans Affairs"},{"label":"Justice","total":30023000,"num_children":18,"short_label":"Justice"},{"label":"Interior","total":11357000,"num_children":31,"short_label":"Interior"},{"label":"Commerce","total":9239000,"num_children":21,"short_label":"Commerce"},{"label":"Labor","total":88993000,"num_children":15,"short_label":"Labor"},{"label":"Homeland Security","total":45109000,"num_children":23,"short_label":"Homeland Security"},{"label":"Housing and Urban Development","total":44010000,"num_children":14,"short_label":"Housing"},{"label":"Corps of Engineers--Civil Works","total":4668000,"num_children":3,"short_label":"Corps of Engineers"},{"label":"Executive Office of the President","total":392000,"num_children":12,"short_label":"Office of the President"},{"label":"Energy","total":32300000,"num_children":10,"short_label":"Energy"},{"label":"Transportation","total":74280000,"num_children":22,"short_label":"Transportation"},{"label":"Education","total":55685000,"num_children":15,"short_label":"Education"},{"label":"Federal Deposit Insurance Corporation","total":1515000,"num_children":5,"short_label":"F.D.I.C."},{"label":"District of Columbia","total":902000,"num_children":5,"short_label":"District of Columbia"},{"label":"Environmental Protection Agency","total":8138000,"num_children":2,"short_label":"E.P.A."},{"label":"Defense - Military","total":620259000,"num_children":13,"short_label":"Defense"},{"label":"Institute of Museum and Library Services","total":231000,"num_children":2,"short_label":"Museum and Library Services"},{"label":"National Aeronautics and Space Administration","total":17693000,"num_children":2,"short_label":"NASA"},{"label":"National Archives and Records Administration","total":370000,"num_children":3,"short_label":"National Archives"},{"label":"National Science Foundation","total":7470000,"num_children":2,"short_label":"N.S.F."},{"label":"Nuclear Regulatory Commission","total":127000,"num_children":2,"short_label":"Nuclear Regulation"},{"label":"Office of Personnel Management","total":94857000,"num_children":3,"short_label":"Personnel Management"},{"label":"Postal Service","total":78000,"num_children":2,"short_label":"Postal Service"},{"label":"Public Company Accounting Oversight Board","total":237000,"num_children":2,"short_label":"Accounting Oversight"},{"label":"Railroad Retirement Board","total":7202000,"num_children":3,"short_label":"Railroad Retirement"},{"label":"Small Business Administration","total":1111000,"num_children":2,"short_label":"Small Business"},{"label":"Social Security Administration","total":885315000,"num_children":2,"short_label":"Social Security"},{"label":"Federal Communications Commission","total":9633000,"num_children":2,"short_label":"F.C.C."},{"label":"Securities Investor Protection Corporation","total":259000,"num_children":2,"short_label":"S.I.P.C."},{"label":"Other","total":-512596000,"num_children":97,"short_label":"Other"}];
+  //nytg.category_data = [{"label":"Health and Human Services","total":921605000,"num_children":26,"short_label":"Health and Human Services"},{"label":"State","total":31608000,"num_children":8,"short_label":"State"},{"label":"Judicial Branch","total":7502000,"num_children":13,"short_label":"Judicial Branch"},{"label":"International Assistance Programs","total":37399000,"num_children":16,"short_label":"International"},{"label":"Agriculture","total":154667000,"num_children":45,"short_label":"Agriculture"},{"label":"Treasury","total":519490000,"num_children":15,"short_label":"Treasury"},{"label":"Other Defense Civil Programs","total":57416000,"num_children":9,"short_label":"Defense Civil Programs"},{"label":"Appalachian Regional Commission","total":64000,"num_children":2,"short_label":"Appalachian Commission"},{"label":"Legislative Branch","total":4789000,"num_children":20,"short_label":"Legislative Branch"},{"label":"Veterans Affairs","total":137381000,"num_children":9,"short_label":"Veterans Affairs"},{"label":"Justice","total":30023000,"num_children":18,"short_label":"Justice"},{"label":"Interior","total":11357000,"num_children":31,"short_label":"Interior"},{"label":"Commerce","total":9239000,"num_children":21,"short_label":"Commerce"},{"label":"Labor","total":88993000,"num_children":15,"short_label":"Labor"},{"label":"Homeland Security","total":45109000,"num_children":23,"short_label":"Homeland Security"},{"label":"Housing and Urban Development","total":44010000,"num_children":14,"short_label":"Housing"},{"label":"Corps of Engineers--Civil Works","total":4668000,"num_children":3,"short_label":"Corps of Engineers"},{"label":"Executive Office of the President","total":392000,"num_children":12,"short_label":"Office of the President"},{"label":"Energy","total":32300000,"num_children":10,"short_label":"Energy"},{"label":"Transportation","total":74280000,"num_children":22,"short_label":"Transportation"},{"label":"Education","total":55685000,"num_children":15,"short_label":"Education"},{"label":"Federal Deposit Insurance Corporation","total":1515000,"num_children":5,"short_label":"F.D.I.C."},{"label":"District of Columbia","total":902000,"num_children":5,"short_label":"District of Columbia"},{"label":"Environmental Protection Agency","total":8138000,"num_children":2,"short_label":"E.P.A."},{"label":"Defense - Military","total":620259000,"num_children":13,"short_label":"Defense"},{"label":"Institute of Museum and Library Services","total":231000,"num_children":2,"short_label":"Museum and Library Services"},{"label":"National Aeronautics and Space Administration","total":17693000,"num_children":2,"short_label":"NASA"},{"label":"National Archives and Records Administration","total":370000,"num_children":3,"short_label":"National Archives"},{"label":"National Science Foundation","total":7470000,"num_children":2,"short_label":"N.S.F."},{"label":"Nuclear Regulatory Commission","total":127000,"num_children":2,"short_label":"Nuclear Regulation"},{"label":"Office of Personnel Management","total":94857000,"num_children":3,"short_label":"Personnel Management"},{"label":"Postal Service","total":78000,"num_children":2,"short_label":"Postal Service"},{"label":"Public Company Accounting Oversight Board","total":237000,"num_children":2,"short_label":"Accounting Oversight"},{"label":"Railroad Retirement Board","total":7202000,"num_children":3,"short_label":"Railroad Retirement"},{"label":"Small Business Administration","total":1111000,"num_children":2,"short_label":"Small Business"},{"label":"Social Security Administration","total":885315000,"num_children":2,"short_label":"Social Security"},{"label":"Federal Communications Commission","total":9633000,"num_children":2,"short_label":"F.C.C."},{"label":"Securities Investor Protection Corporation","total":259000,"num_children":2,"short_label":"S.I.P.C."},{"label":"Other","total":-512596000,"num_children":97,"short_label":"Other"}];
 
   var question = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'get_data_question', id:id });
   question.done(function(data){
@@ -343,30 +342,18 @@ nytg.test2 = [0,nb_question];
     strokeColor     : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#c72d0a", "#e67761","#d9a097",/*"#999","#a7bb8f"*/"#b5c1a6", "#7e965d", "#5a8731"]),
     getFillColor    : null,
     getStrokeColor  : null,
-    pFormat         : d3.format("+.1%"),
-    pctFormat       : function(){return false},
-    tickChangeFormat: d3.format("+%"),
-    simpleFormat    : d3.format(","),
-    simpleDecimal   : d3.format(",.2f"),
 
     bigFormat       : function(n){return nytg.formatNumber(n)},
     nameFormat      : function(n){return n},
-    /*discretionFormat: function(d){
-      if (d == 'Discretionary' || d == 'Mandatory') {
-        return d + " spending"
-      } else {return d}
-    },*/
     
     rScale          : d3.scale.pow().exponent(0.15).domain([0,10000000000]).range([1,100]),
     radiusScale     : null,
     changeScale     : d3.scale.linear().domain(nytg.test2).range([620,220]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
-    groupScale      : {},
+    //groupScale      : {},
     
     //data settings
-    //currentYearDataColumn   : 'budget_2013',
-    previousYearDataColumn  : 'budget_2012',
-    data                    : nytg.budget_array_data,
+    data                    : nytg.array_webSites,
     categoryPositionLookup  : {},
     categoriesList          : [],
     
@@ -396,7 +383,7 @@ nytg.test2 = [0,nb_question];
       this.centerX = this.width / 2;
       this.centerY = 300;
       
-      nytg.category_data.sort(function(a, b){  
+      /*nytg.category_data.sort(function(a, b){  
         return b['total'] - a['total'];  
       });
 
@@ -446,7 +433,7 @@ nytg.test2 = [0,nb_question];
         }        
       };
 
-      this.groupScale = d3.scale.ordinal().domain(this.categoriesList).rangePoints([0,1]);
+      this.groupScale = d3.scale.ordinal().domain(this.categoriesList).rangePoints([0,1]);*/
 
       var maxView = null;
       var minView = null;
@@ -473,11 +460,10 @@ nytg.test2 = [0,nb_question];
           group: n['host_name'],
           change: n['timer'],
           changeCategory: this.categorizeChange(n['timer']),
-          value: n[/*this.currentYearDataColumn*/'view'],
+          value: n['view'],
           url: n['url'],
           avg: n['avg'],
           //discretion: n['discretion'],
-          //isNegative: (n[this.currentYearDataColumn] < 0),
           positions: n.positions,
           x:Math.random() * 1000,
           y:Math.random() * 1000
@@ -494,9 +480,7 @@ nytg.test2 = [0,nb_question];
       });
       
       for (var i=0; i < this.nodes.length; i++) {
-        //if(!this.nodes[i].isNegative ){
-          this.positiveNodes.push(this.nodes[i])
-        //}
+        this.positiveNodes.push(this.nodes[i])
       };
       
       this.svg = d3.select("#nytg-chartCanvas").append("svg:svg")
@@ -638,7 +622,7 @@ nytg.test2 = [0,nb_question];
       //alert('update');
       var that = this;
 
-      this.data = nytg.budget_array_data;
+      this.data = nytg.array_webSites;
       this.nodes = [];
       this.svg = {};
       this.circle = {};
@@ -672,8 +656,8 @@ nytg.test2 = [0,nb_question];
           url: n['url'],
           avg: n['avg'],
           positions: n.positions,
-          x:Math.random() * 100,
-          y:Math.random() * 100
+          x:Math.random() * 1000,
+          y:Math.random() * 1000
         }
         if (n.positions.total) {
           out.x = n.positions.total.x + (n.positions.total.x - (that.width / 2)) * 0.5;
@@ -725,8 +709,6 @@ nytg.test2 = [0,nb_question];
         var $j = jQuery;
 
         d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
-        //d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
-        //console.log(d.group);
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
 
@@ -747,7 +729,6 @@ nytg.test2 = [0,nb_question];
         d3.select("#nytg-tooltip").style('display','none')})
 
       .on("click", function(d) {
-        //document.location.href=that.nameFormat(d.url)
         var win = window.open(d.url, '_blank');
         win.focus();
       });
@@ -781,7 +762,6 @@ nytg.test2 = [0,nb_question];
       //console.log(this.circle)
 
       // this.circle.call(this.force.drag)
-      
     },
     
     totalLayout: function() {
@@ -820,10 +800,6 @@ nytg.test2 = [0,nb_question];
 
     discretionaryLayout: function() {
       var that = this;
-      /*this.node.sort(function(a,b){
-        return a.avg - b.avg;
-      });*/
-
       this.force
       .gravity(0)
       .charge(0)
@@ -836,39 +812,6 @@ nytg.test2 = [0,nb_question];
       })
       .start();
     },
-
-    departmentLayout: function() {
-      var that = this;
-      this.force
-      .gravity(0)
-      .charge(1)
-      .friction(0)
-      .on("tick", function(e){
-        that.circle
-            // .each(that.departmentSort(e.alpha))
-            // .each(that.collide(0.5))
-            .each(that.staticDepartment(e.alpha))
-            .attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; });
-          })
-      .start();
-    },
-
-    comparisonLayout: function() {
-      var that = this;
-      this.force
-      .gravity(0)
-      .charge(that.defaultCharge)
-      .friction(0.9)
-      .on("tick", function(e){
-        that.circle
-        .each(that.comparisonSort(e.alpha))
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
-      })
-      .start();
-      
-    },
     
     // ----------------------------------------------------------------------------------------
     // FORCES
@@ -880,32 +823,12 @@ nytg.test2 = [0,nb_question];
         var targetY = that.centerY;
         var targetX = that.width / 2;
         
-        
-        /*if (d.isNegative) {
-          if (d.changeCategory > 0) {
-            d.x = - 200
-          } else {
-            d.x =  1100
-          }
-        }*/
-        
-        // if (d.positions.total) {
-        //   targetX = d.positions.total.x
-        //   targetY = d.positions.total.y
-        // };
-        
-        
-        
-        // 
         d.y = d.y + (targetY - d.y) * (that.defaultGravity + 0.02) * alpha
         d.x = d.x + (targetX - d.x) * (that.defaultGravity + 0.02) * alpha
         
       };
     },
-    
-    // 
-    // 
-    // 
+
     buoyancy: function(alpha) {
       var that = this;
       return function(d){
@@ -929,33 +852,30 @@ nytg.test2 = [0,nb_question];
           var targetY = that.centerY;
           var targetX = 0;
 
-        //if (d.isNegative) {
           if (d.changeCategory > 0) {
             d.x = - 200
           } else {
             d.x =  1100
           }
           return;
-        //}
-        
-        
-        if (d.discretion === that.DISCRETIONARY) {
-          targetX = 550
-        } else if ((d.discretion === that.MANDATORY)||(d.discretion === that.NET_INTEREST)) {
-          targetX = 400
-        } else {
-          targetX = 900
-        };
 
-        d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * 1.1
-        d.x = d.x + (targetX - d.x) * (that.defaultGravity) * alpha * 1.1
-      };
-    },
-    
-    discretionarySort: function(alpha) {
-      var that = this;
-      return function(d){
-        var targetX = 0;
+          if (d.discretion === that.DISCRETIONARY) {
+            targetX = 550
+          } else if ((d.discretion === that.MANDATORY)||(d.discretion === that.NET_INTEREST)) {
+            targetX = 400
+          } else {
+            targetX = 900
+          };
+
+          d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * 1.1
+          d.x = d.x + (targetX - d.x) * (that.defaultGravity) * alpha * 1.1
+        };
+      },
+
+      discretionarySort: function(alpha) {
+        var that = this;
+        return function(d){
+          var targetX = 0;
         //var targetY = 0;//that.height / 2;
 
         id = tabData.indexOf( tabData.find( site => site.url === d.url) );
@@ -1005,60 +925,10 @@ nytg.test2 = [0,nb_question];
 
         d.x = d.x + speedX;//id*(870/nb_site)+100;//d.x + (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.1;
         d.y = d.y + speedY;//d.y + (targetY - d.y) * Math.sin(Math.PI * (1 - alpha*10)) * 0.2
-        //console.log(d.url);
-        //console.log(id);
-      };
-    },
-
-    departmentSort: function(alpha){
-      var that = this;
-      return function(d){
-        var targetY = 0,
-        targetX = 0;
-        
-        if (that.categoryPositionLookup[d.group]) {
-          targetY = that.categoryPositionLookup[d.group].y;
-          targetX = that.categoryPositionLookup[d.group].x;
-        } else {
-        };
-        
-        
-        var r =  Math.max(5, d.radius)
-        d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * 0.5 * r
-        d.x = d.x + (targetX - d.x) * (that.defaultGravity) * alpha * 0.5 * r
-        
-      };
-    },
-
-    staticDepartment: function(alpha) {
-      var that = this;
-      return function(d){
-        var targetY = 0;
-        var targetX = 0;
-        
-        if (d.positions.department) {
-          targetX = d.positions.department.x;
-          targetY = d.positions.department.y;
-        };
-        
-        d.y += (targetY - d.y) * Math.sin(Math.PI * (1 - alpha*10)) * 0.6
-        d.x += (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.4
-      };
-    },
-
-    comparisonSort: function(alpha) {
-      var that = this;
-      return function(d){
-        var targetY = that.height / 2;
-        var targetX = 650;
-        
-        
-        d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha
-        d.x = d.x + (targetX - d.x) * (that.defaultGravity) * alpha
       };
     },
     
-    collide: function(alpha){
+    /*collide: function(alpha){
       var that = this;
       var padding = 6;
       var quadtree = d3.geom.quadtree(this.nodes);
@@ -1088,9 +958,7 @@ nytg.test2 = [0,nb_question];
           || y2 < ny1;
         });
       };
-
-    }
-    
+    }*/
   }
 };
 
@@ -1170,7 +1038,7 @@ nytg.ready = function() {
 
   this.highlightedItems = [];
   
-  // nytg.s = new nytg.SearchBox("nytg-search", nytg.budget_array_data, "name", "department", "budget_2012", "id");
+  // nytg.s = new nytg.SearchBox("nytg-search", nytg.array_webSites, "name", "department", "budget_2012", "id");
   // nytg.s.findCallback = function(evt){
   //   var foundId = evt.id;    
   //   
@@ -1194,38 +1062,24 @@ nytg.ready = function() {
     };
     if (tabIndex === 0) {
       nytg.c.totalLayout();
-      console.log('totalLayout');
+      //console.log('totalLayout');
       this.currentOverlay = $j("#nytg-totalOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
     } else if (tabIndex === 1){
       nytg.c.mandatoryLayout();
-      console.log('mandatoryLayout');
+      //console.log('mandatoryLayout');
       this.currentOverlay = $j("#nytg-mandatoryOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
     } else if (tabIndex === 2){
       nytg.c.discretionaryLayout();
-      console.log('discretionaryLayout');
+      //console.log('discretionaryLayout');
       this.currentOverlay = $j("#nytg-discretionaryOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':650});
-    }/* else if (tabIndex === 4){
-      nytg.c.comparisonLayout();
-      console.log('comparisonLayout');
-      this.currentOverlay = $j("#nytg-comparisonOverlay");
-      this.currentOverlay.delay(300).fadeIn(500);
-      $j("#nytg-chartFrame").css({'height':650});
-    } else if (tabIndex === 3){
-      nytg.c.departmentLayout();
-      console.log('departmentLayout');
-      this.currentOverlay = $j("#nytg-departmentOverlay");
-      this.currentOverlay.delay(300).fadeIn(500);
-      $j("#nytg-chartFrame").css({'height':850});
-    }*/
-    
+    }
   }
-
 }
 
 if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
@@ -1239,9 +1093,9 @@ $j('.sorts').click(function() {
   jQuery.noConflict();
   var $j = jQuery;
   $j('svg').remove()
-  console.log(nytg.budget_array_data);
-  nytg.budget_array_data = [];
-  console.log(nytg.budget_array_data);
+  //console.log(nytg.array_webSites);
+  nytg.array_webSites = [];
+  //console.log(nytg.array_webSites);
   var checkedQuestions = [];
   var checkedNotes = [];
 
@@ -1293,12 +1147,11 @@ $j('.sorts').click(function() {
     });
 
     if (check) {
-      nytg.budget_array_data.push(tabData[indexData]);
+      nytg.array_webSites.push(tabData[indexData]);
     }
   });
 
   if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
-    //$j(document).ready($j.proxy(nytg.ready, this));
     nytg.c.update();
     nytg.c.start();
     nytg.c.totalLayout();

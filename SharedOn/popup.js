@@ -2,6 +2,57 @@ var adress = "http://163.172.59.102"
 // var adress = "http://localhost/chromeExtension"
 
 function generateList(data) {
+  if (data != undefined) {
+    while (document.getElementById('nbSite').firstChild) {
+      document.getElementById('nbSite').removeChild(document.getElementById('nbSite').firstChild);
+    }
+    while (document.getElementById('timeSpend').firstChild) {
+      document.getElementById('timeSpend').removeChild(document.getElementById('timeSpend').firstChild);
+    }
+    var pNbSite = document.createElement("p");
+    var imgNbSite = document.createElement("img");
+    imgNbSite.style.float = "left"
+    imgNbSite.setAttribute("src", " count.png");
+    imgNbSite.setAttribute("alt", "connected");
+    pNbSite.textContent =" You visited "+data.length+" websites ";
+
+    pNbSite.appendChild(imgNbSite);
+    document.getElementById('nbSite').appendChild(pNbSite);
+
+    var dateNow = new Date(data[data.length-1]['firstTime']);
+    var firstDate = new Date(data[0]['firstTime'])
+    durationMilliSec = (dateNow.getTime() - firstDate.getTime())/1000;
+    console.log(durationMilliSec);
+
+    var hours = 0;
+    var minutes = 0;
+
+    if((durationMilliSec/3600) >= 1){
+      hours = durationMilliSec/3600;
+      durationMilliSec -= Math.floor(hours)*3600;
+      hours = Math.floor(hours);
+    }
+    if((durationMilliSec/60)>= 1){
+      minutes = durationMilliSec/60
+      durationMilliSec -= Math.floor(minutes)*60;
+      minutes = Math.floor(minutes);
+    }
+    var secondes = Math.floor(durationMilliSec);
+
+    var pTimeSpend = document.createElement("p");
+    var imgTimeSpend = document.createElement("img");
+    imgTimeSpend.style.float = "left"
+    imgTimeSpend.setAttribute("src", "time.png");
+    imgTimeSpend.setAttribute("alt", "connected");
+
+    pTimeSpend.textContent =" You search since "+hours+"h"+minutes+"min"+secondes+"sec";
+    
+    pTimeSpend.appendChild(imgTimeSpend);
+    document.getElementById('timeSpend').appendChild(pTimeSpend);
+  }
+
+
+
   // if (data != undefined) {
 
   //   console.log(data);
@@ -15,10 +66,10 @@ function generateList(data) {
   //     var tr = document.createElement('tr');
   //     var rank = document.createElement('td');
   //     rank.textContent = i+1;
-      
+
   //     var url = document.createElement('td');
   //     url.textContent = data[i]['url'];
-      
+
   //     var title = document.createElement('td');
   //     title.textContent = data[i]['title'];
 
@@ -128,7 +179,7 @@ function sendData(key) {
           post.done(function(data) {
             // var test = $.parseJSON(data);
             // $.each($.parseJSON(test[0]['timer']), function(i, element){
-            console.log(data);
+              console.log(data);
             // });
           });
         });
@@ -157,25 +208,24 @@ loadList();
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  document.getElementsByClassName("nav")[0].addEventListener("click",function(e) {
-    console.log(e.target)
-    var overlays = document.getElementById('overlays').children;
-    for (var i = 0; i < overlays.length; i++) {
-      overlays[i].style.display = 'none';
-      if (e.target.id == i+1) {
-        overlays[i].style.display = 'block';
-      }
-    }
-  });
+    // console.log(document.getElementsByClassName("overlay"));
+    document.getElementsByClassName("overlay")[0].addEventListener("click",function(e) {
+      document.getElementById('start').style.visibility = 'visible';
+      document.getElementById('stop').style.visibility = 'visible';
+    });
 
+    document.getElementsByClassName("overlay")[1].addEventListener("click",function(e) {
+      document.getElementById('start').style.visibility = 'hidden';
+      document.getElementById('stop').style.visibility = 'hidden';
+    });
 
-  document.getElementById('suppr').addEventListener('click', resetList);
+  // document.getElementById('suppr').addEventListener('click', resetList);
   //document.getElementById('add').addEventListener('click', function(){ sendData("add") });
-  document.getElementById('load').addEventListener('click', function(){ sendData("load") });
-  document.getElementById('delete').addEventListener('click', function(){ sendData("delete") });
+  // document.getElementById('load').addEventListener('click', function(){ sendData("load") });
+  // document.getElementById('delete').addEventListener('click', function(){ sendData("delete") });
 
   chrome.runtime.sendMessage({type: 'get'}, function get(response){
-    console.log(response.result);
+    console.log(response);
     if (response.result) {
       document.getElementById('start').disabled = response.result;   
       document.getElementById('stop').disabled = !response.result;
@@ -184,6 +234,31 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('start').disabled = response.result;   
       document.getElementById('stop').disabled = !response.result; 
     }
+  });
+
+  chrome.runtime.sendMessage({type: 'getEmail'}, function getEmail(response){
+    console.log(response.email);
+    while (document.getElementById('connected').firstChild) {
+      document.getElementById('connected').removeChild(document.getElementById('connected').firstChild);
+    }
+    var p = document.createElement("p");
+    var pUser = document.createElement("p");
+    var img = document.createElement("img");
+    img.style.float = "left"
+    if (response.email != null) {
+      img.setAttribute("src", "check.png");
+      img.setAttribute("alt", "connected");
+      p.textContent =" We listen your navigation for ";
+      pUser.textContent = response.email;
+    }
+    else{
+      img.setAttribute("src", "cross.png");
+      img.setAttribute("alt", "disconnected");
+      p.textContent =" We don't listen your navigation";
+    }
+    p.appendChild(img);
+    document.getElementById('connected').appendChild(p);
+    document.getElementById('connected').appendChild(pUser);
   });
 
   document.getElementById('start').addEventListener('click', function(){
@@ -227,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
               // a.textContent = "http://localhost/chromeExtension/webSite/graph.php?id="+dataParse[0].id;
 
             }
-            document.getElementById('data-overlay').appendChild(a);
+            // document.getElementById('data-overlay').appendChild(a);
             resetList();
           });
         });

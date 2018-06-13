@@ -5,6 +5,7 @@ var listen = false;
 var question = 1;
 var firstUrl;
 var adress = "http://163.172.59.102";
+var userEmail = null;
 // var adress = "http://localhost/chromeExtension"
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
@@ -213,7 +214,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     createUniqId();
     listen = true;
 
-    sendResponse({url: sendFirstUrl(), result: listen});
+    sendResponse({url: sendFirstUrl(), result: listen, email:userEmail});
   }
   else if (message.type === 'stop') {
     listen = false;
@@ -233,15 +234,20 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   else if (message.type === 'reset'){
     firstUrl = undefined;
   }
+  else if (message.type === 'getEmail') {
+    sendResponse({email: userEmail});
+  }
 });
 
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
     if (request.action == 'stop') {
-      autoStop(request.email);      
+      userEmail = null;
+      autoStop(request.email);       
     }
     else if (request.action == 'start') {
-      autoStart(request.url);      
+      userEmail = request.email; 
+      autoStart(request.url);
     }
     else if (request.action == 'change_question') {
       question += 1;

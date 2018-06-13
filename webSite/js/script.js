@@ -167,7 +167,6 @@ post.done(function(data) {
   });
 
   var nb_site_view = nytg.array_best_median.length;
-  console.log(nb_site_view);
 
   median_time.forEach( function(element, index) {
     var question = JSON.parse(element['question']);
@@ -180,7 +179,6 @@ post.done(function(data) {
   });
   
   var nb_site_time = nytg.array_best_median.length - nb_site_view;
-  console.log(nb_site_time);
 
   nytg.array_best_median.sort(function(a,b) {
     return a.first_time - b.first_time;
@@ -198,7 +196,7 @@ post.done(function(data) {
     }
   });
 
-  console.log(nytg.array_best_median);
+  //console.log(nytg.array_best_median);
   //console.log(median_view);
   //console.log(median_time);
 
@@ -732,7 +730,6 @@ nytg.test2 = [0,/*nb_question*/2];
       // Builds the nodes data array from the original data
       for (var i=0; i < this.data.length; i++) {
         var n = this.data[i];
-        console.log(n);
         var res = Math.exp((this.data[i].view/5)/percent);
         var out = {
           sid: n['id'],
@@ -757,7 +754,6 @@ nytg.test2 = [0,/*nb_question*/2];
         if (n['type']) {
           out['type'] = n['type'];
         };
-        console.log(out);
         this.nodes.push(out)
       };
 
@@ -1160,23 +1156,30 @@ nytg.ready = function() {
   var currentOverlay = undefined;
   nytg.mainNav = new nytg.ChooseList($j(".nytg-navigation"), onMainChange);
   function onMainChange(evt) {
+    console.log(this)
     var tabIndex = evt.currentIndex
     if (this.currentOverlay !== undefined) {
       this.currentOverlay.hide();
     };
     if (tabIndex === 0) {
+      //$j('svg').remove();
+      //nytg.c.update(nytg.array_webSites);
+      //nytg.c.start();
       nytg.c.totalLayout();
       //console.log('totalLayout');
       this.currentOverlay = $j("#nytg-totalOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
-    } else if (tabIndex === 1){
+    } /*else if (tabIndex === 1){
+      $j('svg').remove();
+      nytg.c.update(nytg.array_webSites);
+      nytg.c.start();
       nytg.c.mandatoryLayout();
       //console.log('mandatoryLayout');
       this.currentOverlay = $j("#nytg-mandatoryOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
-    } else if (tabIndex === 2){
+    }*/ else if (tabIndex === 2){
       $j('svg').remove();
       nytg.c.update(nytg.array_best_median);
       nytg.c.discretionaryLayout();

@@ -184,7 +184,7 @@ else {
 						if (data != 0) {
 							var r = confirm("You have already answered this questionnaire, if you continue all your previous data will be deleted");
 							if (r == true) {
-								var reset_user_research = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"reset_user_research", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'] });
+								var reset_user_research = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"reset_user_research", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'], param:param });
 								reset_user_research.done(function(data){
 									console.log(data);
 									that.parent().css('display','none');

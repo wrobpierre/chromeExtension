@@ -2,12 +2,22 @@ var minTime = null;
 var maxTime = null;
 var nb_question = null;
 var nb_site = null;
+var bestNote;
 var errorImg = false;
 var adress = "http://163.172.59.102"
 var tabData = [];
 var maxAvg = 0;
 var minAvg;
 // var adress = "http://localhost/chromeExtension"
+
+function median(values) {
+  values.sort(function(a, b){ return a.total - b.total; });
+  var half = Math.floor(values.length/2);
+  if(values.length % 2)
+    return values[half];
+  else
+    return (values[half-1] + values[half]) / 2.0;
+}
 
 function getUrlParameter(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -48,10 +58,41 @@ post.done(function(data) {
 
   nytg.array_webSites = [];
   nytg.array_best_median = [];
+
+  best_users = [];
+  best_users['view'] = [];
+  best_users['time'] = [];
   
   dataParse = JSON.parse(data);
   console.log(dataParse);
+  bestNote = dataParse[0]['note'];
   dataParse.forEach(function(element){
+    timer = JSON.parse(element['timer']);
+
+    if (element['note'] > bestNote) {
+      bestNote = element['note'];
+    }
+
+    if ( best_users['view'][element['key_user']] == undefined ) {  
+      best_users['view'][element['key_user']] = [];
+      best_users['view'][element['key_user']]['total'] = JSON.parse(element['question']).length;
+
+      time = parseInt(timer.hours)*3600 + parseInt(timer.minutes)*60 + parseInt(timer.secondes);
+      best_users['time'][element['key_user']] = [];
+      best_users['time'][element['key_user']]['total'] = time;
+      
+      best_users['view'][element['key_user']].push(element);
+      best_users['time'][element['key_user']].push(element);
+    } 
+    else {
+      best_users['view'][element['key_user']].push(element);
+      best_users['view'][element['key_user']]['total'] += JSON.parse(element['question']).length;
+
+      time = parseInt(timer.hours)*3600 + parseInt(timer.minutes)*60 + parseInt(timer.secondes);
+      best_users['time'][element['key_user']].push(element);
+      best_users['time'][element['key_user']]['total'] += time;
+    }
+
     nb_question = element['nb_question'];
     if (!tabData.find(function(elem){ return elem.url === element.url; })) {
       tmp = dataParse.filter(function(obj){ return obj.url == element.url; });
@@ -80,8 +121,7 @@ post.done(function(data) {
       tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
       element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
       element['avg'] = note/tmp.length;
-      delete element['note'];
-      delete element['nb_question'];
+
       tabMedianeTime = tabMedianeTime.sort(function compareNombres(a, b) {return a - b;});
       element['timer'] = JSON.parse(element['timer']);
 
@@ -104,12 +144,64 @@ post.done(function(data) {
       tabMedianeFirstTime.sort(function compareNombres(a, b) {return a - b;});
       element['first_time'] = tabMedianeFirstTime[Math.ceil(parseInt(tabMedianeTime.length/2))];
 
-      if ( element['host_name'].indexOf('www.google.') == -1 ) {
+      if ( element['host_name'].indexOf('www.google.') == -1 && element['host_name'].indexOf('163.172.59.102') == -1 ) {
         tabData.push(element);
       }
     }
   });
+
+  var tmp_best_users_view = best_users['view'].filter(function(element){ return element[0]['note'] == bestNote; });
+  var tmp_best_users_time = best_users['time'].filter(function(element){ return element[0]['note'] == bestNote; });
   
+  median_view = median(tmp_best_users_view);
+  median_time = median(tmp_best_users_time);
+
+  median_view.forEach( function(element, index) {
+    var question = JSON.parse(element['question']);
+    question.forEach( function(el) {
+      var tmpEl = JSON.parse(JSON.stringify(element));
+      tmpEl['first_time'] = new Date(el['date']).getTime();
+      tmpEl['type'] = 'view';
+      nytg.array_best_median.push(tmpEl);
+    });
+  });
+
+  var nb_site_view = nytg.array_best_median.length;
+  console.log(nb_site_view);
+
+  median_time.forEach( function(element, index) {
+    var question = JSON.parse(element['question']);
+    question.forEach( function(el) {
+      var tmpEl = JSON.parse(JSON.stringify(element));
+      tmpEl['first_time'] = new Date(el['date']).getTime();
+      tmpEl['type'] = 'time ';
+      nytg.array_best_median.push(tmpEl);
+    });
+  });
+  
+  var nb_site_time = nytg.array_best_median.length - nb_site_view;
+  console.log(nb_site_time);
+
+  nytg.array_best_median.sort(function(a,b) {
+    return a.first_time - b.first_time;
+  });
+
+  var order_view = 0;
+  var order_time = 0;
+  nytg.array_best_median.forEach( function(element, index) {
+    element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
+    if (element['type'] == 'view') {
+      element['order'] = order_view++;
+    }
+    else {
+      element['order'] = order_time++;
+    }
+  });
+
+  console.log(nytg.array_best_median);
+  //console.log(median_view);
+  //console.log(median_time);
+
   for (var i = 0; i < maxQuestion; i++) {
     var questionFilter = document.getElementById('questionFilter');
     var li = document.createElement("li");
@@ -132,7 +224,6 @@ post.done(function(data) {
   minAvg = tabData[0]['avg'];
   tabData.forEach(function(element){
     element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
-    //element["timer"] = JSON.parse(element["timer"]);
     if(minTime == null || minTime.hours >= parseInt(element.timer.hours)) {
       if (minTime == null || minTime.hours > parseInt(element.timer.hours) || minTime.minutes >= parseInt(element.timer.minutes)) {
         if (minTime == null || minTime.hours > parseInt(element.timer.hours) || minTime.minutes > parseInt(element.timer.minutes) || minTime.secondes >= parseInt(element.timer.secondes)) {
@@ -224,11 +315,11 @@ nytg.formatNumber = function(n) {
 };
 
 nytg.test1 = [];
-for (var i = 0; i < nb_question; i++) {
+for (var i = 0; i < 2/*nb_question*/; i++) {
   nytg.test1.push(i+1);
 }
 
-nytg.test2 = [0,nb_question];
+nytg.test2 = [0,/*nb_question*/2];
 
 /*function getUrlParameter(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -348,7 +439,7 @@ nytg.test2 = [0,nb_question];
     
     rScale          : d3.scale.pow().exponent(0.15).domain([0,10000000000]).range([1,100]),
     radiusScale     : null,
-    changeScale     : d3.scale.linear().domain(nytg.test2).range([620,220]).clamp(true),
+    changeScale     : d3.scale.linear().domain(nytg.test2).range([620,260]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
     //groupScale      : {},
     
@@ -367,9 +458,6 @@ nytg.test2 = [0,nb_question];
       
       this.radiusScale = function(n){ return that.rScale(Math.abs(n)); };
       this.getStrokeColor = function(d){
-        // if (d.isNegative) {
-        //   return "#333"
-        // }
         return that.strokeColor(d.changeCategory);
       };
       this.getFillColor = function(d){
@@ -618,11 +706,11 @@ nytg.test2 = [0,nb_question];
       this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
     },
 
-    update: function(){
-      //alert('update');
+    update: function(array_data){
       var that = this;
+      nb_site = array_data.length;
 
-      this.data = nytg.array_webSites;
+      this.data = array_data;
       this.nodes = [];
       this.svg = {};
       this.circle = {};
@@ -644,7 +732,7 @@ nytg.test2 = [0,nb_question];
       // Builds the nodes data array from the original data
       for (var i=0; i < this.data.length; i++) {
         var n = this.data[i];
-
+        console.log(n);
         var res = Math.exp((this.data[i].view/5)/percent);
         var out = {
           sid: n['id'],
@@ -663,6 +751,13 @@ nytg.test2 = [0,nb_question];
           out.x = n.positions.total.x + (n.positions.total.x - (that.width / 2)) * 0.5;
           out.y = n.positions.total.y + (n.positions.total.y - (150)) * 0.5;
         };
+        if (n.order) {
+          out['order'] = n.order;
+        };
+        if (n['type']) {
+          out['type'] = n['type'];
+        };
+        console.log(out);
         this.nodes.push(out)
       };
 
@@ -734,7 +829,6 @@ nytg.test2 = [0,nb_question];
       });
 
       this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
-
     },
 
     getCirclePositions: function(){
@@ -756,10 +850,6 @@ nytg.test2 = [0,nb_question];
       this.force = d3.layout.force()
       .nodes(this.nodes)
       .size([this.width, this.height])
-      
-      //console.log(this.nodes)
-      //console.log(this.svg)
-      //console.log(this.circle)
 
       // this.circle.call(this.force.drag)
     },
@@ -777,8 +867,7 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();
-      
+      .start();     
     },
 
     mandatoryLayout: function() {
@@ -794,8 +883,7 @@ nytg.test2 = [0,nb_question];
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
-      .start();
-      
+      .start();   
     },
 
     discretionaryLayout: function() {
@@ -875,12 +963,28 @@ nytg.test2 = [0,nb_question];
       discretionarySort: function(alpha) {
         var that = this;
         return function(d){
-          var targetX = 0;
-        //var targetY = 0;//that.height / 2;
+          //var targetX = 0;
+          //var targetY = 0;//that.height / 2;
 
-        id = tabData.indexOf( tabData.find( site => site.url === d.url) );
-        lastX = id*(870/nb_site)+(60+d.radius);
-        lastY = (nb_question-d.avg)*(400/nb_question)+220;
+          //id = tabData.indexOf( tabData.find( site => site.url === d.url) );
+          if (d['type'] == 'view') {
+            if (d.order == undefined) {
+              lastX = 0*(870/nb_site_view)+(60+d.radius);  
+            }
+            else {
+              lastX = d.order*(870/nb_site_time)+(60+d.radius);
+            }
+            lastY = 260;//(nb_question-d.avg)*(360/nb_question)+260;
+          }
+          else {
+            if (d.order == undefined) {
+              lastX = 0*(870/nb_site_view)+(60+d.radius);  
+            }
+            else {
+              lastX = d.order*(870/nb_site_time)+(60+d.radius);
+            }
+            lastY = 440;//(nb_question-d.avg)*(360/nb_question)+260;  
+          }
         //console.log(d.radius);
 
         var speedX = (lastX - d.x)/10;
@@ -1073,6 +1177,8 @@ nytg.ready = function() {
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
     } else if (tabIndex === 2){
+      $j('svg').remove();
+      nytg.c.update(nytg.array_best_median);
       nytg.c.discretionaryLayout();
       //console.log('discretionaryLayout');
       this.currentOverlay = $j("#nytg-discretionaryOverlay");
@@ -1152,7 +1258,7 @@ $j('.sorts').click(function() {
   });
 
   if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
-    nytg.c.update();
+    nytg.c.update(nytg.array_webSites);
     nytg.c.start();
     nytg.c.totalLayout();
   } else {

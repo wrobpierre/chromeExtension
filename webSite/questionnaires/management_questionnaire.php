@@ -498,7 +498,7 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'reset_user_research') {
-			if ( isset($_POST['user']) && isset($_POST['id_questionnaire']) ) {
+			if ( isset($_POST['user']) && isset($_POST['id_questionnaire']) && isset($_POST['param'])) {
 				$stmt = $conn->prepare("DELETE a
 					FROM `answers` a
 					INNER JOIN questions q ON a.key_question = q.id
@@ -507,6 +507,17 @@ if (isset($_POST['action'])) {
 				$stmt->bindParam(':id_questionnaire', $id_questionnaire);
 				$user = $_POST['user'];
 				$id_questionnaire = $_POST['id_questionnaire'];
+
+				$stmt->execute();
+
+				$stmt = $conn->prepare("DELETE 
+					FROM sites
+					WHERE sites.key_user = (SELECT id FROM users u WHERE u.email LIKE :user) and sites.key_first_url = 
+					(SELECT id FROM firsturl fu WHERE fu.url LIKE :url)");
+				$stmt->bindParam(':user', $user);
+				$stmt->bindParam(':url', $url);
+				$user = $_POST['user'];
+				$url = $adress.'/webSite/questionnaires/questionnaire.php?id='.$_POST['param'];
 
 				$stmt->execute();
 			}

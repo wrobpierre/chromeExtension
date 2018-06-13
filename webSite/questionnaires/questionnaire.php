@@ -196,7 +196,7 @@ else {
 									}
 
 									var url = window.location.href; 
-									chrome.runtime.sendMessage(editorExtensionId, {action: 'start', url: url},
+									chrome.runtime.sendMessage(editorExtensionId, {action: 'start', url: url, email: checkUser},
 										function(response) {
 											console.log(response);
 										});
@@ -213,7 +213,7 @@ else {
 							}
 
 							var url = window.location.href; 
-							chrome.runtime.sendMessage(editorExtensionId, {action: 'start', url: url},
+							chrome.runtime.sendMessage(editorExtensionId, {action: 'start', url: url, email: checkUser},
 								function(response) {
 									console.log(response);
 								});
@@ -343,7 +343,7 @@ else {
 						})
 
 						if (valid) {
-							chrome.runtime.sendMessage(editorExtensionId, {action: 'stop', email:checkUser},
+							chrome.runtime.sendMessage(editorExtensionId, {action: 'stop', email: checkUser},
 								function(response) {
 									console.log(response);
 								});

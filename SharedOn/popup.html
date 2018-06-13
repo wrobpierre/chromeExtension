@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8">
   <title>SharedOn</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link href="popup.css" rel="stylesheet" type="text/css">
+
     <!--<style type="text/css">
       body {
         margin: 10px;
@@ -23,14 +25,15 @@
   </head>
   <body>
     <div id="header">
-      <div></div>
-      <img src="cherry_logo.png" alt="Logo">
+      <img src="lantern_64.png" alt="Logo">
     </div>
     <div class="navBar">
-      <ul class="nav">
-        <li id="1" class="selected">Datas</li>
-        <li id="2">Questions</li>
-      </ul>
+      <div class = "w3-bar">  
+        <ul class="nav">
+          <li id="1" class="overlay w3-bar-item w3-light-grey w3-button w3-border-right w3-border-bottom">Own search</li>
+          <li id="2" class="overlay w3-bar-item w3-light-grey w3-button w3-border-right w3-border-bottom">Questions</li>
+        </ul>
+      </div>
     </div>
     
     <!-- <div id="overlays">  
@@ -54,19 +57,23 @@
       </div>
     </div> -->
 
-    <div>
-      
+    <div id="connected" class="content w3-container w3-center">
+      <p> <img src="cross.png" alt="disconnected"> Your not connected </p>
     </div>
+    <div id="nbSite" class="content w3-border-top w3-center"></div>
+    <div id="timeSpend" class="content w3-border-top w3-center"></div>
     
-  <button id="suppr">supprimer</button>
-  <!--<button id="add">Add to BD</button>-->
-  <button id="load" style="display: none;">Load BD</button>
-  <button id="delete" style="display: none;">Delete BD</button>
+    <!-- <button id="suppr">supprimer</button> -->
+    <!--<button id="add">Add to BD</button>-->
+    <!-- <button id="load" style="display: none;">Load BD</button> -->
+    <!-- <button id="delete" style="display: none;">Delete BD</button> -->
+    <div id="buttons" class="content" style="width: 100%">
+      <button id="start" class="w3-button w3-light-grey w3-section">Start</button>
+      <button id="stop" disabled class="w3-button w3-light-grey w3-section">Stop</button>
+    </div>
+    <footer></footer>
 
-  <button id="start">Start</button>
-  <button id="stop" disabled>Stop</button>
-
-  <script src="jquery.js"></script>
-  <script src="popup.js"></script>
-</body>
-</html>
+    <script src="jquery.js"></script>
+    <script src="popup.js"></script>
+  </body>
+  </html>

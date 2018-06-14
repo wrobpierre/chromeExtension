@@ -684,8 +684,7 @@ nytg.test2 = [0,/*nb_question*/2];
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
 
-        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
-
+        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" style="width: 40px;" onerror = "this.remove()" />')
         if (d.value == 1) {
           d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' view') 
         }
@@ -808,8 +807,7 @@ nytg.test2 = [0,/*nb_question*/2];
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
 
-        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
-
+        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" style="width: 40px;" onerror="this.remove()" />')
         if (d.value == 1) {
           d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' view') 
         }

@@ -94,7 +94,7 @@ $_SESSION['timeout']=time();
 
         <ul>
           <li>Click on the "Download extension" button on the top of the page.</li>
-          <li>On the chrome store, add the extension.<br></li>
+          <li>On the chrome store, add the extension.</li>
           <li>Now the extension is installed, you can check it by going on more tools > extension</li>
         </ul>
 

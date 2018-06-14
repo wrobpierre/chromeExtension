@@ -51,6 +51,7 @@ else {
 
 
 post.done(function(data) {
+  console.log(data);
   var nytg = nytg || {}; 
   var time = 0;
   var alreadySave = false;
@@ -64,6 +65,7 @@ post.done(function(data) {
   best_users['time'] = [];
   
   dataParse = JSON.parse(data);
+  console.log(data);
   console.log(dataParse);
   bestNote = dataParse[0]['note'];
   dataParse.forEach(function(element){
@@ -271,7 +273,7 @@ post.done(function(data) {
       var param = getUrlParameter('id');
 
       var dataParse = JSON.parse(data);
-      //console.log(dataParse);
+      console.log(dataParse);
       document.getElementById('question_title').textContent = dataParse[0]['title'];
       var li = document.createElement("li");
       var a = document.createElement("a");

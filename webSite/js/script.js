@@ -202,17 +202,16 @@ post.done(function(data) {
 
   for (var i = 0; i < maxQuestion; i++) {
     var questionFilter = document.getElementById('questionFilter');
+    var li = document.createElement("li");
     var input = document.createElement("input");
     var label = document.createElement("label");
-    // li.style.float = "left";
     input.setAttribute("class", "sorts questionFilter w3-radio");
     input.setAttribute("type", "checkbox");
     input.setAttribute("checked", "checked");
-    input.style.float = "left";
-    label.style.textAlign = "left";
     label.innerHTML = "question "+(i+1);
-    questionFilter.appendChild(input);
-    questionFilter.appendChild(label);
+    li.appendChild(input);
+    li.appendChild(label);
+    questionFilter.appendChild(li);
   }
 
   nb_site = tabData.length;
@@ -250,15 +249,15 @@ post.done(function(data) {
 
   for (var i = minAvg; i <= maxAvg; i++) {
     var notesFilter = document.getElementById('notes');
+    var li = document.createElement("li");
     var input = document.createElement("input");
     var label = document.createElement("label");
     input.setAttribute("class", "sorts notesFilter w3-radio");
     input.setAttribute("type", "checkbox");
-    input.style.float = "left";
-    label.style.textAlign = "left";
-    label.innerHTML = "note : "+i+"/"+maxAvg;
-    notesFilter.appendChild(input);
-    notesFilter.appendChild(label);
+    label.innerHTML = "note : "+i;
+    li.appendChild(input);
+    li.appendChild(label);
+    notes.appendChild(li);
   }
 
   //nytg.category_data = [{"label":"Health and Human Services","total":921605000,"num_children":26,"short_label":"Health and Human Services"},{"label":"State","total":31608000,"num_children":8,"short_label":"State"},{"label":"Judicial Branch","total":7502000,"num_children":13,"short_label":"Judicial Branch"},{"label":"International Assistance Programs","total":37399000,"num_children":16,"short_label":"International"},{"label":"Agriculture","total":154667000,"num_children":45,"short_label":"Agriculture"},{"label":"Treasury","total":519490000,"num_children":15,"short_label":"Treasury"},{"label":"Other Defense Civil Programs","total":57416000,"num_children":9,"short_label":"Defense Civil Programs"},{"label":"Appalachian Regional Commission","total":64000,"num_children":2,"short_label":"Appalachian Commission"},{"label":"Legislative Branch","total":4789000,"num_children":20,"short_label":"Legislative Branch"},{"label":"Veterans Affairs","total":137381000,"num_children":9,"short_label":"Veterans Affairs"},{"label":"Justice","total":30023000,"num_children":18,"short_label":"Justice"},{"label":"Interior","total":11357000,"num_children":31,"short_label":"Interior"},{"label":"Commerce","total":9239000,"num_children":21,"short_label":"Commerce"},{"label":"Labor","total":88993000,"num_children":15,"short_label":"Labor"},{"label":"Homeland Security","total":45109000,"num_children":23,"short_label":"Homeland Security"},{"label":"Housing and Urban Development","total":44010000,"num_children":14,"short_label":"Housing"},{"label":"Corps of Engineers--Civil Works","total":4668000,"num_children":3,"short_label":"Corps of Engineers"},{"label":"Executive Office of the President","total":392000,"num_children":12,"short_label":"Office of the President"},{"label":"Energy","total":32300000,"num_children":10,"short_label":"Energy"},{"label":"Transportation","total":74280000,"num_children":22,"short_label":"Transportation"},{"label":"Education","total":55685000,"num_children":15,"short_label":"Education"},{"label":"Federal Deposit Insurance Corporation","total":1515000,"num_children":5,"short_label":"F.D.I.C."},{"label":"District of Columbia","total":902000,"num_children":5,"short_label":"District of Columbia"},{"label":"Environmental Protection Agency","total":8138000,"num_children":2,"short_label":"E.P.A."},{"label":"Defense - Military","total":620259000,"num_children":13,"short_label":"Defense"},{"label":"Institute of Museum and Library Services","total":231000,"num_children":2,"short_label":"Museum and Library Services"},{"label":"National Aeronautics and Space Administration","total":17693000,"num_children":2,"short_label":"NASA"},{"label":"National Archives and Records Administration","total":370000,"num_children":3,"short_label":"National Archives"},{"label":"National Science Foundation","total":7470000,"num_children":2,"short_label":"N.S.F."},{"label":"Nuclear Regulatory Commission","total":127000,"num_children":2,"short_label":"Nuclear Regulation"},{"label":"Office of Personnel Management","total":94857000,"num_children":3,"short_label":"Personnel Management"},{"label":"Postal Service","total":78000,"num_children":2,"short_label":"Postal Service"},{"label":"Public Company Accounting Oversight Board","total":237000,"num_children":2,"short_label":"Accounting Oversight"},{"label":"Railroad Retirement Board","total":7202000,"num_children":3,"short_label":"Railroad Retirement"},{"label":"Small Business Administration","total":1111000,"num_children":2,"short_label":"Small Business"},{"label":"Social Security Administration","total":885315000,"num_children":2,"short_label":"Social Security"},{"label":"Federal Communications Commission","total":9633000,"num_children":2,"short_label":"F.C.C."},{"label":"Securities Investor Protection Corporation","total":259000,"num_children":2,"short_label":"S.I.P.C."},{"label":"Other","total":-512596000,"num_children":97,"short_label":"Other"}];
@@ -269,7 +268,7 @@ post.done(function(data) {
       var param = getUrlParameter('id');
 
       var dataParse = JSON.parse(data);
-      //console.log(dataParse);
+      console.log(dataParse);
       document.getElementById('question_title').textContent = dataParse[0]['title'];
       var li = document.createElement("li");
       var a = document.createElement("a");
@@ -520,7 +519,7 @@ nytg.test2 = [0,/*nb_question*/2];
         }        
       };
 
-      this.groupScale = d3.scale.ordinal().domain(this.categoriesList).rangePoints([0,1]);
+      this.groupScale = d3.scale.ordinal().domain(this.categoriesList).rangePoints([0,1]);*/
 
       var maxView = null;
       var minView = null;
@@ -571,7 +570,7 @@ nytg.test2 = [0,/*nb_question*/2];
       };
       
       this.svg = d3.select("#nytg-chartCanvas").append("svg:svg")
-      .attr("width", this.width);*/
+      .attr("width", this.width);
       
       for (var i=0; i < this.changeTickValues.length; i++) {
         d3.select("#nytg-discretionaryOverlay").append("div")
@@ -654,7 +653,7 @@ nytg.test2 = [0,/*nb_question*/2];
       };*/
       
       // This is the every circle
-      /*this.circle = this.svg.selectAll("circle")
+      this.circle = this.svg.selectAll("circle")
       .data(this.nodes, function(d) { return d.sid; });
 
       this.circle.enter().append("svg:circle")
@@ -702,7 +701,7 @@ nytg.test2 = [0,/*nb_question*/2];
         win.focus();
       });
 
-      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})*/
+      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
     },
 
     update: function(array_data){
@@ -960,10 +959,6 @@ nytg.test2 = [0,/*nb_question*/2];
       discretionarySort: function(alpha) {
         var that = this;
         return function(d){
-          //var targetX = 0;
-          //var targetY = 0;//that.height / 2;
-
-          //id = tabData.indexOf( tabData.find( site => site.url === d.url) );
           if (d['type'] == 'view') {
             if (d.order == undefined) {
               lastX = 0*(870/nb_site_view)+(60+d.radius);  
@@ -971,7 +966,7 @@ nytg.test2 = [0,/*nb_question*/2];
             else {
               lastX = d.order*(870/nb_site_time)+(60+d.radius);
             }
-            lastY = 260;//(nb_question-d.avg)*(360/nb_question)+260;
+            lastY = 260;
           }
           else {
             if (d.order == undefined) {
@@ -980,55 +975,31 @@ nytg.test2 = [0,/*nb_question*/2];
             else {
               lastX = d.order*(870/nb_site_time)+(60+d.radius);
             }
-            lastY = 440;//(nb_question-d.avg)*(360/nb_question)+260;  
+            lastY = 440;
           }
-        //console.log(d.radius);
 
-        var speedX = (lastX - d.x)/10;
-        var speedY = (lastY - d.y)/10;
-        
-        if (lastX >= d.x && lastX - d.x <= 0.5) {
-          speedX = 0;
-        }
-        else if (lastX <= d.x && lastX - d.x >= 0.5) {
-          speedX = 0; 
-        }
+          var speedX = (lastX - d.x)/10;
+          var speedY = (lastY - d.y)/10;
 
-        if (lastY >= d.y && lastY - d.y <= 0.5) {
-          speedY = 0;
-        }
-        else if (lastY <= d.y && lastY - d.y >= 0.5) {
-          speedY = 0; 
-        }
-
-        /*if (d.isNegative) {
-          if (d.changeCategory > 0) {
-            d.x = - 200
-          } else {
-            d.x =  1100
+          if (lastX >= d.x && lastX - d.x <= 0.5) {
+            speedX = 0;
           }
-          return;
-        }*/
+          else if (lastX <= d.x && lastX - d.x >= 0.5) {
+            speedX = 0; 
+          }
 
-        /*if (d.discretion === "Discretionary") {
-          targetY = that.changeScale(d.change);
-          targetX = 100 + that.groupScale(d.group)*(that.width - 120);
-          if (isNaN(targetY)) {targetY = that.centerY};
-          if (targetY > (that.height-80)) {targetY = that.height-80};
-          if (targetY < 80) {targetY = 80};
-          
-        } else if ((d.discretion === "Mandatory")||(d.discretion === "Net interest")) {
-          targetX = -300 + Math.random()* 100;
-          targetY = d.y;
-        } else {
-          targetX = 0
-        };*/
+          if (lastY >= d.y && lastY - d.y <= 0.5) {
+            speedY = 0;
+          }
+          else if (lastY <= d.y && lastY - d.y >= 0.5) {
+            speedY = 0; 
+          }
 
-        d.x = d.x + speedX;//id*(870/nb_site)+100;//d.x + (targetX - d.x) * Math.sin(Math.PI * (1 - alpha*10)) * 0.1;
-        d.y = d.y + speedY;//d.y + (targetY - d.y) * Math.sin(Math.PI * (1 - alpha*10)) * 0.2
-      };
-    },
-    
+          d.x = d.x + speedX;
+          d.y = d.y + speedY;
+        };
+      },
+
     /*collide: function(alpha){
       var that = this;
       var padding = 6;
@@ -1163,10 +1134,11 @@ nytg.ready = function() {
       this.currentOverlay.hide();
     };
     if (tabIndex === 0) {
-      //$j('svg').remove();
+      $j('svg').remove();
       nytg.c.update(nytg.array_webSites);
       nytg.c.start();
       nytg.c.totalLayout();
+      //eventFire($j("#nytg-totalOverlay"), 'click');
       //console.log('totalLayout');
       this.currentOverlay = $j("#nytg-totalOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
@@ -1181,7 +1153,7 @@ nytg.ready = function() {
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
     }*/ else if (tabIndex === 2){
-      //$j('svg').remove();
+      $j('svg').remove();
       nytg.c.update(nytg.array_best_median);
       nytg.c.start();
       nytg.c.discretionaryLayout();
@@ -1203,7 +1175,7 @@ if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/
 $j('.sorts').click(function() {
   jQuery.noConflict();
   var $j = jQuery;
-  $j('svg').remove()
+  
   //console.log(nytg.array_webSites);
   nytg.array_webSites = [];
   //console.log(nytg.array_webSites);
@@ -1263,9 +1235,12 @@ $j('.sorts').click(function() {
   });
 
   if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
-    nytg.c.update(nytg.array_webSites);
-    nytg.c.start();
-    nytg.c.totalLayout();
+    if ($j("#navBarGraph").find('.selected')[0].id == 'nytg-nav-all') {
+      $j('svg').remove()
+      nytg.c.update(nytg.array_webSites);
+      nytg.c.start();
+      nytg.c.totalLayout();
+    };
   } else {
     $j("#nytg-chartFrame").hide();
   // $j("#nytg-error").show();

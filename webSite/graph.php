@@ -26,10 +26,11 @@
 		<div class="w3-container w3-red">
 			<h2 class="w3-text-white">Sort</h2>
 		</div>
-		<div id="questionFilter" class="w3-col m6 w3-center">
+		<div id="questionFilter" class="w3-col m12 w3-center w3-section">
 			<h5>By question</h5>
 		</div>
-		<div id="notes" class="w3-col m6 w3-center">
+		<hr>
+		<div id="notes" class="w3-col m12 w3-center w3-section">
 			<h5>By notes</h5>
 		</div>
 

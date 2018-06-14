@@ -13,7 +13,7 @@ function generateList(data) {
     var imgNbSite = document.createElement("img");
     imgNbSite.style.float = "left"
     imgNbSite.setAttribute("src", " count.png");
-    imgNbSite.setAttribute("alt", "connected");
+    imgNbSite.setAttribute("alt", "counter");
     pNbSite.textContent =" You visited "+data.length+" websites ";
 
     pNbSite.appendChild(imgNbSite);
@@ -43,7 +43,7 @@ function generateList(data) {
     var imgTimeSpend = document.createElement("img");
     imgTimeSpend.style.float = "left"
     imgTimeSpend.setAttribute("src", "time.png");
-    imgTimeSpend.setAttribute("alt", "connected");
+    imgTimeSpend.setAttribute("alt", "timer");
 
     pTimeSpend.textContent =" You search since "+hours+"h"+minutes+"min"+secondes+"sec";
     

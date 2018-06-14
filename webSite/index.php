@@ -93,20 +93,10 @@ $_SESSION['timeout']=time();
         <h1>How to install the extension ?</h1>
 
         <ul>
-          <li>Download the extension</li>
-          <li>Locate the ZIP file on your computer and unzip it.<br><strong class="w3-text-red"> (IMPORTANT : You have to put the folder "Sharing experience" at the root of "Program Files (x86)" !)</strong></li>
-          <li>Go back to the chrome://extensions/ page and click the Load unpacked extension button and select the unzipped folder for your extension to install it</li>
+          <li>Click on the "Download extension" button on the top of the page.</li>
+          <li>On the chrome store, add the extension.<br></li>
+          <li>Now the extension is installed, you can check it by going on more tools > extension</li>
         </ul>
-
-        <h1>How to install as unpacked file ?</h1>
-        <ul>
-          <li>Go to chrome://extensions/ and check the box for Developer mode in the top right. </li>
-          <li>Unzip the extension</li>
-          <li>Install it in Google Chrome as an unpacked file</li>
-          <li>Have fun !</li>
-        </ul>
-
-        <p>Thanks to MATT ELLIOTT For the tutoriel on : <a href="https://www.cnet.com/how-to/how-to-install-chrome-extensions-manually/">This link</a></p>
 
       </div>
       <div class="w3-third w3-center" style="font-size:15em;">

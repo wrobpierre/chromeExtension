@@ -37,7 +37,7 @@ else{
 	<script type="text/javascript">
 
 		// The ID of the extension we want to talk to.
-		var editorExtensionId = "lelffhnbkddkijndbkdjkaoaeljhbcij";			
+		var editorExtensionId = "bfiomnfjhlbbmkncooahhdilkncgchmo";			
 		
 		var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"

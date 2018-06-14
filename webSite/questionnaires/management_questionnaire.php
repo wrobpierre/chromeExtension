@@ -424,9 +424,10 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_data_question') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT q.title, q.statement
+				$stmt = $conn->prepare("SELECT qts.title, qts.statement, q.question
 					FROM firsturl fu
-					INNER JOIN questionnaires q ON fu.id = q.key_first_url
+					INNER JOIN questionnaires qts ON fu.id = qts.key_first_url
+					INNER JOIN questions q ON qts.id = q.key_questionnaires
 					WHERE fu.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.php?id=".$_POST['id']."'");
 				$stmt->execute();
 

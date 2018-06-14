@@ -4,7 +4,7 @@
       <a class="w3-bar-item w3-button w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
       <a href="/webSite" class="w3-bar-item w3-button w3-padding-large w3-white w3-center">Home</a>
       <a href="/webSite/questionnaires/questionnaire.php" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white">See graphics</a>
-      <a href="/SharedOn.zip" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white" download="SharedOn">Download extension</a>
+      <a href="https://chrome.google.com/webstore/detail/sharedon/bfiomnfjhlbbmkncooahhdilkncgchmo" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white">Download extension</a>
       <?php
       if(!isset($_SESSION['user'])){
         ?>

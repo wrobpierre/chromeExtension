@@ -119,7 +119,7 @@
 														</ul>
 													</div>
 												</div>
-												<div class="nytg-overlay" id="nytg-mandatoryOverlay" >
+												<!--<div class="nytg-overlay" id="nytg-mandatoryOverlay" >
 													<div class="nytg-mandatoryExplainer">
 													</div>
 													<div class="nytg-mandatoryAside">
@@ -132,7 +132,7 @@
 														<h5>Recommended navigation route</h5>
 														<p>We propose you a route who help the most person using our application. The horizontal axis represents the visit path of the users. The vertical axis represent the relevance of the pages.</p>
 													</div>
-												</div>
+												</div>-->
 												<div class="nytg-overlay" id="nytg-discretionaryOverlay" >
 													<div id="nytg-discretionaryIntro">
 														<h5>Changes to Discretionary Spending</h5>

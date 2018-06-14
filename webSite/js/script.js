@@ -519,7 +519,7 @@ nytg.test2 = [0,/*nb_question*/2];
         }        
       };
 
-      this.groupScale = d3.scale.ordinal().domain(this.categoriesList).rangePoints([0,1]);*/
+      this.groupScale = d3.scale.ordinal().domain(this.categoriesList).rangePoints([0,1]);
 
       var maxView = null;
       var minView = null;
@@ -570,7 +570,7 @@ nytg.test2 = [0,/*nb_question*/2];
       };
       
       this.svg = d3.select("#nytg-chartCanvas").append("svg:svg")
-      .attr("width", this.width);
+      .attr("width", this.width);*/
       
       for (var i=0; i < this.changeTickValues.length; i++) {
         d3.select("#nytg-discretionaryOverlay").append("div")
@@ -653,7 +653,7 @@ nytg.test2 = [0,/*nb_question*/2];
       };*/
       
       // This is the every circle
-      this.circle = this.svg.selectAll("circle")
+      /*this.circle = this.svg.selectAll("circle")
       .data(this.nodes, function(d) { return d.sid; });
 
       this.circle.enter().append("svg:circle")
@@ -701,7 +701,7 @@ nytg.test2 = [0,/*nb_question*/2];
         win.focus();
       });
 
-      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
+      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})*/
     },
 
     update: function(array_data){
@@ -1134,7 +1134,7 @@ nytg.ready = function() {
   var that = this;    
   nytg.c = new nytg.Chart();
   nytg.c.init();
-  nytg.c.start();
+  //nytg.c.start();
 
   this.highlightedItems = [];
   
@@ -1156,15 +1156,15 @@ nytg.ready = function() {
   var currentOverlay = undefined;
   nytg.mainNav = new nytg.ChooseList($j(".nytg-navigation"), onMainChange);
   function onMainChange(evt) {
-    console.log(this)
+    //console.log(this)
     var tabIndex = evt.currentIndex
     if (this.currentOverlay !== undefined) {
       this.currentOverlay.hide();
     };
     if (tabIndex === 0) {
       //$j('svg').remove();
-      //nytg.c.update(nytg.array_webSites);
-      //nytg.c.start();
+      nytg.c.update(nytg.array_webSites);
+      nytg.c.start();
       nytg.c.totalLayout();
       //console.log('totalLayout');
       this.currentOverlay = $j("#nytg-totalOverlay");
@@ -1180,8 +1180,9 @@ nytg.ready = function() {
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
     }*/ else if (tabIndex === 2){
-      $j('svg').remove();
+      //$j('svg').remove();
       nytg.c.update(nytg.array_best_median);
+      nytg.c.start();
       nytg.c.discretionaryLayout();
       //console.log('discretionaryLayout');
       this.currentOverlay = $j("#nytg-discretionaryOverlay");

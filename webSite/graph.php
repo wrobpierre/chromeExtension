@@ -22,16 +22,19 @@
 	<div id="list_questionnaire">
 		
 	</div>
-	<div class="sort w3-right w3-col m3 w3-margin w3-border">
+	<div class="sort w3-right w3-col l3 w3-col s12 w3-margin w3-border">
 		<div class="w3-container w3-red">
 			<h2 class="w3-text-white">Sort</h2>
 		</div>
-		<div id="questionFilter" class="w3-col m12 w3-center w3-section">
-			<h5>By question</h5>
-		</div>
-		<hr>
-		<div id="notes" class="w3-col m12 w3-center w3-section">
-			<h5>By notes</h5>
+		<div class="w3-padding">
+			<div id="questionFilter" class="sorts w3-col m12 w3-center w3-section">
+				<h5>Look at visited websites for each question</h5>
+			</div>
+			<hr>
+			<div id="notes" class="w3-col m12 w3-center w3-section">
+				<h5>Look at visited websites based on ratings results</h5>
+			</div>
+			
 		</div>
 
 	</div>

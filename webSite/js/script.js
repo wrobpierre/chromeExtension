@@ -196,20 +196,6 @@ post.done(function(data) {
     }
   });
 
-  for (var i = 0; i < maxQuestion; i++) {
-    var questionFilter = document.getElementById('questionFilter');
-    var li = document.createElement("li");
-    var input = document.createElement("input");
-    var label = document.createElement("label");
-    input.setAttribute("class", "sorts questionFilter w3-radio");
-    input.setAttribute("type", "checkbox");
-    input.setAttribute("checked", "checked");
-    label.innerHTML = "question "+(i+1);
-    li.appendChild(input);
-    li.appendChild(label);
-    questionFilter.appendChild(li);
-  }
-
   nb_site = tabData.length;
 
   tabData.sort(function(a,b) {
@@ -245,15 +231,15 @@ post.done(function(data) {
 
   for (var i = minAvg; i <= maxAvg; i++) {
     var notesFilter = document.getElementById('notes');
-    var li = document.createElement("li");
     var input = document.createElement("input");
     var label = document.createElement("label");
     input.setAttribute("class", "sorts notesFilter w3-radio");
     input.setAttribute("type", "checkbox");
-    label.innerHTML = "note : "+i;
-    li.appendChild(input);
-    li.appendChild(label);
-    notes.appendChild(li);
+    input.style.float = "left";
+    label.style.textAlign = "left";
+    label.innerHTML = "note : "+i+"/"+maxAvg;
+    notesFilter.appendChild(input);
+    notesFilter.appendChild(label);
   }
 
   //nytg.category_data = [{"label":"Health and Human Services","total":921605000,"num_children":26,"short_label":"Health and Human Services"},{"label":"State","total":31608000,"num_children":8,"short_label":"State"},{"label":"Judicial Branch","total":7502000,"num_children":13,"short_label":"Judicial Branch"},{"label":"International Assistance Programs","total":37399000,"num_children":16,"short_label":"International"},{"label":"Agriculture","total":154667000,"num_children":45,"short_label":"Agriculture"},{"label":"Treasury","total":519490000,"num_children":15,"short_label":"Treasury"},{"label":"Other Defense Civil Programs","total":57416000,"num_children":9,"short_label":"Defense Civil Programs"},{"label":"Appalachian Regional Commission","total":64000,"num_children":2,"short_label":"Appalachian Commission"},{"label":"Legislative Branch","total":4789000,"num_children":20,"short_label":"Legislative Branch"},{"label":"Veterans Affairs","total":137381000,"num_children":9,"short_label":"Veterans Affairs"},{"label":"Justice","total":30023000,"num_children":18,"short_label":"Justice"},{"label":"Interior","total":11357000,"num_children":31,"short_label":"Interior"},{"label":"Commerce","total":9239000,"num_children":21,"short_label":"Commerce"},{"label":"Labor","total":88993000,"num_children":15,"short_label":"Labor"},{"label":"Homeland Security","total":45109000,"num_children":23,"short_label":"Homeland Security"},{"label":"Housing and Urban Development","total":44010000,"num_children":14,"short_label":"Housing"},{"label":"Corps of Engineers--Civil Works","total":4668000,"num_children":3,"short_label":"Corps of Engineers"},{"label":"Executive Office of the President","total":392000,"num_children":12,"short_label":"Office of the President"},{"label":"Energy","total":32300000,"num_children":10,"short_label":"Energy"},{"label":"Transportation","total":74280000,"num_children":22,"short_label":"Transportation"},{"label":"Education","total":55685000,"num_children":15,"short_label":"Education"},{"label":"Federal Deposit Insurance Corporation","total":1515000,"num_children":5,"short_label":"F.D.I.C."},{"label":"District of Columbia","total":902000,"num_children":5,"short_label":"District of Columbia"},{"label":"Environmental Protection Agency","total":8138000,"num_children":2,"short_label":"E.P.A."},{"label":"Defense - Military","total":620259000,"num_children":13,"short_label":"Defense"},{"label":"Institute of Museum and Library Services","total":231000,"num_children":2,"short_label":"Museum and Library Services"},{"label":"National Aeronautics and Space Administration","total":17693000,"num_children":2,"short_label":"NASA"},{"label":"National Archives and Records Administration","total":370000,"num_children":3,"short_label":"National Archives"},{"label":"National Science Foundation","total":7470000,"num_children":2,"short_label":"N.S.F."},{"label":"Nuclear Regulatory Commission","total":127000,"num_children":2,"short_label":"Nuclear Regulation"},{"label":"Office of Personnel Management","total":94857000,"num_children":3,"short_label":"Personnel Management"},{"label":"Postal Service","total":78000,"num_children":2,"short_label":"Postal Service"},{"label":"Public Company Accounting Oversight Board","total":237000,"num_children":2,"short_label":"Accounting Oversight"},{"label":"Railroad Retirement Board","total":7202000,"num_children":3,"short_label":"Railroad Retirement"},{"label":"Small Business Administration","total":1111000,"num_children":2,"short_label":"Small Business"},{"label":"Social Security Administration","total":885315000,"num_children":2,"short_label":"Social Security"},{"label":"Federal Communications Commission","total":9633000,"num_children":2,"short_label":"F.C.C."},{"label":"Securities Investor Protection Corporation","total":259000,"num_children":2,"short_label":"S.I.P.C."},{"label":"Other","total":-512596000,"num_children":97,"short_label":"Other"}];
@@ -261,10 +247,29 @@ post.done(function(data) {
   var question = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'get_data_question', id:id });
   question.done(function(data){
     if (data != "") {
+
       var param = getUrlParameter('id');
 
       var dataParse = JSON.parse(data);
       console.log(dataParse);
+
+      for (var i = 0; i < maxQuestion; i++) {
+        var questionFilter = document.getElementById('questionFilter');
+        var input = document.createElement("input");
+        var label = document.createElement("label");
+        input.setAttribute("class", "sorts questionFilter w3-radio");
+        input.setAttribute("type", "checkbox");
+        input.setAttribute("checked", "checked");
+        input.style.float = "left";
+        label.style.textAlign = "left";
+        label.style.paddingLeft = "25px";
+        label.innerHTML = dataParse[i][2];
+        // label.innerHTML = "question "+[i];
+        questionFilter.appendChild(input);
+        questionFilter.appendChild(label);
+        questionFilter.appendChild(document.createElement("br"));
+      }
+
       document.getElementById('question_title').textContent = dataParse[0]['title'];
       var li = document.createElement("li");
       var a = document.createElement("a");
@@ -623,8 +628,7 @@ nytg.changeScale = [0,2];
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
 
-        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
-
+        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" style="width: 40px;" onerror = "this.remove()" />')
         if (d.value == 1) {
           d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' view') 
         }
@@ -767,8 +771,7 @@ nytg.changeScale = [0,2];
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
 
-        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" />')
-
+        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" style="width: 40px;" onerror="this.remove()" />')
         if (d.value == 1) {
           d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' view') 
         }

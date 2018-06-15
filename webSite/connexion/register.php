@@ -11,13 +11,13 @@ try {
 	$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	$stmt = $conn->prepare("SELECT email FROM users WHERE email like :email");
-	$stmt->bindParam(':email', $email);
-	$email = $_POST['email'];
+	$stmt = $conn->prepare("SELECT email FROM users WHERE email like :login");
+	$stmt->bindParam(':login', $login);
+	$email = $_POST['login'];
 	$stmt->execute();
 	$user = $stmt->fetchAll();
 
-	if (isset($user[0]['email']) && $user[0]['email'] == $_POST['email']) {
+	if (isset($user[0]['email']) && $user[0]['email'] == $_POST['login']) {
 		echo "Exist";
 	}
 	else{
@@ -26,16 +26,16 @@ try {
 		$pwd = $_POST['password'];
 		$pwd = md5($salt.$pwd);
 
-		$stmid = $conn->prepare("INSERT INTO users (check_id,name,email,job,lang,password) VALUES (:checkId, :name, :email, :job, :lang, :password)");
+		$stmid = $conn->prepare("INSERT INTO users (check_id,name,email,job,lang,password) VALUES (:checkId, :name, :login, :job, :lang, :password)");
 		$stmid->bindParam(':password', $password);
 		$stmid->bindParam(':name', $name);
-		$stmid->bindParam(':email', $email);
+		$stmid->bindParam(':login', $login);
 		$stmid->bindParam(':job', $job);
 		$stmid->bindParam(':lang', $lang);
 		$stmid->bindParam(':checkId', $checkId);
 		$createId = uniqid();
 		$name = $_POST['name'];
-		$email = $_POST['email'];
+		$login = $_POST['login'];
 		$job = $_POST['job'];
 		$lang = $_POST['lang'];
 		$password = $pwd;

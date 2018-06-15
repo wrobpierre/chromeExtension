@@ -13,7 +13,7 @@ header('Access-Control-Allow-Origin: *');
 
     try {
 
-        if( isset($_POST['email']) && isset($_POST['password']) ){
+        if( isset($_POST['login']) && isset($_POST['password']) ){
         
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -23,25 +23,25 @@ header('Access-Control-Allow-Origin: *');
         $pwd = $_POST['password'];
         $pwdSalt = md5($salt.$pwd);
 
-        $stmtCheck = $conn->prepare("SELECT id, email, password FROM users WHERE email like '".$_POST['email']."'");
+        $stmtCheck = $conn->prepare("SELECT id, email, password FROM users WHERE email like '".$_POST['login']."'");
 
         $stmtCheck->execute();
         $user = $stmtCheck->fetchAll();
 
         $id = $user[0]['id'];        
-        $email = $user[0]['email'];
+        $login = $user[0]['email'];
         $pwdCheck = $user[0]['password'];
 
-        if($_POST['email'] == $email && $pwdSalt == $pwdCheck){
+        if($_POST['login'] == $login && $pwdSalt == $pwdCheck){
             session_start();
             $_SESSION['id'] = $id;
-            $_SESSION['user'] = $email;
+            $_SESSION['user'] = $login;
             $_SESSION['timeout']= time();
             echo "Success";
             // header("Location: ".$adress."/webSite/index.php");
         }
         else{ 
-            echo "Failed";
+            echo $login;
         }
     }
 }

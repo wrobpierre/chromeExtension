@@ -8,15 +8,14 @@
       <?php
       if(!isset($_SESSION['user'])){
         ?>
-        <a href="/webSite/connexion/connect.php" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white w3-right">Sign in</a>
-        <a href="/webSite/connexion/regist.php" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white w3-right">Sign up</a>
+        <a href="/webSite/connexion/connect" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white w3-right">Sign in</a>
         <?php
       }
       ?>
       <?php
       if(isset($_SESSION['user'])){
         ?>
-        <a href="/webSite/connexion/disconnection.php" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white w3-right">Disconnection</a>
+        <a href="/webSite/connexion/disconnection" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white w3-right">Disconnection</a>
         <?php
       }
       ?>
@@ -26,8 +25,7 @@
     <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-large">
       <a href="./questionnaires/questionnaire" class="w3-bar-item w3-button w3-padding-large">See graphics</a>
       <a href="/SharedOn.zip" class="w3-bar-item w3-button w3-padding-large">Download extension</a>
-      <a href="./connexion/connexion.html" class="w3-bar-item w3-button w3-padding-large">Sign in</a>
-      <a href="./connexion/register.html" class="w3-bar-item w3-button w3-padding-large">Sign up</a>
+      <a href="./connexion/connect" class="w3-bar-item w3-button w3-padding-large">Sign in</a>
     </div>
   </div>
   <script>

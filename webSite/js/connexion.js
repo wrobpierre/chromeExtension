@@ -107,7 +107,7 @@ $(document).ready(function(){
         if(data == 'Success'){
          window.history.back();
        }
-       else{ 
+       else{
         console.log('false');
          $("#register").show();
        }

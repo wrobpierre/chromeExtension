@@ -70,7 +70,7 @@ if (isset($_POST['action'])) {
 			echo "<pre>";
 			var_dump($_FILES);
 			echo "</pre>";*/
-			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire");
 			if ( isset($_POST['title']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
 				$id = uniqid();
 
@@ -197,7 +197,7 @@ if (isset($_POST['action'])) {
 			echo "<pre>";
 			var_dump($_FILES);
 			echo "</pre>";*/
-			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire");
 			if (isset($_POST['id_questionnaire']) && isset($_POST['param_id'])) {
 
 				$target_dir = "../img/quest_img/".$_POST['param_id'];
@@ -462,7 +462,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'edit_user_result') {
 			if (isset($_POST['res'])) {
-				header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+				header("Location: ".$adress."/webSite/questionnaires/questionnaire");
 
 				$stmt = $conn->prepare("UPDATE answers
 					SET result = :result

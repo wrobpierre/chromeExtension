@@ -13,7 +13,7 @@ $(document).ready(function(){
                 function(data){
                     console.log(data);
                     if(data == 'Success'){
-                       document.location.href="../index.php";
+                       document.location.href="../index";
                    }
                    else{ 
                        $("#resultat").html("<p>Your email or password is invalid.</p>");

@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user'])) {
-	header("Location: ../index.php");
+	header("Location: ../connexion/connect");
 	exit;
 }
 else{
@@ -12,7 +12,7 @@ else{
 	$session_life = time() - $_SESSION['timeout'];
 	if($session_life > $inactive){
 		session_destroy(); 
-		header("Location: ../index.php");
+		header("Location: ../connexion/connect");
 		exit;
 	}
 }
@@ -204,22 +204,7 @@ else{
 			}
 		}
 
-		function getUrlParameter(sParam) {
-			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-			sURLVariables = sPageURL.split('&'),
-			sParameterName,
-			i;
-
-			for (i = 0; i < sURLVariables.length; i++) {
-				sParameterName = sURLVariables[i].split('=');
-
-				if (sParameterName[0] === sParam) {
-					return sParameterName[1] === undefined ? true : sParameterName[1];
-				}
-			}
-		}
-
-		var param = getUrlParameter('id');
+		var param = document.URL.split('-')[1];
 
 		$('input[name="param_id"]').val(param);
 
@@ -231,7 +216,7 @@ else{
 				console.log(dataParse);
 				console.log(dataParse[0]);
 				if(dataParse[0]['key_user'] != checkIdUser){
-					document.location.href="/index.php"
+					window.history.back();
 				}
 
 				$('input[name="id_questionnaire"]').val(dataParse[0]['key_questionnaires']);

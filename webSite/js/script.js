@@ -19,33 +19,16 @@ function median(values) {
     return (values[half-1] + values[half]) / 2.0;
 }
 
-function getUrlParameter(sParam) {
-  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-  sURLVariables = sPageURL.split('&'),
-  sParameterName,
-  i;
-  for (i = 0; i < sURLVariables.length; i++) {
-    sParameterName = sURLVariables[i].split('=');
+var id = document.URL.split('-')[1];
+//var user = getUrlParameter('user');
 
-    if (sParameterName[0] === sParam) {
-      return sParameterName[1] === undefined ? true : sParameterName[1];
-    }
-  }
-};
-var id = getUrlParameter('id');
-var user = getUrlParameter('user');
-
-if (id !== undefined && user !== undefined) {
-  //console.log(id);
-  //console.log(user);
+/*if (id !== undefined && user !== undefined) {
   var post = $.post(adress+'/dataBase.php', { key:"load", id:id});
-}
-else if (id !== undefined) {
-  //console.log(id);
+}*/
+if (id !== undefined) {
   var post = $.post(adress+'/dataBase.php', { key:"load", id:id });
 }
 else {
-  //console.log('pas d\'url');
   var post = $.post(adress+'/dataBase.php', { key:"load" });
 }
 
@@ -248,8 +231,6 @@ post.done(function(data) {
   question.done(function(data){
     if (data != "") {
 
-      var param = getUrlParameter('id');
-
       var dataParse = JSON.parse(data);
       console.log(dataParse);
 
@@ -275,7 +256,7 @@ post.done(function(data) {
       var a = document.createElement("a");
       a.style.textDecoration = "none";
       a.style.color = "#999";
-      a.setAttribute("href" ,  "questionnaires/questionnaire.php?id="+param);
+      a.setAttribute("href" ,  "questionnaires/questionnaire-"+id);
       a.textContent = "Answer this questionnaire"
       li.appendChild(a);
       document.getElementById('navBarGraph').appendChild(li);
@@ -837,6 +818,8 @@ nytg.changeScale = [0,2];
     },*/
 
     discretionaryLayout: function() {
+      $j('#navBarGraph')
+
       var that = this;
       this.force
       .gravity(0)

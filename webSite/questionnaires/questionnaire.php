@@ -42,25 +42,12 @@ else{
 		var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
 
-		function getUrlParameter(sParam) {
-			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-			sURLVariables = sPageURL.split('&'),
-			sParameterName,
-			i;
-
-			for (i = 0; i < sURLVariables.length; i++) {
-				sParameterName = sURLVariables[i].split('=');
-
-				if (sParameterName[0] === sParam) {
-					return sParameterName[1] === undefined ? true : sParameterName[1];
-				}
-			}
-		};
 		var checkUser = '<?php echo $checkUser ;?>';
 		var checkIdUser = '<?php echo $checkIdUser ;?>';
-		console.log(checkIdUser);
-		console.log(checkUser);
-		var param = getUrlParameter('id');
+		//console.log(checkIdUser);
+		//console.log(checkUser);
+		var param = document.URL.split('-')[1];
+		//console.log(param);
 
 		if (param == undefined) {
 			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"all" });
@@ -102,11 +89,11 @@ else{
 
 						var do_ques = $('<input type="button" class="w3-button w3-blue w3-col l6 w3-section" style="white-space: normal; border: solid white;" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
 
-						var graph_ques = $('<input type="button" class="w3-button w3-blue w3-col l6 w3-section" style="white-space: normal; border: solid white;" onclick="window:location.href=\''+adress+'/webSite/graph.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Graph');
+						var graph_ques = $('<input type="button" class="w3-button w3-blue w3-col l6 w3-section" style="white-space: normal; border: solid white;" onclick="window:location.href=\''+adress+'/webSite/graph-'+value['url'].split('-')[1]+'\'"></input>').attr('value', 'Graph');
 						
 						if(checkUser != ""){
 							var option = $('<div class="option w3-col m12"></div>')
-							var edit = $('<input type="button" class="w3-button w3-blue w3-col l4 w3-section" style="white-space: normal; border: solid white;"onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire.php?id='+value['url'].split('=')[1]+'\'"></input>').attr('value', 'Edit');
+							var edit = $('<input type="button" class="w3-button w3-blue w3-col l4 w3-section" style="white-space: normal; border: solid white;"onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire-'+value['url'].split('-')[1]+'\'"></input>').attr('value', 'Edit');
 							var del = $('<button class="w3-button w3-red w3-col l4 w3-section" style="white-space: normal; border: solid white;">Delete</button>').click(function(){
 								var r = confirm("Are you sure to delete this questionnaire ?");
 								if (r == true) {
@@ -117,7 +104,7 @@ else{
 									});
 								}
 							});
-							var edit_result = $('<input type="button" class="w3-button w3-indigo w3-col l4 w3-section" style="white-space: normal; border: solid white;" style="white-space: normal;"  onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_results.html?id='+value['url'].split('=')[1]+'\'"></input>').attr('value','Edit users\' results');
+							var edit_result = $('<input type="button" class="w3-button w3-indigo w3-col l4 w3-section" style="white-space: normal; border: solid white;" style="white-space: normal;"  onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_results-'+value['url'].split('-')[1]+'\'"></input>').attr('value','Edit users\' results');
 
 						}
 						titleDiv.append(img, title);
@@ -141,7 +128,7 @@ else{
 						$('#content').append(ul);
 					})
 					if (checkUser != "") {
-						var add = $('<input type="button" class="w3-button w3-green" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire.php\'"></input>').attr('value', 'New questionnaire');
+						var add = $('<input type="button" class="w3-button w3-green" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire\'"></input>').attr('value', 'New questionnaire');
 						add.css("background-color", "#00B16A");
 						add.css("height", "40px");
 						$('#addQuestionnaire').append(add);
@@ -151,7 +138,7 @@ else{
 }
 else {
 	if (checkUser == "") {
-		document.location.href="../connexion/connect.php";
+		document.location.href="../connexion/connect";
 	}
 	window.onbeforeunload = function(){
 		chrome.runtime.sendMessage(editorExtensionId, {action: 'stop'});

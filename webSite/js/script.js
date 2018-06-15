@@ -19,33 +19,16 @@ function median(values) {
     return (values[half-1] + values[half]) / 2.0;
 }
 
-function getUrlParameter(sParam) {
-  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-  sURLVariables = sPageURL.split('&'),
-  sParameterName,
-  i;
-  for (i = 0; i < sURLVariables.length; i++) {
-    sParameterName = sURLVariables[i].split('=');
+var id = document.URL.split('-')[1];
+//var user = getUrlParameter('user');
 
-    if (sParameterName[0] === sParam) {
-      return sParameterName[1] === undefined ? true : sParameterName[1];
-    }
-  }
-};
-var id = getUrlParameter('id');
-var user = getUrlParameter('user');
-
-if (id !== undefined && user !== undefined) {
-  //console.log(id);
-  //console.log(user);
+/*if (id !== undefined && user !== undefined) {
   var post = $.post(adress+'/dataBase.php', { key:"load", id:id});
-}
-else if (id !== undefined) {
-  //console.log(id);
+}*/
+if (id !== undefined) {
   var post = $.post(adress+'/dataBase.php', { key:"load", id:id });
 }
 else {
-  //console.log('pas d\'url');
   var post = $.post(adress+'/dataBase.php', { key:"load" });
 }
 
@@ -196,10 +179,6 @@ post.done(function(data) {
     }
   });
 
-  //console.log(nytg.array_best_median);
-  //console.log(median_view);
-  //console.log(median_time);
-
   nb_site = tabData.length;
 
   tabData.sort(function(a,b) {
@@ -252,8 +231,6 @@ post.done(function(data) {
   question.done(function(data){
     if (data != "") {
 
-      var param = getUrlParameter('id');
-
       var dataParse = JSON.parse(data);
       console.log(dataParse);
 
@@ -279,7 +256,7 @@ post.done(function(data) {
       var a = document.createElement("a");
       a.style.textDecoration = "none";
       a.style.color = "#999";
-      a.setAttribute("href" ,  "questionnaires/questionnaire.php?id="+param);
+      a.setAttribute("href" ,  "questionnaires/questionnaire-"+id);
       a.textContent = "Answer this questionnaire"
       li.appendChild(a);
       document.getElementById('navBarGraph').appendChild(li);
@@ -317,27 +294,12 @@ nytg.formatNumber = function(n) {
   return  s + suffix;
 };
 
-nytg.test1 = [];
-for (var i = 0; i < 2/*nb_question*/; i++) {
-  nytg.test1.push(i+1);
+nytg.changeTickValues = [];
+for (var i = 0; i < 2; i++) {
+  nytg.changeTickValues.push(i+1);
 }
 
-nytg.test2 = [0,/*nb_question*/2];
-
-/*function getUrlParameter(sParam) {
-  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-  sURLVariables = sPageURL.split('&'),
-  sParameterName,
-  i;
-
-  for (i = 0; i < sURLVariables.length; i++) {
-    sParameterName = sURLVariables[i].split('=');
-
-    if (sParameterName[0] === sParam) {
-      return sParameterName[1] === undefined ? true : sParameterName[1];
-    }
-  }
-};*/
+nytg.changeScale = [0,2];
 
 /********************************
  ** FILE: Chart.js
@@ -383,7 +345,7 @@ nytg.test2 = [0,/*nb_question*/2];
     circle          : {},
     gravity         : null,
     charge          : null,
-    changeTickValues: nytg.test1,
+    changeTickValues: nytg.changeTickValues,
     categorizeChange: function(c){
       var time = parseInt(c['hours'])*3600 + parseInt(c['minutes'])*60 + parseInt(c['secondes']);
       var nbSecondesMax = parseInt(maxTime['hours'])*3600 + parseInt(maxTime['minutes'])*60 + parseInt(maxTime['secondes']);
@@ -432,8 +394,8 @@ nytg.test2 = [0,/*nb_question*/2];
       } else if ( time < divisionTime*5){ return 2;
       } else { return 3; }
     },
-    fillColor       : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#d84b2a", "#ee9586","#e4b7b2",/*"#AAA","#beccae"*/"#BECCAE", "#9caf84", "#7aa25c"]),
-    strokeColor     : d3.scale.ordinal().domain([/*-3,*/-2,-1,0,1,2,3]).range(["#c72d0a", "#e67761","#d9a097",/*"#999","#a7bb8f"*/"#b5c1a6", "#7e965d", "#5a8731"]),
+    fillColor       : d3.scale.ordinal().domain([-2,-1,0,1,2,3]).range(["#d84b2a", "#ee9586", "#e4b7b2", "#BECCAE", "#9caf84", "#7aa25c"]),
+    strokeColor     : d3.scale.ordinal().domain([-2,-1,0,1,2,3]).range(["#c72d0a", "#e67761", "#d9a097", "#b5c1a6", "#7e965d", "#5a8731"]),
     getFillColor    : null,
     getStrokeColor  : null,
 
@@ -442,7 +404,7 @@ nytg.test2 = [0,/*nb_question*/2];
     
     rScale          : d3.scale.pow().exponent(0.15).domain([0,10000000000]).range([1,100]),
     radiusScale     : null,
-    changeScale     : d3.scale.linear().domain(nytg.test2).range([620,260]).clamp(true),
+    changeScale     : d3.scale.linear().domain(nytg.changeScale).range([620,260]).clamp(true),
     sizeScale       : d3.scale.linear().domain([0,110]).range([0,1]),
     //groupScale      : {},
     
@@ -451,9 +413,6 @@ nytg.test2 = [0,/*nb_question*/2];
     categoryPositionLookup  : {},
     categoriesList          : [],
     
-    // 
-    // 
-    // 
     init: function() {
       var that = this;
       
@@ -554,7 +513,6 @@ nytg.test2 = [0,/*nb_question*/2];
           value: n['view'],
           url: n['url'],
           avg: n['avg'],
-          //discretion: n['discretion'],
           positions: n.positions,
           x:Math.random() * 1000,
           y:Math.random() * 1000
@@ -598,15 +556,6 @@ nytg.test2 = [0,/*nb_question*/2];
       .style("top", this.changeScale(-100)+'px')
       .classed('nytg-discretionaryTickLabel', true)*/
 
-      // total circle
-      // this.svg.append("circle")
-      //   .attr('r', this.radiusScale(this.totalValue))
-      //   .style("stroke-width",1)
-      //   .style('stroke',"#AAA")
-      //   .style('fill','none')
-      //   .attr('cx', this.width/2)
-      //   .attr('cy', this.height/2);
-
       // deficit circle
       d3.select("#nytg-deficitCircle").append("circle")
       .attr('r', this.radiusScale(this.deficitValue))
@@ -635,28 +584,6 @@ nytg.test2 = [0,/*nb_question*/2];
       .attr('cx', 30)
       .attr('cy', 55);
       
-
-      /*var departmentOverlay = $j("#nytg-departmentOverlay")
-      
-      for (var i=0; i < nytg.category_data.length; i++) {
-        var cat = nytg.category_data[i]['label']
-        var catLabel = nytg.category_data[i]['short_label']
-        var catTot = this.bigFormat(nytg.category_data[i]['total'])
-        var catWidth = this.categoryPositionLookup[cat].w
-        var catYOffset = this.categoryPositionLookup[cat].offsetY;
-        var catNode;
-        if (catLabel === "Other") {
-          catNode = $j("<div class='nytg-departmentAnnotation nytg-row"+nytg.category_data[i]['row']+"'><p class='department'>"+catLabel+"</p></div>")
-          
-        } else {
-          catNode = $j("<div class='nytg-departmentAnnotation nytg-row"+nytg.category_data[i]['row']+"'><p class='total'>$"+catTot+"</p><p class='department'>"+catLabel+"</p></div>")
-          
-        }
-        catNode.css({'left':this.categoryPositionLookup[cat].x-catWidth/2,'top': this.categoryPositionLookup[cat].y - catYOffset, 'width':catWidth})
-        departmentOverlay.append(catNode)
-
-      };*/
-      
       // This is the every circle
       this.circle = this.svg.selectAll("circle")
       .data(this.nodes, function(d) { return d.sid; });
@@ -679,8 +606,6 @@ nytg.test2 = [0,/*nb_question*/2];
         var $j = jQuery;
 
         d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
-        //d3.select("#nytg-tooltip .nytg-discretion").text(that.discretionFormat(d.discretion))
-        //console.log(d.group);
         d3.select("#nytg-tooltip .nytg-domain").text(d.group)
         var url = new URL(d.url)
 
@@ -700,7 +625,6 @@ nytg.test2 = [0,/*nb_question*/2];
         d3.select("#nytg-tooltip").style('display','none')})
 
       .on("click", function(d) {
-        //document.location.href=that.nameFormat(d.url)
         var win = window.open(d.url, '_blank');
         win.focus();
       });
@@ -782,6 +706,27 @@ nytg.test2 = [0,/*nb_question*/2];
       .classed('nytg-discretionaryTick', true)
       .classed('nytg-discretionaryZeroTick', true)
       
+      // $ 100 billion
+      d3.select("#nytg-scaleKey").append("circle")
+      .attr('r', this.radiusScale(10000000))
+      .attr('class',"nytg-scaleKeyCircle")
+      .attr('cx', 30)
+      .attr('cy', 40);
+
+      // $ 10 billion
+      d3.select("#nytg-scaleKey").append("circle")
+      .attr('r', this.radiusScale(1000000))
+      .attr('class',"nytg-scaleKeyCircle")
+      .attr('cx', 30)
+      .attr('cy', 50);
+
+      // $ 1 billion
+      d3.select("#nytg-scaleKey").append("circle")
+      .attr('r', this.radiusScale(100000))
+      .attr('class',"nytg-scaleKeyCircle")
+      .attr('cx', 30)
+      .attr('cy', 55);
+
       // This is the every circle
       this.circle = this.svg.selectAll("circle")
       .data(this.nodes, function(d) { return d.sid; });
@@ -830,19 +775,6 @@ nytg.test2 = [0,/*nb_question*/2];
       this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
     },
 
-    getCirclePositions: function(){
-      var that = this
-      var circlePositions = {};
-      this.circle.each(function(d){
-
-        circlePositions[d.sid] = {
-          x:Math.round(d.x),
-          y:Math.round(d.y)
-        }
-      })
-      return JSON.stringify(circlePositions)
-    },
-
     start: function() {
       var that = this;
 
@@ -869,7 +801,7 @@ nytg.test2 = [0,/*nb_question*/2];
       .start();     
     },
 
-    mandatoryLayout: function() {
+    /*mandatoryLayout: function() {
       var that = this;
       this.force
       .gravity(0)
@@ -883,9 +815,11 @@ nytg.test2 = [0,/*nb_question*/2];
         .attr("cy", function(d) { return d.y; });
       })
       .start();   
-    },
+    },*/
 
     discretionaryLayout: function() {
+      $j('#navBarGraph')
+
       var that = this;
       this.force
       .gravity(0)
@@ -918,122 +852,81 @@ nytg.test2 = [0,/*nb_question*/2];
 
     buoyancy: function(alpha) {
       var that = this;
+      return function(d){        
+        var targetY = that.centerY - (d.changeCategory / 3) * that.boundingRadius
+        d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * alpha * alpha * 100
+      };
+    },
+
+    mandatorySort: function(alpha) {
+      var that = this;
       return function(d){
-          // d.y -= 1000 * alpha * alpha * alpha * d.changeCategory
-          
-          // if (d.changeCategory >= 0) {
-          //   d.y -= 1000 * alpha * alpha * alpha
-          // } else {
-          //   d.y += 1000 * alpha * alpha * alpha
-          // }
-          
-          
-          var targetY = that.centerY - (d.changeCategory / 3) * that.boundingRadius
-          d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * alpha * alpha * 100
+        var targetY = that.centerY;
+        var targetX = 0;
+
+        if (d.changeCategory > 0) {
+          d.x = - 200
+        } else {
+          d.x =  1100
+        }
+        return;
+
+        if (d.discretion === that.DISCRETIONARY) {
+          targetX = 550
+        } else if ((d.discretion === that.MANDATORY)||(d.discretion === that.NET_INTEREST)) {
+          targetX = 400
+        } else {
+          targetX = 900
         };
-      },
 
-      mandatorySort: function(alpha) {
-        var that = this;
-        return function(d){
-          var targetY = that.centerY;
-          var targetX = 0;
+        d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * 1.1
+        d.x = d.x + (targetX - d.x) * (that.defaultGravity) * alpha * 1.1
+      };
+    },
 
-          if (d.changeCategory > 0) {
-            d.x = - 200
-          } else {
-            d.x =  1100
-          }
-          return;
-
-          if (d.discretion === that.DISCRETIONARY) {
-            targetX = 550
-          } else if ((d.discretion === that.MANDATORY)||(d.discretion === that.NET_INTEREST)) {
-            targetX = 400
-          } else {
-            targetX = 900
-          };
-
-          d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * 1.1
-          d.x = d.x + (targetX - d.x) * (that.defaultGravity) * alpha * 1.1
-        };
-      },
-
-      discretionarySort: function(alpha) {
-        var that = this;
-        return function(d){
-          if (d['type'] == 'view') {
-            if (d.order == undefined) {
-              lastX = 0*(870/nb_site_view)+(60+d.radius);  
-            }
-            else {
-              lastX = d.order*(870/nb_site_time)+(60+d.radius);
-            }
-            lastY = 260;
+    discretionarySort: function(alpha) {
+      var that = this;
+      return function(d){
+        if (d['type'] == 'view') {
+          if (d.order == undefined) {
+            lastX = 0*(870/nb_site_view)+(60+d.radius);  
           }
           else {
-            if (d.order == undefined) {
-              lastX = 0*(870/nb_site_view)+(60+d.radius);  
-            }
-            else {
-              lastX = d.order*(870/nb_site_time)+(60+d.radius);
-            }
-            lastY = 440;
+            lastX = d.order*(870/nb_site_time)+(60+d.radius);
           }
+          lastY = 260;
+        }
+        else {
+          if (d.order == undefined) {
+            lastX = 0*(870/nb_site_view)+(60+d.radius);  
+          }
+          else {
+            lastX = d.order*(870/nb_site_time)+(60+d.radius);
+          }
+          lastY = 440;
+        }
 
-          var speedX = (lastX - d.x)/10;
-          var speedY = (lastY - d.y)/10;
+        var speedX = (lastX - d.x)/10;
+        var speedY = (lastY - d.y)/10;
 
-          if (lastX >= d.x && lastX - d.x <= 0.5) {
-            speedX = 0;
-          }
-          else if (lastX <= d.x && lastX - d.x >= 0.5) {
-            speedX = 0; 
-          }
+        if (lastX >= d.x && lastX - d.x <= 0.5) {
+          speedX = 0;
+        }
+        else if (lastX <= d.x && lastX - d.x >= 0.5) {
+          speedX = 0; 
+        }
 
-          if (lastY >= d.y && lastY - d.y <= 0.5) {
-            speedY = 0;
-          }
-          else if (lastY <= d.y && lastY - d.y >= 0.5) {
-            speedY = 0; 
-          }
+        if (lastY >= d.y && lastY - d.y <= 0.5) {
+          speedY = 0;
+        }
+        else if (lastY <= d.y && lastY - d.y >= 0.5) {
+          speedY = 0; 
+        }
 
-          d.x = d.x + speedX;
-          d.y = d.y + speedY;
-        };
-      },
-
-    /*collide: function(alpha){
-      var that = this;
-      var padding = 6;
-      var quadtree = d3.geom.quadtree(this.nodes);
-      return function(d) {
-        var r = d.radius + that.maxRadius + padding,
-        nx1 = d.x - r,
-        nx2 = d.x + r,
-        ny1 = d.y - r,
-        ny2 = d.y + r;
-        quadtree.visit(function(quad, x1, y1, x2, y2) {
-          if (quad.point && (quad.point !== d) && (d.group === quad.point.group)) {
-            var x = d.x - quad.point.x,
-            y = d.y - quad.point.y,
-            l = Math.sqrt(x * x + y * y),
-            r = d.radius + quad.point.radius;
-            if (l < r) {
-              l = (l - r) / l * alpha;
-              d.x -= x *= l;
-              d.y -= y *= l;
-              quad.point.x += x;
-              quad.point.y += y;
-            }
-          }
-          return x1 > nx2
-          || x2 < nx1
-          || y1 > ny2
-          || y2 < ny1;
-        });
+        d.x = d.x + speedX;
+        d.y = d.y + speedY;
       };
-    }*/
+    },
   }
 };
 
@@ -1155,7 +1048,7 @@ nytg.ready = function() {
       this.currentOverlay = $j("#nytg-mandatoryOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
-    }*/ else if (tabIndex === 2){
+    }*/ else if (tabIndex === 1){
       $j('svg').remove();
       nytg.c.update(nytg.array_best_median);
       nytg.c.start();
@@ -1178,7 +1071,6 @@ if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/
 $j('.sorts').click(function() {
   jQuery.noConflict();
   var $j = jQuery;
-  
   //console.log(nytg.array_webSites);
   nytg.array_webSites = [];
   //console.log(nytg.array_webSites);

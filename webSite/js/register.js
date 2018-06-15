@@ -62,7 +62,7 @@ $(document).ready(function(){
           console.log(data);
           if(data == 'Success'){
            alert("Your account is created !")
-           document.location.href="../index.php";
+           document.location.href="../index";
          }
          else if(data == 'Failed'){
            $("#resultat").html("<p>Bad email or password.</p>");

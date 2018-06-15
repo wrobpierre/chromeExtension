@@ -110,12 +110,12 @@ if (isset($_POST['key'])) {
 				INNER JOIN questionnaires qts ON fu2.id = qts.key_first_url
 				INNER JOIN questions q ON qts.id = q.key_questionnaires
 				INNER JOIN answers a ON q.id = a.key_question
-				WHERE a.key_user = s.key_user and fu2.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.php?id=".$_POST['id']."')note, 
+				WHERE a.key_user = s.key_user and fu2.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire-".$_POST['id']."')note, 
 				(SELECT distinct COUNT(*) FROM questions WHERE questions.key_questionnaires = questionnaires.id)nb_question
 				FROM sites s
 				INNER JOIN firsturl fu1 ON s.key_first_url = fu1.id
 				INNER JOIN questionnaires ON fu1.id = questionnaires.key_first_url
-				WHERE fu1.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.php?id=".$_POST['id']."'";
+				WHERE fu1.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire-".$_POST['id']."'";
 			}
 			else {
 				$requete = "SELECT * FROM sites";

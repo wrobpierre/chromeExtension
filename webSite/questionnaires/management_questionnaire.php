@@ -70,7 +70,7 @@ if (isset($_POST['action'])) {
 			echo "<pre>";
 			var_dump($_FILES);
 			echo "</pre>";*/
-			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire");
 			if ( isset($_POST['title']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
 				$id = uniqid();
 
@@ -95,7 +95,7 @@ if (isset($_POST['action'])) {
 						$stmt = $conn->prepare("INSERT INTO firsturl (url)
 							VALUES (:url)");
 						$stmt->bindParam(':url', $url);
-						$url = $adress."/webSite/questionnaires/questionnaire.php?id=".$id;
+						$url = $adress."/webSite/questionnaires/questionnaire-".$id;
 						$stmt->execute();
 
 						$stmt = $conn->prepare("INSERT INTO questionnaires (title, statement, link_img, auto_correction, key_user, key_first_url)
@@ -183,7 +183,7 @@ if (isset($_POST['action'])) {
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");
 				$stmt->bindParam(':url', $url);
-				$url = $adress.'/webSite/questionnaires/questionnaire.php?id='.$_POST['id'];
+				$url = $adress.'/webSite/questionnaires/questionnaire-'.$_POST['id'];
 				$stmt->execute();
 
 				echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "questionnaire"));
@@ -197,7 +197,7 @@ if (isset($_POST['action'])) {
 			echo "<pre>";
 			var_dump($_FILES);
 			echo "</pre>";*/
-			header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+			header("Location: ".$adress."/webSite/questionnaires/questionnaire");
 			if (isset($_POST['id_questionnaire']) && isset($_POST['param_id'])) {
 
 				$target_dir = "../img/quest_img/".$_POST['param_id'];
@@ -416,7 +416,7 @@ if (isset($_POST['action'])) {
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
 					WHERE qtn.key_first_url = (SELECT id FROM firsturl WHERE url LIKE :url)");
 				$stmt->bindParam(':url', $url);
-				$url = $adress.'/webSite/questionnaires/questionnaire.php?id='.$_POST['id'];
+				$url = $adress.'/webSite/questionnaires/questionnaire-'.$_POST['id'];
 				$stmt->execute();
 
 				echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "questionnaire"));
@@ -428,7 +428,7 @@ if (isset($_POST['action'])) {
 					FROM firsturl fu
 					INNER JOIN questionnaires qts ON fu.id = qts.key_first_url
 					INNER JOIN questions q ON qts.id = q.key_questionnaires
-					WHERE fu.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire.php?id=".$_POST['id']."'");
+					WHERE fu.url LIKE 'http://163.172.59.102/webSite/questionnaires/questionnaire-".$_POST['id']."'");
 				$stmt->execute();
 
 				echo json_encode($stmt->fetchAll());	
@@ -454,7 +454,7 @@ if (isset($_POST['action'])) {
 					WHERE fu.url LIKE :url
 					ORDER BY a.key_user");
 				$stmt->bindParam(':url', $url);
-				$url = $adress.'/webSite/questionnaires/questionnaire.php?id='.$_POST['id'];
+				$url = $adress.'/webSite/questionnaires/questionnaire-'.$_POST['id'];
 				$stmt->execute();
 
 				echo json_encode($stmt->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_CLASS));
@@ -462,7 +462,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'edit_user_result') {
 			if (isset($_POST['res'])) {
-				header("Location: ".$adress."/webSite/questionnaires/questionnaire.php");
+				header("Location: ".$adress."/webSite/questionnaires/questionnaire");
 
 				$stmt = $conn->prepare("UPDATE answers
 					SET result = :result
@@ -518,7 +518,7 @@ if (isset($_POST['action'])) {
 				$stmt->bindParam(':user', $user);
 				$stmt->bindParam(':url', $url);
 				$user = $_POST['user'];
-				$url = $adress.'/webSite/questionnaires/questionnaire.php?id='.$_POST['param'];
+				$url = $adress.'/webSite/questionnaires/questionnaire-'.$_POST['param'];
 
 				$stmt->execute();
 			}

@@ -1,8 +1,8 @@
 $(document).ready(function(){
-   $("#country").countrySelect();
-  if($("#register").is(":visible")){
-
-   $("#submit").click(function(e){
+ $("#country").countrySelect();
+ $("#submit").click(function(e){
+  console.log($("#register").is(":visible"));
+   if($("#register").is(":visible")){
     e.preventDefault();
     $job = "";
     alert($("#job").val());
@@ -64,7 +64,7 @@ $(document).ready(function(){
           console.log(data);
           if(data == 'Success'){
            alert("Your account is created !")
-           document.location.href="../index.php";
+           document.location.href="../index";
          }
          else if(data == 'Failed'){
            $("#resultat").html("<p>Bad login or password.</p>");
@@ -91,9 +91,8 @@ $(document).ready(function(){
         $("#resultat").html("<p>A problem occured please try later.</p>");
       }
     }
-  });
- }
- else{
+  }
+  else{
    $("#submit").click(function(e){
     e.preventDefault();
     $.post(
@@ -104,10 +103,12 @@ $(document).ready(function(){
       },
 
       function(data){
+        console.log(data);
         if(data == 'Success'){
          window.history.back();
        }
        else{ 
+        console.log('false');
          $("#register").show();
        }
      },
@@ -115,4 +116,5 @@ $(document).ready(function(){
      );
   });
  }
+});
 });

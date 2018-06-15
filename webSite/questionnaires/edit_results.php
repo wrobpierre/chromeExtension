@@ -1,3 +1,23 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user'])) {
+	header("Location: ../connexion/connect");
+	exit;
+}
+else{
+	$checkUser = $_SESSION['user'];
+	$checkIdUser = $_SESSION['id'];
+	$inactive = 45*60; 
+	$session_life = time() - $_SESSION['timeout'];
+	if($session_life > $inactive){
+		session_destroy(); 
+		header("Location: ../connexion/connect");
+		exit;
+	}
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,21 +40,7 @@
 		var adress = "http://163.172.59.102"
 		//var adress = "http://localhost/chromeExtension"
 
-		function getUrlParameter(sParam) {
-			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-			sURLVariables = sPageURL.split('&'),
-			sParameterName,
-			i;
-
-			for (i = 0; i < sURLVariables.length; i++) {
-				sParameterName = sURLVariables[i].split('=');
-
-				if (sParameterName[0] === sParam) {
-					return sParameterName[1] === undefined ? true : sParameterName[1];
-				}
-			}
-		};
-		var param = getUrlParameter('id');
+		var param = document.URL.split('-')[1];
 		//console.log(param); 
 		var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_user_result", id:param });
 		post.done(function(data){

@@ -52,7 +52,7 @@
 												<div id="nytg-search" style="display:none;"></div>
 												<ul id="navBarGraph" class="nytg-navigation clearfix">
 													<li id="nytg-nav-all">All web site</li>
-													<li id="nytg-nav-mandatory">By domain name</li>
+													<!--<li id="nytg-nav-mandatory">By domain name</li>-->
 													<li id="nytg-nav-discretionary">Visit by time</li>
 													<!--<li id="nytg-nav-comparison">Historical</li> -->
 												</ul>

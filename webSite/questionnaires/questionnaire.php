@@ -47,6 +47,7 @@ else{
 			sURLVariables = sPageURL.split('&'),
 			sParameterName,
 			i;
+			console.log(document.URL)
 
 			for (i = 0; i < sURLVariables.length; i++) {
 				sParameterName = sURLVariables[i].split('=');
@@ -60,7 +61,8 @@ else{
 		var checkIdUser = '<?php echo $checkIdUser ;?>';
 		console.log(checkIdUser);
 		console.log(checkUser);
-		var param = getUrlParameter('id');
+		var param = document.URL.split('-')[1];;
+		console.log(param);
 
 		if (param == undefined) {
 			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"all" });

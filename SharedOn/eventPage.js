@@ -36,7 +36,6 @@ function getCurrentTabUrl(eventUrl) {
     var url;
     var title;
     var hostName;
-    // alert(lastUrl);
 
     if(tab != undefined){
       url = tab.url;
@@ -44,32 +43,6 @@ function getCurrentTabUrl(eventUrl) {
     else{
       url = eventUrl;
     }
-
-    /*if (url.indexOf(adress+'/webSite/questionnaires/questionnaire.php?id=') != -1) {
-      autoStart(url);
-      storage.get('uniqId', function(resultId){
-        var id = resultId.uniqId;
-        chrome.tabs.executeScript({
-          code: "if (document.readyState === 'complete') {"
-          +"var id;"
-          +"if( document.querySelector('input[name=\"method\"]').value == 'sign_up' ) {"
-          +"document.getElementsByName('user_id')[0].value = '"+id+"';"
-          +"}"
-          +"else if ( document.querySelector('input[name=\"method\"]').value == 'sign_in' ) {"
-          +"id = document.getElementsByName('user_id')[0].value;"
-          +"}"
-          +"} id",
-          runAt: "document_end"
-        }, function(results){
-          if (results[0] != undefined) {
-            storage.set({'uniqId':results[0]});
-          }
-        });
-      });
-    }*/
-    /*if (url.indexOf(adress+'/webSite/questionnaires/result.html') != -1) {
-      autoStop();
-    }*/
 
     storage.get('firstUrl', function(result) {
       if(result.firstUrl != undefined && result.firstUrl != url){
@@ -95,11 +68,8 @@ function getCurrentTabUrl(eventUrl) {
             title = "no title"
           }
           
-          //if (hostName != '163.172.59.102') {
-            //alert(hostName);
-            var values = {'url':url, 'title':title, 'keywords':keywords, 'firstTime':dateBegin, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'question': [{question: question, date:dateBegin}] }
-            saveList(values);
-          //}
+          var values = {'url':url, 'title':title, 'keywords':keywords, 'firstTime':dateBegin, 'dateBegin': dateBegin, 'timeOnPage': {'hours': 0, 'minutes': 0, 'secondes': 0}, 'views':1, 'hostName': hostName, 'question': [{question: question, date:dateBegin}] }
+          saveList(values);
         });
       }
     });

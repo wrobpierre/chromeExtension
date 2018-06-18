@@ -13,7 +13,7 @@ try {
 
 	$stmt = $conn->prepare("SELECT email FROM users WHERE email like :login");
 	$stmt->bindParam(':login', $login);
-	$email = $_POST['login'];
+	$login = $_POST['login'];
 	$stmt->execute();
 	$user = $stmt->fetchAll();
 
@@ -26,15 +26,13 @@ try {
 		$pwd = $_POST['password'];
 		$pwd = md5($salt.$pwd);
 
-		$stmid = $conn->prepare("INSERT INTO users (check_id,name,email,job,lang,password) VALUES (:checkId, :name, :login, :job, :lang, :password)");
+		$stmid = $conn->prepare("INSERT INTO users (check_id,email,job,lang,password) VALUES (:checkId, :login, :job, :lang, :password)");
 		$stmid->bindParam(':password', $password);
-		$stmid->bindParam(':name', $name);
 		$stmid->bindParam(':login', $login);
 		$stmid->bindParam(':job', $job);
 		$stmid->bindParam(':lang', $lang);
 		$stmid->bindParam(':checkId', $checkId);
 		$createId = uniqid();
-		$name = $_POST['name'];
 		$login = $_POST['login'];
 		$job = $_POST['job'];
 		$lang = $_POST['lang'];
@@ -44,7 +42,7 @@ try {
 
 		if($stmid->execute()){
 			session_start();
-			$_SESSION['user'] = $email;
+			$_SESSION['user'] = $login;
 			$_SESSION['timeout'] = time();
 			echo "Success";
 		}

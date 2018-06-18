@@ -1,1 +1,32 @@
 Options -Indexes
+
+DirectoryIndex /webSite/index
+
+ErrorDocument 400 /webSite/erreur.php?erreur=400
+ErrorDocument 401 /webSite/erreur.php?erreur=401
+ErrorDocument 402 /webSite/erreur.php?erreur=402
+ErrorDocument 403 /webSite/erreur.php?erreur=403
+ErrorDocument 404 /webSite/erreur.php?erreur=404
+ErrorDocument 405 /webSite/erreur.php?erreur=405
+ErrorDocument 500 /webSite/erreur.php?erreur=500
+ErrorDocument 501 /webSite/erreur.php?erreur=501
+ErrorDocument 502 /webSite/erreur.php?erreur=502
+ErrorDocument 503 /webSite/erreur.php?erreur=503
+ErrorDocument 504 /webSite/erreur.php?erreur=504
+ErrorDocument 505 /webSite/erreur.php?erreur=505
+
+RewriteRule ^webSite/index$ /webSite/index.php [L]
+
+#RewriteRule ^webSite/questionnaires/questionnaire.php$ /webSite/questionnaires/questionnaire [R=301]
+RewriteRule ^webSite/questionnaires/questionnaire$ /webSite/questionnaires/questionnaire.php [L]
+
+RewriteRule ^webSite/questionnaires/add_questionnaire$ /webSite/questionnaires/add_questionnaire.php [L]
+RewriteRule ^webSite/questionnaires/questionnaire-([0-9A-Za-z]*)$ /webSite/questionnaires/questionnaire.php?id$
+RewriteRule ^webSite/questionnaires/edit_questionnaire-([0-9A-Za-z]*)$ /webSite/questionnaires/edit_questionna$
+RewriteRule ^webSite/questionnaires/edit_results-([0-9A-Za-z]*)$ /webSite/questionnaires/edit_results.php?id=$$
+
+RewriteRule ^webSite/graph-([0-9A-Za-z]*)$ /webSite/graph.php?id=$1 [L]
+
+RewriteRule ^webSite/connexion/connect$ /webSite/connexion/connect.php [L]
+
+RewriteRule ^webSite/connexion/disconnection$ /webSite/connexion/disconnection.php [L]

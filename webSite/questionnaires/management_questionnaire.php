@@ -446,7 +446,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_user_result') {
 			if (isset($_POST['id'])) {
-				$stmt = $conn->prepare("SELECT a.key_user, a.key_question, q.question, a.answer
+				$stmt = $conn->prepare("SELECT a.key_user, a.key_question, q.question, a.answer, a.result
 					FROM firsturl fu
 					INNER JOIN questionnaires qtn ON fu.id = qtn.key_first_url
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires

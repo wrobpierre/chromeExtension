@@ -56,6 +56,12 @@ else{
 						var answer = $('<p>'+v.answer+'</p>');
 						var right = $('<input type="radio" name="res['+index+']['+v.key_question+']" value="right"> <label>Right</label>');
 						var wrong = $('<input type="radio" name="res['+index+']['+v.key_question+']" value="wrong"> <label>Wrong</label>');
+						if (v.result == "1") {
+							right[0]['checked'] = true;
+						}
+						else if (v.result == "0") {
+							wrong[0]['checked'] = true;
+						}
 						li.append(question,answer,right,wrong);
 						ul.append(li);
 					})

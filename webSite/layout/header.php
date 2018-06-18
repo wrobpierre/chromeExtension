@@ -25,7 +25,20 @@
     <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-large">
       <a href="./questionnaires/questionnaire" class="w3-bar-item w3-button w3-padding-large">See graphics</a>
       <a href="/SharedOn.zip" class="w3-bar-item w3-button w3-padding-large">Download extension</a>
-      <a href="./connexion/connect" class="w3-bar-item w3-button w3-padding-large">Sign in</a>
+      <?php
+      if(!isset($_SESSION['user'])){
+        ?>
+        <a href="./connexion/connect" class="w3-bar-item w3-button w3-padding-large">Sign in / Sign up</a>
+        <?php
+      }
+      ?>
+      <?php
+      if(isset($_SESSION['user'])){
+        ?>
+        <a href="./connexion/disconnection" class="w3-bar-item w3-button w3-padding-large">Disconnection</a>
+        <?php
+      }
+      ?>
     </div>
   </div>
   <script>

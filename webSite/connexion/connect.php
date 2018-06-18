@@ -10,26 +10,26 @@
   <?php include '../layout/header.php'; ?>
 
   <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-    <div class="w3-content w3-center" style="width:300px;">
+    <div class="w3-content w3-center" style="width:350px;">
 
       <h1>Sign In</h1>
 
       <form>
         <div id="content">
-          <div class="w3-padding">
-            <div>
+          <div>
+            <div class="w3-col l4 w3-section">
               login :
             </div>
-            <div >
+            <div class="w3-col l8 w3-section">
              <input class="w3-input" type="text" id="login" />
            </div>
 
          </div>
-         <div class="w3-padding">
-          <div>
+         <div>
+          <div class="w3-col l4 w3-section">
             Password :
           </div>
-          <div id="connectionButton">
+          <div id="connectionButton" class="w3-col l8">
            <input class="w3-input" type="password" id="password" />
          </div>
 
@@ -37,16 +37,19 @@
        <div id="register" style="display: none;" class="w3-row-padding w3-row-padding w3-light-grey w3-centered">
         <p>This login is not yet registered, to register please enter this additional information</p>
         <div>
-          Re-enter your password :
-        </div>
-        <div>
-         <input class="w3-input" type="password" id="passwordCheck" />
+          <div class="w3-col l4 w3-section">
+            Re-enter your password :
+          </div>
+          <div class="w3-col l8 w3-section">
+           <input class="w3-input" type="password" id="passwordCheck" />
+         </div>
+
        </div>
-       <div>
-        <div>
+       <div class="w3-row">
+        <div class="w3-col l4 w3-section">
           Job :
         </div>
-        <div >
+        <div class="w3-col l8 w3-section">
           <select id="job" class="w3-select" name="option">
             <option value="" disabled selected>Choose your option</option>
             <option value="1">Administrative and support service activities</option>
@@ -73,10 +76,10 @@
 
       </div>
       <div>
-        <div>
+        <div class="w3-col l4 w3-section">
           Language :
         </div>
-        <div id="registerButton">
+        <div id="registerButton" class="w3-col l8 w3-section">
           <input class="w3-input" type="text" id="country">
         </div>
       </div>

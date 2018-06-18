@@ -1,3 +1,14 @@
+<?php
+session_start();
+if(isset($_SESSION['user'])){
+	$checkUser = $_SESSION['user'];
+	$checkIdUser = $_SESSION['id'];
+}
+else{
+	$checkUser = null;
+	$checkIdUser = null;
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,16 +16,16 @@
 	<title>Users</title>
 	<link rel="stylesheet" type="text/css" href="css/questionnaire.css">
 </head>
+<?php include './layout/includes.php'; ?>
 <body>
-	<header class="parallax-window" data-parallax="scroll" data-image-src="img/list_user.jpg"></header>
-	<div id="form-questionnaire">
-		<h1>List of users</h1>
+	<?php include './layout/header.php'; ?>
+	<div id="form-questionnaire" class="w3-col l12 w3-border w3-white w3-margin-bottom" style="margin-top:50px;">
+		<h1 class="w3-center">Statistics</h1>
 		<ul id="users">
 
 		</ul>
-		
-	</div>
 
+	</div>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
 		var adress = "http://163.172.59.102"
@@ -61,5 +72,6 @@
 		});
 	</script>
 	<script src="js/parallax.js-1.5.0/parallax.js"></script>
+	<?php include './layout/footer.php'; ?>
 </body>
 </html>

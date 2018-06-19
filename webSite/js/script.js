@@ -13,10 +13,12 @@ var minAvg;
 function median(values) {
   values.sort(function(a, b){ return a.total - b.total; });
   var half = Math.floor(values.length/2);
-  if(values.length % 2)
+  if(values.length % 2 == 0) {
+    return values[half-1];
+  }
+  else {
     return values[half];
-  else
-    return (values[half-1] + values[half]) / 2.0;
+  }
 }
 
 var id = document.URL.split('-')[1];

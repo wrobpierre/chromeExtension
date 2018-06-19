@@ -15,12 +15,31 @@ else{
 	<meta charset="utf-8">
 	<title>Users</title>
 	<link rel="stylesheet" type="text/css" href="css/questionnaire.css">
+	<style>
+
+	.chart-container{
+		padding:25px;
+	}
+
+	
+</style>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 </head>
 <?php include './layout/includes.php'; ?>
 <body>
 	<?php include './layout/header.php'; ?>
-	<div id="form-questionnaire" class="w3-col l12 w3-border w3-white w3-margin-bottom" style="margin-top:50px;">
+	<div id="form-questionnaire" class="w3-col l12 w3-white w3-margin-bottom w3-center" style="margin-top:50px;">
 		<h1 class="w3-center">Statistics</h1>
+
+		<div class="widget w3-col l6">
+			<div class="header">Percent of response without the graphics help</div>
+			<div id="chart1" class="chart-container"></div>
+		</div>
+		<div class="widget  w3-col l6">
+			<div class="header">Percent of response with the graphics help</div>
+			<div id="chart2" class="chart-container"></div>
+		</div>
+
 		<ul id="users">
 
 		</ul>
@@ -31,11 +50,25 @@ else{
 		var adress = "http://163.172.59.102"
 		// var adress = "http://localhost/chromeExtension"
 
+		var param = document.URL.split('-')[1];
+		//console.log(param);
+
+		if (param == undefined) {
+			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"all" });
+
+			post.done(function(data){
+				if (data != '') {
+					var dataParse = JSON.parse(data);
+					console.log(dataParse);
+				}
+			});
+		}
+
 		var post = $.post(adress+'/dataBase.php', { key:"get_data_users" });
 
 		post.done(function(data){
+			console.log(data);
 			var dataParse = JSON.parse(data);
-			console.log(dataParse);
 			var ul = $('ul');
 			ul.css("list-style", "none");
 
@@ -71,7 +104,7 @@ else{
 			});
 		});
 	</script>
-	<script src="js/parallax.js-1.5.0/parallax.js"></script>
-	<?php include './layout/footer.php'; ?>
+	<script src="js/pieChart.js"></script>
+	<!-- <?php include './layout/footer.php'; ?> -->
 </body>
 </html>

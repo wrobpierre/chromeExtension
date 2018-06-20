@@ -1,11 +1,11 @@
 var minTime = null;
 var maxTime = null;
 var nb_question = null;
-var nb_site = null;
 var bestNote;
 var errorImg = false;
 var adress = "http://163.172.59.102"
 var tabData = [];
+var medianData = [];
 var maxAvg = 0;
 var minAvg;
 // var adress = "http://localhost/chromeExtension"
@@ -158,7 +158,7 @@ post.done(function(data) {
     question.forEach( function(el) {
       var tmpEl = JSON.parse(JSON.stringify(element));
       tmpEl['first_time'] = new Date(el['date']).getTime();
-      tmpEl['type'] = 'time ';
+      tmpEl['type'] = 'time';
       nytg.array_best_median.push(tmpEl);
     });
   });
@@ -168,6 +168,8 @@ post.done(function(data) {
   nytg.array_best_median.sort(function(a,b) {
     return a.first_time - b.first_time;
   });
+
+  medianData = nytg.array_best_median;
 
   var order_view = 0;
   var order_time = 0;
@@ -180,8 +182,6 @@ post.done(function(data) {
       element['order'] = order_time++;
     }
   });
-
-  nb_site = tabData.length;
 
   tabData.sort(function(a,b) {
     return a.first_time - b.first_time;
@@ -636,7 +636,6 @@ nytg.changeScale = [0,2];
 
     update: function(array_data){
       var that = this;
-      nb_site = array_data.length;
 
       this.data = array_data;
       this.nodes = [];
@@ -894,13 +893,13 @@ nytg.changeScale = [0,2];
             lastX = 0*(870/nb_site_view)+(60+d.radius);  
           }
           else {
-            lastX = d.order*(870/nb_site_time)+(60+d.radius);
+            lastX = d.order*(870/nb_site_view)+(60+d.radius);
           }
           lastY = 260;
         }
         else {
           if (d.order == undefined) {
-            lastX = 0*(870/nb_site_view)+(60+d.radius);  
+            lastX = 0*(870/nb_site_time)+(60+d.radius);  
           }
           else {
             lastX = d.order*(870/nb_site_time)+(60+d.radius);
@@ -1073,9 +1072,7 @@ if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/
 $j('.sorts').click(function() {
   jQuery.noConflict();
   var $j = jQuery;
-  //console.log(nytg.array_webSites);
-  nytg.array_webSites = [];
-  //console.log(nytg.array_webSites);
+
   var checkedQuestions = [];
   var checkedNotes = [];
 
@@ -1090,11 +1087,14 @@ $j('.sorts').click(function() {
     }
   });
 
-  $j.each(tabData, function(indexData) {
-    var check = false;
-    var questionNum = JSON.parse(tabData[indexData]['question']);
-    $j.each(questionNum, function(indexQuestNum) {
-      if (checkedQuestions.length > 0) {
+  if ($j("#navBarGraph").find('.selected')[0].id == 'nytg-nav-all') {
+    nytg.array_webSites = [];
+    
+    $j.each(tabData, function(indexData) {
+      var check = false;
+      var questionNum = JSON.parse(tabData[indexData]['question']);
+      $j.each(questionNum, function(indexQuestNum) {
+        if (checkedQuestions.length > 0) {
         //console.log(checkedNotes);
         if (checkedNotes.length > 0) {
           $j.each(checkedQuestions, function(indexQuestions) {
@@ -1126,10 +1126,41 @@ $j('.sorts').click(function() {
       }
     });
 
-    if (check) {
-      nytg.array_webSites.push(tabData[indexData]);
-    }
-  });
+      if (check) {
+        nytg.array_webSites.push(tabData[indexData]);
+      }
+    });
+  }
+  else if ($j("#navBarGraph").find('.selected')[0].id == 'nytg-nav-discretionary') {
+    var i = 0;
+    var j = 0;
+    nytg.array_best_median = [];
+    $j.each(medianData, function(indexData) {
+      var check = false;
+      var questionNum = JSON.parse(medianData[indexData]['question']);
+
+      $j.each(questionNum, function(indexQuestNum) {
+        if (checkedQuestions.length > 0) {
+          $j.each(checkedQuestions, function(indexQuestions) {
+            if(JSON.parse(questionNum[indexQuestNum]['question']) == (checkedQuestions[indexQuestions]+1)){
+              check = true;
+            }
+          });  
+        }
+      });
+
+      if (check) {
+        nytg.array_best_median.push(medianData[indexData]);
+        if (nytg.array_best_median[nytg.array_best_median.length-1]['type'] == 'view') {  
+          nytg.array_best_median[nytg.array_best_median.length-1]['order'] = i++;
+        }
+        else {
+          nytg.array_best_median[nytg.array_best_median.length-1]['order'] = j++; 
+        }
+      }
+    });
+  }
+
 
   if (!!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', "svg").createSVGRect){
     if ($j("#navBarGraph").find('.selected')[0].id == 'nytg-nav-all') {
@@ -1137,11 +1168,22 @@ $j('.sorts').click(function() {
       nytg.c.update(nytg.array_webSites);
       nytg.c.start();
       nytg.c.totalLayout();
-    };
-  } else {
+    }
+    else if ($j("#navBarGraph").find('.selected')[0].id == 'nytg-nav-discretionary') {
+      nb_site_view = nytg.array_best_median.filter(function(obj){ return obj['type'] == 'view'; }).length;
+      nb_site_time = nytg.array_best_median.filter(function(obj){ return obj['type'] == 'time'; }).length;
+      console.log(nb_site_view);
+      console.log(nb_site_time);
+      $j('svg').remove()
+      nytg.c.update(nytg.array_best_median);
+      nytg.c.start();
+      nytg.c.discretionaryLayout();
+    }
+  } 
+  else {
     $j("#nytg-chartFrame").hide();
-  // $j("#nytg-error").show();
-}
+    // $j("#nytg-error").show();
+  }
 
 });
 });

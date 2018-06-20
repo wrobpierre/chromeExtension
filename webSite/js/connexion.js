@@ -61,10 +61,15 @@ $(document).ready(function(){
 
           function(data){
             if(data == 'Success'){
-             alert("Your account is created !")
-             document.location.href="../index";
-           }
-           else if(data == 'Failed'){
+             swal(
+              'Your account is created !',
+              'You can now use our application !',
+              'success'
+              ).then((result) => {
+                window.history.back();
+              });
+            }
+            else if(data == 'Failed'){
              $("#result").html("<p>Bad login or password.</p>");
            }
            else if(data == 'Exist'){
@@ -74,42 +79,42 @@ $(document).ready(function(){
         },
         'text'
         );
-      }
-      else{
-        if($("#login").val() == ""){
-          $("#result").html("<p>The login is empty.</p>");
-        }
-        else if($("#password").val() != $("#passwordCheck").val()){
-          $("#result").html("<p>The two password are not the same.</p>");
-        }
-        else if($("#password").val().length < 8){
-          $("#result").html("<p>Your password must be at least 8 characters.</p>");
-        }
-        else{
-          $("#result").html("<p>A problem occured please try later.</p>");
-        }
-      }
-    }
-    else{
-      e.preventDefault();
-      $.post(
-        '../connexion/connexion.php',
-        {
-          login : $("#login").val(),
-          password : md5($("#password").val())
-        },
+            }
+            else{
+              if($("#login").val() == ""){
+                $("#result").html("<p>The login is empty.</p>");
+              }
+              else if($("#password").val() != $("#passwordCheck").val()){
+                $("#result").html("<p>The two password are not the same.</p>");
+              }
+              else if($("#password").val().length < 8){
+                $("#result").html("<p>Your password must be at least 8 characters.</p>");
+              }
+              else{
+                $("#result").html("<p>A problem occured please try later.</p>");
+              }
+            }
+          }
+          else{
+            e.preventDefault();
+            $.post(
+              '../connexion/connexion.php',
+              {
+                login : $("#login").val(),
+                password : md5($("#password").val())
+              },
 
-        function(data){
-          if(data == 'Success'){
-            window.history.back();
+              function(data){
+                if(data == 'Success'){
+                  window.history.back();
+                }
+                else{ 
+                  register = true;
+                  $("#register").show();
+                }
+              },
+              'text'
+              );
           }
-          else{ 
-            register = true;
-            $("#register").show();
-          }
-        },
-        'text'
-        );
-    }
-  });
-});
+        });
+      });

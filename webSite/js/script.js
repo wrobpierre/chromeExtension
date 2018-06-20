@@ -221,6 +221,7 @@ post.done(function(data) {
     var label = document.createElement("label");
     input.setAttribute("class", "sorts notesFilter w3-radio");
     input.setAttribute("type", "checkbox");
+    input.setAttribute("checked", "checked");
     input.style.float = "left";
     label.style.textAlign = "left";
     label.innerHTML = "note : "+i+"/"+maxAvg;

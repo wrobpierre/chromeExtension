@@ -49,7 +49,7 @@ else{
 						<div class="w3-row w3-margin">
 							<div class="w3-section">
 								<label>Statement of the questionnaire&nbsp;:</label><br>
-								<textarea form="form" name="statement" style="width: 100%;"></textarea>							
+								<textarea form="form" name="statement" style="width: 100%; max-width: 100%;"></textarea>							
 							</div>
 
 						</div>

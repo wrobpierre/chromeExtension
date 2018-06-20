@@ -46,7 +46,7 @@
 						<div class="ledeStory">
 							<div id="interactiveFreeFormMain">
 								<div class="nytg">
-									<h1 id="nytg-error" style="visibility: hidden;text-align: center;">An error occured or no data is availiable for this graphic</h1>
+									<h1 id="nytg-error" style="visibility: hidden;text-align: center;">An error occured or no data is available for this graphic</h1>
 									<div id="nytg-chartFrame">
 										<div id="nytg-chart">
 											<div class="nytg-navBar">

@@ -47,6 +47,8 @@ else{
 		//console.log(checkIdUser);
 		//console.log(checkUser);
 		var param = document.URL.split('-')[1];
+		var formHasChanged = false;
+		var submitted = false;
 		//console.log(param);
 
 		if (param == undefined) {
@@ -140,10 +142,21 @@ else {
 	if (checkUser == "") {
 		document.location.href="../connexion/connect";
 	}
-	window.onbeforeunload = function(){
-		chrome.runtime.sendMessage(editorExtensionId, {action: 'stop'});
-		return "You will leave the questionnaire, all your data will be lost. Are you sure you want to leave this page?";
-	};
+
+	$(document).ready(function () {
+	    // Warning
+	    $(window).on('beforeunload', function(){
+	    	return "Any changes will be lost";
+	    });
+
+	    // Form Submit
+	    $(document).on("submit", "form", function(event){
+	        // disable warning
+	        $(window).off('beforeunload');
+	    });
+	});
+	window.onunload = function() { chrome.runtime.sendMessage(editorExtensionId, {action: 'stop'}); }
+
 			//console.log(param);
 			var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
 
@@ -332,6 +345,7 @@ else {
 						if (valid) {
 							chrome.runtime.sendMessage(editorExtensionId, {action: 'stop', email: checkUser},
 								function(response) {
+									submitted = true;
 									console.log(response);
 								});
 						}

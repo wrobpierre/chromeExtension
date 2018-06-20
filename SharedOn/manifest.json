@@ -3,7 +3,7 @@
 
   "name": "SharedOn",
   "description": "This application was created to prove if it is possible to help a person solve a problem using the experience of other users.",
-  "version": "2.2",
+  "version": "2.3",
 
   "background": {
     "scripts": ["jquery.js", "eventPage.js"],

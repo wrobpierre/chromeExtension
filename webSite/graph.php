@@ -46,6 +46,7 @@
 						<div class="ledeStory">
 							<div id="interactiveFreeFormMain">
 								<div class="nytg">
+									<h1 id="nytg-error" style="visibility: hidden;text-align: center;">An error occured or no data is availiable for this graphic</h1>
 									<div id="nytg-chartFrame">
 										<div id="nytg-chart">
 											<div class="nytg-navBar">
@@ -76,7 +77,7 @@
 											<div id="nytg-overlays">
 												<div class="nytg-overlay" id="nytg-totalOverlay" >
 													<div class="nytg-overview">
-														<h5>Which pages was used ?</h5>
+														<h5>Context of the questionnaire</h5>
 														<p>You can see a huge parts of the searchs done from the same page as you.</p>
 													</div>
 													<div class="nytg-increasesLabel">
@@ -138,8 +139,8 @@
 												</div>-->
 												<div class="nytg-overlay" id="nytg-discretionaryOverlay" >
 													<div id="nytg-discretionaryIntro">
-														<h5>Changes to Discretionary Spending</h5>
-														<p>Discretionary spending is controlled by the annual budget process. The White House and Congress agreed to a cap in spending in August, so proposed increases in categories like education and energy require cuts in other areas.</p>
+														<h5>Best web sites to visit</h5>
+														<p>This graphic represent the navigation of two users with the best note. The first line is the user who visited the fewest websites. The second line is the user who answered the questionnaire the most quickly. </p>
 													</div>
 												</div>
 												<div class="nytg-overlay" id="nytg-departmentOverlay" >
@@ -151,14 +152,14 @@
 											</div>
 											<div id="nytg-chartCanvas">
 											</div>
+											</div>
 										</div>
 									</div>
-								</div>
 
-								<script src="http://code.jquery.com/jquery-1.7.1.js"></script>
-								<script type="text/javascript" charset="utf-8">
+									<script src="http://code.jquery.com/jquery-1.7.1.js"></script>
+									<script type="text/javascript" charset="utf-8">
 
-									var nytg = nytg || {};
+										var nytg = nytg || {};
 
 								/*var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
 

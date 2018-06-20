@@ -50,6 +50,7 @@ post.done(function(data) {
   
   dataParse = JSON.parse(data);
   console.log(dataParse);
+  if(dataParse.length > 0){
   bestNote = dataParse[0]['note'];
   dataParse.forEach(function(element){
     timer = JSON.parse(element['timer']);
@@ -242,13 +243,14 @@ post.done(function(data) {
         var questionFilter = document.getElementById('questionFilter');
         var input = document.createElement("input");
         var label = document.createElement("label");
+        var content = dataParse[i][2].split("(/=/)")
         input.setAttribute("class", "sorts questionFilter w3-radio");
         input.setAttribute("type", "checkbox");
         input.setAttribute("checked", "checked");
         input.style.float = "left";
         label.style.textAlign = "left";
         label.style.paddingLeft = "25px";
-        label.innerHTML = dataParse[i][2];
+        label.innerHTML = content[0];
         // label.innerHTML = "question "+[i];
         questionFilter.appendChild(input);
         questionFilter.appendChild(label);
@@ -268,7 +270,12 @@ post.done(function(data) {
       document.querySelector('.nytg-overview > p').textContent = dataParse[0]['statement'];
     }
   });
-
+}
+else{
+  var $j = jQuery;
+  $j("#nytg-chartFrame").hide();
+  $j("#nytg-error").css('visibility', 'visible');
+}
 // BEGIN nytg Additions
 jQuery.noConflict();
 var $j = jQuery;
@@ -541,7 +548,7 @@ nytg.changeScale = [0,2];
       
       for (var i=0; i < this.changeTickValues.length; i++) {
         d3.select("#nytg-discretionaryOverlay").append("div")
-        .html("<p>"+this.changeTickValues[i]+"/"+this.changeTickValues.length+"</p>")
+        .html("<p></p>")
         .style("top", this.changeScale(this.changeTickValues[i])+'px')
         .classed('nytg-discretionaryTick', true)
         .classed('nytg-discretionaryZeroTick', (this.changeTickValues[i] === 0) )
@@ -697,7 +704,7 @@ nytg.changeScale = [0,2];
       
       for (var i=0; i < this.changeTickValues.length; i++) {
         d3.select("#nytg-discretionaryOverlay").append("div")
-        .html("<p>"+this.changeTickValues[i]+"/"+this.changeTickValues.length+"</p>")
+        .html("<p></p>")
         .style("top", this.changeScale(this.changeTickValues[i])+'px')
         .classed('nytg-discretionaryTick', true)
         .classed('nytg-discretionaryZeroTick', (this.changeTickValues[i] === 0) )
@@ -1184,7 +1191,7 @@ $j('.sorts').click(function() {
   } 
   else {
     $j("#nytg-chartFrame").hide();
-    // $j("#nytg-error").show();
+    $j("#nytg-error").show();
   }
 
 });

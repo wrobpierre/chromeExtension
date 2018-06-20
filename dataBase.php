@@ -164,7 +164,7 @@ if (isset($_POST['key'])) {
 			echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "firsturl"));
 		}
 		elseif ($_POST['key'] == 'get_data_users') {
-			$stmt = $conn->prepare("SELECT distinct (u.id)user_id, fu.*, q.title
+			$stmt = $conn->prepare("SELECT distinct (u.id)user_id, (u.email)user_email, fu.*, q.title
 				FROM users u
 				INNER JOIN sites s ON u.id = s.key_user
 				INNER JOIN firsturl fu ON s.key_first_url = fu.id
@@ -172,7 +172,7 @@ if (isset($_POST['key'])) {
 
 				UNION
 
-				SELECT distinct (u.id)user_id, fu.*, ('')title
+				SELECT distinct (u.id)user_id, (u.email)user_email, fu.*, ('')title
 				FROM users u
 				INNER JOIN sites s ON u.id = s.key_user
 				INNER JOIN firsturl fu ON s.key_first_url = fu.id

@@ -137,10 +137,11 @@ post.done(function(data) {
 
   var tmp_best_users_view = best_users['view'].filter(function(element){ return element[0]['note'] == bestNote; });
   var tmp_best_users_time = best_users['time'].filter(function(element){ return element[0]['note'] == bestNote; });
-  
+  console.log(tmp_best_users_view);
   median_view = median(tmp_best_users_view);
   median_time = median(tmp_best_users_time);
 
+  console.log(median_view);
   median_view.forEach( function(element, index) {
     var question = JSON.parse(element['question']);
     question.forEach( function(el) {

@@ -24,8 +24,8 @@ else{
 	<div id="form-questionnaire" class="w3-container w3-light-grey">
 		<div class="w3-col l3 w3-padding"></div>
 		<div id="questionnaire" class="w3-col l6 w3-col s12 w3-border w3-white w3-margin-bottom" style="margin-top:-80px;">
-			<div id="content" >
-				<div class="w3-container w3-red">
+			<div id="content"  class="w3-center">
+				<div id="title" class="w3-container w3-red">
 					<h1></h1>
 				</div>
 				<div id="addQuestionnaire" class="w3-padding"></div>
@@ -191,8 +191,10 @@ else {
 									that.parent().next().css('display','block');
 
 									if (dataParse[0]['link_img'] != "") {
-										link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link_img']);
-										link.insertAfter('#content > h1 + p');
+										console.log(dataParse[0]['link_img']);
+										link = $('<img class="w3-margin-top">').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link_img']);
+										link.css( "width", "90%" );
+										link.insertAfter('#title');
 									}
 
 									var url = window.location.href; 
@@ -208,8 +210,10 @@ else {
 							that.parent().next().css('display','block');
 
 							if (dataParse[0]['link_img'] != "") {
-								link = $('<img>').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link_img']);
-								link.insertAfter('#content > h1 + p');
+								console.log(dataParse[0]);
+								link = $('<img class="w3-margin-top">').attr('src', dataParse[0]['link_img']).attr('alt', dataParse[0]['link_img']);
+								link.css( "width", "90%" );
+								link.insertAfter('#title');
 							}
 
 							var url = window.location.href; 

@@ -59,7 +59,7 @@ else{
 								<span class="error"></span><br>
 								<div>
 									<input type="radio" name="auto_correction" value="auto" checked="checked" class="w3-radio"><label>Automatic</label><br>
-									<input type="radio" name="auto_correction" value="manuel" class="w3-radio"><label>Manuel</label>
+									<input type="radio" name="auto_correction" value="manuel" class="w3-radio"><label>Manual</label>
 								</div>
 							</div>
 						</div>

@@ -196,6 +196,32 @@ if (isset($_POST['key'])) {
 				}
 			}
 		}
+		elseif ($_POST['key'] == 'get_stat') {
+			$stmt = $conn->prepare("SELECT qts1.id, qts1.title, qts1.statement, qts1.link_img, q1.question, q1.image, q1.key_questionnaires, a1.result, a1.rank, a1.knowledge, a1.use_graph, a1.key_user, a1.key_question, 
+				( (SELECT COUNT(s.url)
+				FROM questionnaires qts3
+				INNER JOIN firsturl fu ON qts3.key_first_url = fu.id
+				INNER JOIN sites s ON fu.id = s.key_first_url
+				WHERE qts3.id = qts1.id ) /
+				(SELECT COUNT(DISTINCT a2.key_user)
+				FROM answers a2
+				INNER JOIN questions q2 ON a2.key_question = q2.id
+				INNER JOIN questionnaires qts2 ON q2.key_questionnaires = qts2.id
+				WHERE qts2.id = qts1.id ) )avg_sites,
+				(SELECT COUNT(DISTINCT a2.key_user)
+				FROM answers a2
+				INNER JOIN questions q2 ON a2.key_question = q2.id
+				INNER JOIN questionnaires qts2 ON q2.key_questionnaires = qts2.id
+				WHERE qts2.id = qts1.id )nb_users
+				FROM questionnaires qts1
+				INNER JOIN questions q1 ON qts1.id = q1.key_questionnaires
+				INNER JOIN answers a1 ON q1.id = a1.key_question
+				ORDER BY qts1.id");
+
+			$stmt->execute();
+
+			echo json_encode($stmt->fetchAll(PDO::FETCH_CLASS, "firsturl"));
+		}
 	}
 	catch(PDOException $e)
 	{

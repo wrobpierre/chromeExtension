@@ -36,6 +36,10 @@ else{
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script src="../js/questionnaire.js"></script>
 	<script src="../js/parallax.js-1.5.0/parallax.js" type="text/javascript"></script>
+	<script src="/javascripts/application.js" type="text/javascript" charset="utf-8" async defer>
+		var checkUser = '<?php echo $checkUser ;?>';
+		console.log(checkUser);
+	</script>
 	<?php include '../layout/footer.php'; ?>
 </body>
 </html>

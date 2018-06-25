@@ -14,7 +14,7 @@ else{
 <head>
 	<meta charset="utf-8">
 	<title>Users</title>
-	<link rel="stylesheet" type="text/css" href="../css/questionnaire.css">
+	<link rel="stylesheet" type="text/css" href="/webSite/css/questionnaire.css">
 	<style>
 
 	.chart-container{
@@ -27,9 +27,9 @@ else{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 </head>
-<?php include '../layout/includes.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'].'/webSite/layout/includes.php'; ?>
 <body>
-	<?php include '../layout/header.php'; ?>
+	<?php include $_SERVER['DOCUMENT_ROOT'].'/webSite/layout/header.php'; ?>
 	<div id="form-questionnaire" class="w3-col l12 w3-white w3-margin-bottom w3-center" style="margin-top:50px;">
 		<h1 class="w3-center">Statistics</h1>
 		<h2 class="w3-center">Statistiques for</h2>
@@ -75,7 +75,7 @@ else{
 			</div>
 
 		</div>
-		<script src="../js/barChart.js"></script>
+		<script src="/webSite/questionnaires/js/barChart.js"></script>
 		<script type="text/javascript">
 			var adress = "http://163.172.59.102"
 			var post = $.post(adress+'/dataBase.php', { key:"get_stat" });
@@ -410,7 +410,7 @@ else{
 
 </script>
 
-<script src="../js/pieChart.js"></script>
-<!-- <?php include '../layout/footer.php' ?> -->
+<script src="/webSite/questionnaires/js/pieChart.js"></script>
+<!-- <?php include '/webSite/layout/footer.php' ?> -->
 </body>
 </html>

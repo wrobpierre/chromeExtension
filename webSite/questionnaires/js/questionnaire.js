@@ -3,15 +3,12 @@ var editorExtensionId = "bfiomnfjhlbbmkncooahhdilkncgchmo";
 
 var adress = "http://163.172.59.102"
 
-
-var checkUser = '<?php echo $checkUser ;?>';
-var checkIdUser = '<?php echo $checkIdUser ;?>';
 var param = document.URL.split('-')[1];
 var formHasChanged = false;
 var submitted = false;
 
 if (param == undefined) {
-	var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"all" });
+	var post = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"all" });
 
 	post.done(function(data){
 		if (data != '') {
@@ -51,7 +48,7 @@ if (param == undefined) {
 					var del = $('<button class="w3-button w3-red w3-col l4 w3-section" style="white-space: normal; border: solid white;">Delete</button>').click(function(){
 						var r = confirm("Are you sure to delete this questionnaire ?");
 						if (r == true) {
-							var postDel = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"delete", url:value['url'] });
+							var postDel = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"delete", url:value['url'] });
 							postDel.done(function(data){
 								alert(data);
 								location.reload();
@@ -109,7 +106,7 @@ else {
 	    });
 	});
 	window.onunload = function() { chrome.runtime.sendMessage(editorExtensionId, {action: 'stop'}); }
-	var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"get_questions", id:param });
+	var post = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"get_questions", id:param });
 
 	post.done(function(data){
 		var dataParse = JSON.parse(data);
@@ -128,14 +125,14 @@ else {
 		var valid = $('<button class="w3-button w3-blue w3-section">Start questionnaire</button>');
 		valid.click(function(){
 			var that = $(this);
-			var already_done = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"already_done", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'] })
+			var already_done = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"already_done", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'] })
 
 			already_done.done(function(data){
 				console.log(data);
 				if (data != 0) {
 					var r = confirm("You have already answered this questionnaire, if you continue all your previous data will be deleted");
 					if (r == true) {
-						var reset_user_research = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:"reset_user_research", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'], param:param });
+						var reset_user_research = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"reset_user_research", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'], param:param });
 						reset_user_research.done(function(data){
 							console.log(data);
 							that.parent().css('display','none');

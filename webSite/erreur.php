@@ -1,3 +1,14 @@
+<?php
+session_start();
+if(isset($_SESSION['user'])){
+	$checkUser = $_SESSION['user'];
+	$checkIdUser = $_SESSION['id'];
+}
+else{
+	$checkUser = null;
+	$checkIdUser = null;
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>

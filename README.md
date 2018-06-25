@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100" height="100" src="http://163.172.59.102/webSite/img/lantern_128.png">
+  <img width="100" height="100" src="http://163.172.59.102/webSite/img/lantern_64.png">
 </p>
 
 #SharedOn

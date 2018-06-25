@@ -8,7 +8,6 @@
 <script src="https://unpkg.com/sweetalert2@7.22.2/dist/sweetalert2.all.js"></script>
 <script src="https://unpkg.com/promise-polyfill"></script>
 
-
 <style>
 body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 .w3-bar,h1,button {font-family: "Montserrat", sans-serif}

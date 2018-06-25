@@ -179,7 +179,7 @@ var check_title = true;
 
 $('input[name="title"]').change(function(){
 	var title = $('input[name="title"]').val();
-	var post = $.post(adress+'/webSite/questionnaires/management_questionnaire.php', { action:'check_title', title:title });
+	var post = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:'check_title', title:title });
 	post.done(function(data){
 		if (data != 0) {
 			$('input[name="title"]').prev().text('Already exist');

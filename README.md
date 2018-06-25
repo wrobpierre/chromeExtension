@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100" height="100" src="http://163.172.59.102/opu_blank.png">
+  <img width="100" height="100" src="http://163.172.59.102/webSite/img/lantern_128.png">
 </p>
 
 #SharedOn
@@ -20,25 +20,15 @@ This project was done as part of an internship.
 For use our application you just need to have Google Chrome and to download our extension.
 
 ### Installing
-- Download the extension
-- Unzip the extension
-- Install it in Google Chrome as an unpacked file
+- Download the extension on Chrome store
+- Verify if the extension is installed on "More tools" -> "Extensions"
 - Have fun !
-
-### How to install as unpacked file ? 
-1) Go to chrome://extensions/ and check the box for Developer mode in the top right.
-![alt text](https://c-8oqtgrjgwu46x24epgv6x2eedukuvcvkex2eeqo.g00.cnet.com/g00/3_c-8yyy.epgv.eqo_/c-8OQTGRJGWU46x24jvvrux3ax2fx2fepgv6.edukuvcvke.eqox2fkoix2fgfXKulUUHLtE6G82FyEwjwmR2Wux3dx2f842z2x2f4239x2f23x2f30x2fd1ef0e24-6c65-6e54-d7d1-87d7hc6g18dhx2ffgx78gnqrgt-oqfg-ejtqog.lrix3fk32e.octmx3dkocig_$/$/$/$/$/$/$/$/$)
-2) Locate the ZIP file on your computer and unzip it.
-3) Go back to the chrome://extensions/ page and click the Load unpacked extension button and select the unzipped folder for your extension to install it.
-
-Thanks to MATT ELLIOTT
-For the tutoriel on : https://www.cnet.com/how-to/how-to-install-chrome-extensions-manually/
 
 ## How to use it ?
 1) Open the extension
-2) Push the button "start" to start your research. (When you start the page where you are is the first point of research of our application)
-3) When you have find your answer push the "stop" button in the extension
-4) You can see others users result with the link.
+2) Go on our webSite and choose a questionnaire (the extension will automatically listen your navigation)
+3) When you have find the answer send it
+4) You can see others users result with the link
 
 ## Built With
 Google Chrome extension - https://developer.chrome.com/extensions/devguide

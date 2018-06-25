@@ -18,12 +18,13 @@ ErrorDocument 505 /webSite/erreur.php?erreur=505
 RewriteRule ^webSite/index$ /webSite/index.php [L]
 
 #RewriteRule ^webSite/questionnaires/questionnaire.php$ /webSite/questionnaires/questionnaire [R=301]
-RewriteRule ^webSite/questionnaires/questionnaire$ /webSite/questionnaires/questionnaire.php [L]
 
-RewriteRule ^webSite/questionnaires/add_questionnaire$ /webSite/questionnaires/add_questionnaire.php [L]
-RewriteRule ^webSite/questionnaires/questionnaire-([0-9A-Za-z]*)$ /webSite/questionnaires/questionnaire.php?id$
-RewriteRule ^webSite/questionnaires/edit_questionnaire-([0-9A-Za-z]*)$ /webSite/questionnaires/edit_questionna$
-RewriteRule ^webSite/questionnaires/edit_results-([0-9A-Za-z]*)$ /webSite/questionnaires/edit_results.php?id=$$
+RewriteRule ^webSite/questionnaires/questionnaire$ /webSite/questionnaires/src/questionnaire.php [L]
+RewriteRule ^webSite/questionnaires/add_questionnaire$ /webSite/questionnaires/src/add_questionnaire.php [L]
+RewriteRule ^webSite/questionnaires/questionnaire-([0-9A-Za-z]*)$ /webSite/questionnaires/src/questionnaire.php?id=$1 [L]
+RewriteRule ^webSite/questionnaires/edit_questionnaire-([0-9A-Za-z]*)$ /webSite/questionnaires/src/edit_questionnaire.php?id=$1 [L]
+RewriteRule ^webSite/questionnaires/edit_results-([0-9A-Za-z]*)$ /webSite/questionnaires/src/edit_results.php?id=$1 [L]
+RewriteRule ^webSite/questionnaires/statistics$ /webSite/questionnaires/src/statistics.php [L]
 
 RewriteRule ^webSite/graph-([0-9A-Za-z]*)$ /webSite/graph.php?id=$1 [L]
 

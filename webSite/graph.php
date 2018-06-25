@@ -7,7 +7,6 @@
 	<link rel="stylesheet" type="text/css" href="https://static01.nyt.com/css/0.1/screen/build/interactive/us/politics/styles.css">
 	<link rel="stylesheet" type="text/css" media="print" href="https://static01.nyt.com/css/0.1/print/styles.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<!-- <link rel="stylesheet" type="text/css" href="./css/header_footer.css"> -->
 	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
 	<?php include './layout/includes.php'; ?>
 	<style>
@@ -53,9 +52,7 @@
 												<div id="nytg-search" style="display:none;"></div>
 												<ul id="navBarGraph" class="nytg-navigation clearfix">
 													<li id="nytg-nav-all">All web site</li>
-													<!--<li id="nytg-nav-mandatory">By domain name</li>-->
 													<li id="nytg-nav-discretionary">Visit by time</li>
-													<!--<li id="nytg-nav-comparison">Historical</li> -->
 												</ul>
 												
 											</div>
@@ -104,14 +101,6 @@
 															<li class="change-increase2"></li>
 															<li class="change-increase3"></li>
 														</ul>
-														<!-- <ul class="nytg-colorTicks">
-															<li></li>
-															<li></li>
-															<li></li>
-															<li></li>
-															<li></li>
-															<li></li>
-														</ul> -->
 														<ul class="nytg-colorLabels">
 															<li></li>
 															<li></li>
@@ -123,20 +112,6 @@
 														</ul>
 													</div>
 												</div>
-												<!--<div class="nytg-overlay" id="nytg-mandatoryOverlay" >
-													<div class="nytg-mandatoryExplainer">
-													</div>
-													<div class="nytg-mandatoryAside">
-														<h5>By domain name</h5>
-														<p>You can see the different web pages visited by domain name. The importance of a page is calculate on the same way as the previece tab.</p>
-													</div>
-													<div class="nytg-discretionaryExplainer">
-													</div>
-													<div class="nytg-discretionaryAside">
-														<h5>Recommended navigation route</h5>
-														<p>We propose you a route who help the most person using our application. The horizontal axis represents the visit path of the users. The vertical axis represent the relevance of the pages.</p>
-													</div>
-												</div>-->
 												<div class="nytg-overlay" id="nytg-discretionaryOverlay" >
 													<div id="nytg-discretionaryIntro">
 														<h5>Best web sites to visit</h5>
@@ -152,129 +127,11 @@
 											</div>
 											<div id="nytg-chartCanvas">
 											</div>
-											</div>
 										</div>
 									</div>
+								</div>
 
-									<script src="http://code.jquery.com/jquery-1.7.1.js"></script>
-									<script type="text/javascript" charset="utf-8">
-
-										var nytg = nytg || {};
-
-								/*var post = $.post('http://localhost/chromeExtension/dataBase.php', { key:"load" });
-
-								post.done(function(data) {
-									test = JSON.parse(data);
-									test.forEach(function(element){
-										element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
-										element["domain"] = "Health and Human Services";
-										element["timer"] = JSON.parse(element["timer"]);
-										
-										var nytg = nytg || {}; 
-										nytg.budget_array_data = [];
-										nytg.budget_array_data.push(element);
-									});
-								});
-
-								post.fail(function(data){
-									console.log('fail');
-								});*/
-
-								//console.log(nytg.budget_array_data);
-
-								/*nytg.budget_array_data = 
-									[
-									{
-										"url": "https://fr.wikipedia.org/wiki/Th%C3%A9orie_des_cordes",
-										"positions": {
-											"total": {
-												"x": 308,
-												"y": 229
-											},
-											"department": {
-												"x": 225,
-												"y": 476
-											}
-										},
-										"id": 1,
-										//"budget_2012": 66161000,
-										"timer": {
-											'hours': 0,
-											'minutes': 2, 
-											'secondes': 30
-													},//0.14342286241139,
-										"view": 1000,
-										"domain": "Wikipedia",
-										//"discretion": "Mandatory"
-										},
-										{
-											"url": "https://lci.fr",
-										"positions": {
-											"total": {
-												"x": 308,
-												"y": 229
-											},
-											"department": {
-												"x": 225,
-												"y": 476
-											}
-										},
-										"id": 2,
-										//"budget_2012": 66161000,
-										"timer": {
-											'hours': 0,
-											'minutes': 0, 
-											'secondes': 5
-													},//0.14342286241139,
-										"view": 10,
-										"domain": "lci",
-										//"discretion": "Mandatory"
-										},
-										{
-										"url": "https://youtube.com",
-										"positions": {
-											"total": {
-												"x": 308,
-												"y": 229
-											},
-											"department": {
-												"x": 225,
-												"y": 476
-											}
-										},
-										"id": 3,
-										//"budget_2012": 66161000,
-										"timer": {
-											'hours': 2,
-											'minutes': 12, 
-											'secondes': 46
-													},//0.14342286241139,
-										"view": 100,
-										"domain": "youtube",
-										//"discretion": "Mandatory"
-										},
-									/*{
-										"name": "Veterans Health Administration",
-										"positions": {
-											"total": {
-												"x": 570,
-												"y": 340
-											},
-											"department": {
-												"x": 248,
-												"y": 434
-											}
-										},
-										"id": 285,
-										"budget_2012": 53981000,
-										"change": 0.0424038087475223,
-										"budget_2013": 56270000,
-										"department": "Veterans Affairs",
-										"discretion": "Discretionary"
-									},
-									];*/
-								</script>
-
+								<script src="http://code.jquery.com/jquery-1.7.1.js"></script>
 								<script src="../d3/d3.min.js"></script>
 								<script src="../d3/d3.geom.min.js"></script>
 								<script src="../d3/d3.layout.min.js"></script>

@@ -255,8 +255,8 @@ else{
 				if(checked.length){
 					$.each(dataParse, function(index, value){
 						$.each(checked, function(indexChecked, valueChecked){
-
-							if(value.question == valueChecked.value && valueChecked.checked){
+							console.log(value.question+" / "+valueChecked.value);
+							if(value.question.split('(/=/)')[0] == valueChecked.value.split('(/=/)')[0] && valueChecked.checked){
 								checkedQuestions.push(value);
 							}
 						});

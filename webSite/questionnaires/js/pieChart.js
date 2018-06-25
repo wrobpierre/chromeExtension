@@ -75,10 +75,9 @@ function generatePieCharts(dataset, div){
 		var legendRectSize=20;
 		var legendSpacing=7;
 		var legendHeight=legendRectSize+legendSpacing;
-
-
+		console.log(legendRectSize+legendSpacing);
 		var legend=svg.selectAll('.legend')
-		.data(color.domain())
+		.data([dataset[0].name, dataset[1].name])
 		.enter()
 		.append('g')
 		.attr({

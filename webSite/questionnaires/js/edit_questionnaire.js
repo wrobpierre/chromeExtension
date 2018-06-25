@@ -1,6 +1,4 @@
 var adress = "http://163.172.59.102";
-var checkUser = '<?php echo $checkUser ;?>';
-var checkIdUser = '<?php echo $checkIdUser ;?>';
 var fileTypes = ['image/jpeg','image/pjpeg','image/png'];
 var fileName = "";
 

@@ -103,6 +103,9 @@ else{
 	</div>
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<<script type="text/javascript" charset="utf-8" >
+		var checkUser = '<?php echo $checkUser ;?>';
+	</script>
 	<script src="/webSite/questionnaires/js/add_questionnaire.js"></script>
 	<?php include $_SERVER['DOCUMENT_ROOT'].'/webSite/layout/footer.php'; ?>
 	<script src="/webSite/js/parallax.js-1.5.0/parallax.js" type="text/javascript"></script>

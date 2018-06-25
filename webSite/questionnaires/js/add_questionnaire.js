@@ -1,8 +1,6 @@
 var adress = "http://163.172.59.102"
 //var adress = "http://localhost/chromeExtension"
 
-var checkUser = '<?php echo $checkUser ;?>';
-
 var fileTypes = ['image/jpeg','image/pjpeg','image/png'];
 var fileName = "";
 

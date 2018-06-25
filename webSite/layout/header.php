@@ -15,6 +15,7 @@
       <?php
       if(isset($_SESSION['user'])){
         ?>
+        <a href="/webSite/questionnaires/statistics" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white w3-left">Statistics</a>
         <a href="/webSite/connexion/disconnection" class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-padding-large w3-hover-white w3-right">Disconnection</a>
         <?php
       }

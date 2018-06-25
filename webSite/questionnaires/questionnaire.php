@@ -130,10 +130,12 @@ else{
 						$('#content').append(ul);
 					})
 					if (checkUser != "") {
-						var add = $('<input type="button" class="w3-button w3-green" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire\'"></input>').attr('value', 'New questionnaire');
+						var add = $('<input type="button" class="w3-button w3-green w3-margin" style="width: 155px; onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire\'"></input>').attr('value', 'New questionnaire');
 						add.css("background-color", "#00B16A");
 						add.css("height", "40px");
-						$('#addQuestionnaire').append(add);
+						var statistic = $('<input type="button" class="w3-button w3-indigo w3-margin" style="width: 155px;" onclick="window:location.href=\''+adress+'/webSite/statistics\'"></input>').attr('value', 'statistics');
+						add.css("height", "40px");
+						$('#addQuestionnaire').append(add, statistic);
 					}
 				}
 			});

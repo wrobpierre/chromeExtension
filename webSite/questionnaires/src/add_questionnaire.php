@@ -29,7 +29,7 @@ else{
 	<header class="parallax-window" data-parallax="scroll" style="height: 300px;" data-image-src="../img/header_question.jpg"></header>
 
 	<div id="form-questionnaire" class="w3-light-grey w3-container w3-padding-64">
-		<form id="form" action="management_questionnaire.php" method="post" enctype="multipart/form-data">
+		<form id="form" action="/webSite/questionnaires/src/management_questionnaire.php" method="post" enctype="multipart/form-data">
 			<div class="w3-col m3 w3-margin"></div>
 			<div class="questionnaire">
 				<div class="w3-col m6 w3-border w3-white" style="margin-top:-140px;">

@@ -32,7 +32,7 @@ else{
 	<?php include $_SERVER['DOCUMENT_ROOT'].'/webSite/layout/header.php'; ?>
 	<div id="form-questionnaire" class="w3-col l12 w3-white w3-margin-bottom w3-center" style="margin-top:50px;">
 		<h1 class="w3-center">Statistics</h1>
-		<h2 class="w3-center">Statistiques for</h2>
+		<h2 class="w3-center">Statistics for</h2>
 		<h2 id="title" class="w3-center">all questionnaires</h2>
 		<div class="w3-col l2 w3-padding"></div>
 		<div class="w3-col l8 w3-center w3-section">
@@ -48,29 +48,54 @@ else{
 			</div>
 			<div class="w3-row w3-section">
 				<div class="w3-center w3-section">
-					<div id="nbPaticipants" class=" w3-center w3-section">
-						<p>Number of participants : </p>
+					<div id="nbParticipants" class=" w3-center w3-section w3-col l6">
+						<p>Number of participants without graph help: </p>
 					</div>
-					<div id="avgSites" class=" w3-center w3-section">
-						<p>Number of sites visited on average : </p>
+					<div id="nbParticipants2" class=" w3-center w3-section w3-col l6">
+						<p>Number of participants with graph help: </p>
 					</div>
 				</div>
+				<div class="w3-center w3-section">
+					<div id="avgSites" class=" w3-center w3-section w3-col l6">
+						<p>Number of sites visited on average without graph help: </p>
+					</div>
+					<div id="avgSites2" class=" w3-center w3-section w3-col l6">
+						<p>Number of sites visited on average with graph help: </p>
+					</div>
+				</div>
+				<div  style="margin-top: 50px;">
+						<h3>Percent of good response</h3>
+					</div>
 				<div class="widget w3-col l6">
-					<div class="header">Percent of good response without the graphics help</div>
+					<div class="header">Without the graphics help</div>
 					<div id="chart1" class="chart-container"></div>
 				</div>
 				<div class="widget  w3-col l6">
-					<div class="header">Percent of good response with the graphics help</div>
+					<div class="header">With the graphics help</div>
 					<div id="chart2" class="chart-container"></div>
 				</div>
 			</div>
+			<div  style="margin-top: 50px;">
+				<h3>Number of participants according to their level of knowledge in the area of ​​the questionnaire</h3>
+			</div>
 			<div class="w3-col l2 w3-padding"></div>
 			<div class="w3-row w3-section w3-padding">
-				<div class="w3-col l6">
+				<div class="w3-col l6 w3-padding">
 					<canvas id="barChart" class="w3-col l12"></canvas>
 				</div>
-				<div class="w3-col l6 ">
+				<div class="w3-col l6 w3-padding">
+					<canvas id="barChart3" class="w3-col l12"></canvas>
+				</div>
+			</div>
+			<div style="margin-top: 50px;">
+				<h3>Number of participants based on difficulty in answering questions</h3>
+			</div>
+			<div class="w3-row w3-section w3-padding">
+				<div class="w3-col l6 w3-padding">
 					<canvas id="barChart2" class="w3-col l12"></canvas>
+				</div>
+				<div class="w3-col l6 w3-padding">
+					<canvas id="barChart4" class="w3-col l12"></canvas>
 				</div>
 			</div>
 
@@ -88,6 +113,7 @@ else{
 			var dataSecondChart = [];
 			var questionnairesNames = [];
 			var nbQuestions = [];
+
 			var dataset = [
 			{ name: 'success percentage', percent: 0.00 },
 			{ name: 'failure percentage', percent: 100.00 }
@@ -96,6 +122,7 @@ else{
 			{ name: 'success percentage', percent: 0.00 },
 			{ name: 'failure percentage', percent: 100.00 }
 			];
+
 
 			post.done(function(data){
 				if (data != '') {
@@ -112,12 +139,16 @@ else{
 					dataset2[1].percent = 100 - dataset2[0].percent;
 					generatePieCharts(dataset2, firstGraph2);
 
-					barChart($('#barChart'), knowledgeBarChart(dataParse), "Number of participants according to their level of knowledge in the area of ​​the questionnaire");
-					barChart($('#barChart2'), rankBarChart(dataParse), "Number of participants based on difficulty in answering questions");
+					barChart($('#barChart'), knowledgeBarChart(dataParse, 0), "Without the graph help");
+					barChart($('#barChart3'), knowledgeBarChart(dataParse, 1), "With the graph help");
+					barChart($('#barChart2'), rankBarChart(dataParse, 0), "Without graph help");
+					barChart($('#barChart4'), rankBarChart(dataParse, 1), "With graph help");
 					
 
-					$("#nbPaticipants p").append(nbParticipants(dataParse));
-					$("#avgSites p").append(avgSites(dataParse));
+					$("#nbParticipants p").append(nbParticipants(dataParse, 0));
+					$("#nbParticipants2 p").append(nbParticipants(dataParse, 1));
+					$("#avgSites p").append(avgSites(dataParse, 0));
+					$("#avgSites2 p").append(avgSites(dataParse, 1));
 
 					return questionnairesInput();
 				}
@@ -138,7 +169,6 @@ else{
 				});
 				$('input').on('click', function(){
 					var firstGraph = '#chart1'
-					console.log(this.value);
 					if(this.value != "All questionnaires"){
 						var tabQuestionnaires = chooseQuestionnaires(dataParse, this.value);
 						$('#title').text(this.value);
@@ -151,6 +181,9 @@ else{
 
 					dataPieChart = {'percent': [] , 'total': 0};
 					dataPieChart2 = {'percent': [] , 'total': 0};
+					dataPieChart3 = {'percent': [] , 'total': 0};
+					dataPieChart4 = {'percent': [] , 'total': 0};
+
 					$('#chart1').children().remove();
 					dataset[0].percent = percentPieChart(tabQuestionnaires, dataPieChart, 0);
 					dataset[1].percent = 100 - dataset[0].percent;
@@ -162,36 +195,49 @@ else{
 					dataset2[1].percent = 100 - dataset2[0].percent;
 					generatePieCharts(dataset2, firstGraph2);
 
+
 					var parentBarChart = $('#barChart').parent();
 					var parentBarChart2 = $('#barChart2').parent();
+					var parentBarChart3 = $('#barChart3').parent();
+					var parentBarChart4 = $('#barChart4').parent();
 
 					$('#barChart').remove();
 					$('#barChart2').remove();
+					$('#barChart3').remove();
+					$('#barChart4').remove();
 
 					parentBarChart.append('<canvas id="barChart" class="w3-col l12"></canvas>');
 					parentBarChart2.append('<canvas id="barChart2" class="w3-col l12"></canvas>');
+					parentBarChart3.append('<canvas id="barChart3" class="w3-col l12"></canvas>');
+					parentBarChart4.append('<canvas id="barChart4" class="w3-col l12"></canvas>');
 
-					barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires), "Number of participants according to their level of knowledge in the area of ​​the questionnaire");
-					barChart($('#barChart2'), rankBarChart(tabQuestionnaires), "Number of participants based on difficulty in answering questions");
+					barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Number of participants according to their level of knowledge in the area of ​​the questionnaire without graph help");
+					barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "Number of participants according to their level of knowledge in the area of ​​the questionnaire with graph help");
 					
-					$('#nbPaticipants p').remove();
-					$("#nbPaticipants").append('<p>Number of participants : '+nbParticipants(tabQuestionnaires)+'</p>');
+					barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Number of participants based on difficulty in answering questions without graph help");
+					barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "Number of participants based on difficulty in answering questions with graph help");
+					
+					$('#nbParticipants p').remove();
+					$("#nbParticipants").append('<p>Number of participants without graph help: '+nbParticipants(tabQuestionnaires, 0)+'</p>');
+					$('#nbParticipants2 p').remove();
+					$("#nbParticipants2").append('<p>Number of participants without graph help: '+nbParticipants(tabQuestionnaires, 1)+'</p>');
 					$('#avgSites p').remove();
-					$("#avgSites").append('<p>Number of sites visited on average : '+avgSites(tabQuestionnaires)+'</p>');
+					$("#avgSites").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 0)+'</p>');
+					$('#avgSites2 p').remove();
+					$("#avgSites2").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
 
 					$('#questions').children().remove();
 					var questions = createQuestions(tabQuestionnaires);
 					if(this.value != "All questionnaires"){
 						$('#questions').append('<h3>Look at the statistics for each questions</h3>');
 						$.each(questions, function(index, value){
-							$('#questions').append('<input class="w3-check" type="checkbox" checked="checked" value="'+value.question.split('(/=/)')[0]+'">');
+							$('#questions').append('<input class="w3-check" type="checkbox" checked="checked" value="'+value.key_question+'">');
 							$('#questions').append('<label>'+value.question.split('(/=/)')[0]+'</label>');
 							$('#questions').append('<br>');
 
 						});
 						$('#questions input').on('click', function(){
 							var choosedQuestion = chooseQuestion(dataParse, questions);
-							console.log(choosedQuestion);
 							if( choosedQuestion != undefined && choosedQuestion.length>0){
 								var tabQuestionnaires = choosedQuestion;
 
@@ -208,26 +254,55 @@ else{
 								dataset2[1].percent = 100 - dataset2[0].percent;
 								generatePieCharts(dataset2, firstGraph2);
 
+								$('#chart3').children().remove();
+								var firstGraph3 = '#chart3'
+								dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 0);
+								dataset2[1].percent = 100 - dataset2[0].percent;
+								generatePieCharts(dataset2, firstGraph3);
+
+								$('#chart4').children().remove();
+								var firstGraph4 = '#chart4'
+								dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
+								dataset2[1].percent = 100 - dataset2[0].percent;
+								generatePieCharts(dataset2, firstGraph4);
+
 								var parentBarChart = $('#barChart').parent();
 								var parentBarChart2 = $('#barChart2').parent();
+								var parentBarChart3 = $('#barChart3').parent();
+								var parentBarChart4 = $('#barChart4').parent();
 
 								$('#barChart').remove();
 								$('#barChart2').remove();
+								$('#barChart3').remove();
+								$('#barChart4').remove();
 
 								parentBarChart.append('<canvas id="barChart" class="w3-col l12"></canvas>');
 								parentBarChart2.append('<canvas id="barChart2" class="w3-col l12"></canvas>');
+								parentBarChart3.append('<canvas id="barChart3" class="w3-col l12"></canvas>');
+								parentBarChart4.append('<canvas id="barChart4" class="w3-col l12"></canvas>');
 
-								barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires), "Number of participants according to their level of knowledge in the area of ​​the questionnaire");
-								barChart($('#barChart2'), rankBarChart(tabQuestionnaires), "Number of participants based on difficulty in answering questions");
+								barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Number of participants according to their level of knowledge in the area of ​​the questionnaire without graph help");
+								barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "Number of participants according to their level of knowledge in the area of ​​the questionnaire with graph help");
+								
+								barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Number of participants based on difficulty in answering questions without graph help");
+								barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "Number of participants based on difficulty in answering questions with graph help");
 
-								$('#nbPaticipants p').remove();
-								$("#nbPaticipants").append('<p>Number of participants : '+nbParticipants(tabQuestionnaires)+'</p>');
+
+								$('#nbParticipants p').remove();
+								$("#nbParticipants").append('<p>Number of participants : '+nbParticipants(tabQuestionnaires, 0)+'</p>');
+								$('#nbParticipants2 p').remove();
+								$("#nbParticipants2").append('<p>Number of participants : '+nbParticipants(tabQuestionnaires, 1)+'</p>');
 								$('#avgSites p').remove();
-								$("#avgSites").append('<p>Number of sites visited on average : '+avgSites(tabQuestionnaires)+'</p>');
+								$("#avgSites").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 0)+'</p>');
+								$('#avgSites2 p').remove();
+								$("#avgSites2").append('<p>Number of sites visited on average with graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
 							}
 							else{
 								var parentBarChart = $('#barChart').parent();
 								var parentBarChart2 = $('#barChart2').parent();
+								var parentBarChart3 = $('#barChart3').parent();
+								var parentBarChart4 = $('#barChart4').parent();
+								// var parentBarChart4 = $('#barChart4').parent();
 
 								$('#chart1').children().remove();
 								$('#chart1').append('<p>No Data</p>');
@@ -237,176 +312,229 @@ else{
 								parentBarChart.append('<p id="barChart">No Data</p>');
 								$('#barChart2').remove();
 								parentBarChart2.append('<p id="barChart2">No Data</p>');
-								$('#nbPaticipants p').remove();
-								$("#nbPaticipants").append('<p>No Data</p>');
+								$('#barChart3').remove();
+								parentBarChart3.append('<p id="barChart3">No Data</p>');
+								$('#barChart4').remove();
+								parentBarChart4.append('<p id="barChart4">No Data</p>');
+								$('#nbParticipants p').remove();
+								$("#nbParticipants").append('<p>No Data</p>');
 								$('#avgSites p').remove();
 								$("#avgSites").append('<p>No Data</p>');
+								$('#avgSites2 p').remove();
+								$("#avgSites2").append('<p>No Data</p>');
 
 							}
 						});
-					}
-					
-				});
-			}
+}
 
-			function chooseQuestion(dataParse){
-				var checkedQuestions = [];
-				var checked = $('#questions input');
-				if(checked.length){
-					$.each(dataParse, function(index, value){
-						$.each(checked, function(indexChecked, valueChecked){
-							console.log(value.question+" / "+valueChecked.value);
-							if(value.question.split('(/=/)')[0] == valueChecked.value.split('(/=/)')[0] && valueChecked.checked){
-								checkedQuestions.push(value);
-							}
-						});
-					})
+});
+}
+
+function chooseQuestion(dataParse){
+	var checkedQuestions = [];
+	var checked = $('#questions input');
+	if(checked.length){
+		$.each(dataParse, function(index, value){
+			$.each(checked, function(indexChecked, valueChecked){
+				if(value.key_question== valueChecked.value && valueChecked.checked){
+					checkedQuestions.push(value);
 				}
-				return checkedQuestions;
+			});
+		})
+	}
+	return checkedQuestions;
+}
+
+function createQuestions(dataParse){
+	var questions = []
+	var questionAlreadyExist = false;
+	$.each(dataParse, function(index, value){
+		$.each(questions, function(indexQuestions, valueQuestions){
+			if(valueQuestions.question == value.question){
+				questionAlreadyExist = true;
+			}
+		});
+		if(questionAlreadyExist == false){
+			questions.push(value);
+		}
+	});
+	return questions;
+}
+
+function chooseQuestionnaires(dataParse, title){
+	var tabQuestionnaires = []
+	$.each(dataParse, function(index, value){
+		if(value.title == title){
+			tabQuestionnaires.push(value);
+		}
+	});
+	return tabQuestionnaires;
+}
+
+function knowledgeBarChart(data, checkGraph){
+	var keyUser;
+	var keyQuestionnaires;
+	var useGraph;
+	var knowledgeTab = [{
+		'value1': {'labels':'novice', 'nbData': 0},
+		'value2': {'labels':'medium', 'nbData': 0},
+		'value3': {'labels':'expert', 'nbData': 0}
+	}];
+
+	$.each(data, function(index, value){
+		if (index == 0) {
+			keyUser = value.key_user;
+			keyQuestionnaires = value.key_questionnaires;
+			useGraph = value.use_graph;
+			knowledge = value.knowledge;
+		}
+		if (checkGraph == 1) {
+			console.log(value);
+		}
+
+		if((keyUser != value.key_user || keyQuestionnaires != value.key_questionnaires) && checkGraph == parseInt(useGraph)){
+			if (knowledgeTab[0].value1.labels == knowledge) {
+				knowledgeTab[0].value1.nbData += 1;
+			}
+			else if (knowledgeTab[0].value2.labels == knowledge) {
+				knowledgeTab[0].value2.nbData += 1;
+			}
+			else{
+				knowledgeTab[0].value3.nbData += 1;
+			}
+		}
+		keyUser = value.key_user;
+		keyQuestionnaires = value.key_questionnaires;
+		useGraph = value.use_graph;
+		knowledge = value.knowledge;
+		if(index == (data.length-1)  && checkGraph == parseInt(value.use_graph)){
+			if (knowledgeTab[0].value1.labels == value.knowledge) {
+				knowledgeTab[0].value1.nbData += 1;
+			}
+			else if (knowledgeTab[0].value2.labels == value.knowledge) {
+				knowledgeTab[0].value2.nbData += 1;
+			}
+			else{
+				knowledgeTab[0].value3.nbData += 1;
+			}
+		}
+	});
+	return knowledgeTab[0];
+}
+
+function rankBarChart(dataParse, checkGraph){
+	var keyUser;
+	var keyQuestionnaires;
+	var rankTab = [{
+		'value1': {'labels':'easy', 'nbData': 0},
+		'value2': {'labels':'medium', 'nbData': 0},
+		'value3': {'labels':'hard', 'nbData': 0}
+	}];
+
+	$.each(dataParse, function(index, value){
+		if (checkGraph == value.use_graph) {
+			if (rankTab[0].value1.labels == value.rank) {
+				rankTab[0].value1.nbData += 1;
+			}
+			else if (rankTab[0].value2.labels == value.rank) {
+				rankTab[0].value2.nbData += 1;
+			}
+			else {
+				rankTab[0].value3.nbData += 1;
 			}
 
-			function createQuestions(dataParse){
-				var questions = []
-				var questionAlreadyExist = false;
-				$.each(dataParse, function(index, value){
-					$.each(questions, function(indexQuestions, valueQuestions){
-						if(valueQuestions.question == value.question){
-							questionAlreadyExist = true;
-						}
-					});
-					if(questionAlreadyExist == false){
-						questions.push(value);
-					}
-				});
-				return questions;
-			}
+		}
 
-			function chooseQuestionnaires(dataParse, title){
-				var tabQuestionnaires = []
-				$.each(dataParse, function(index, value){
-					if(value.title == title){
-						tabQuestionnaires.push(value);
-					}
-				});
-				return tabQuestionnaires;
-			}
+	});
+	return rankTab[0];
+}
 
-			function knowledgeBarChart(data){
-				var keyUser;
-				var keyQuestionnaires;
-				var knowledgeTab = [{
-					'value1': {'labels':'novice', 'nbData': 0},
-					'value2': {'labels':'medium', 'nbData': 0},
-					'value3': {'labels':'expert', 'nbData': 0}
-				}];
+function percentPieChart(dataParse, dataChart, checkGraph){
+	$.each(dataParse, function(index, value){
+		if(parseInt(value.result) && checkGraph == value.use_graph){
+			dataChart.percent.push(value.key_user);
+		}
+		dataChart.total++;
 
-				$.each(data, function(index, value){
-					if (index == 0) {
-						keyUser = value.key_user;
-						keyQuestionnaires = value.key_questionnaires;
-					}
-					if(keyUser != value.key_user || keyQuestionnaires != value.key_questionnaires || index == data.length-1){
-						if (knowledgeTab[0].value1.labels == value.knowledge) {
-							knowledgeTab[0].value1.nbData += 1;
-						}
-						else if (knowledgeTab[0].value2.labels == value.knowledge) {
-							knowledgeTab[0].value2.nbData += 1;
-						}
-						else{
-							knowledgeTab[0].value3.nbData += 1;
-						}
-					}
-					keyUser = value.key_user;
-					keyQuestionnaires = value.key_questionnaires;
-				});
-				return knowledgeTab[0];
-			}
+	});
 
-			function rankBarChart(dataParse){
-				var keyUser;
-				var keyQuestionnaires;
-				var rankTab = [{
-					'value1': {'labels':'easy', 'nbData': 0},
-					'value2': {'labels':'medium', 'nbData': 0},
-					'value3': {'labels':'hard', 'nbData': 0}
-				}];
+	return ((dataChart.percent.length/dataChart.total)*100).toFixed(2);
+}
 
-				$.each(dataParse, function(index, value){
-					if (rankTab[0].value1.labels == value.rank) {
-						rankTab[0].value1.nbData += 1;
-					}
-					else if (rankTab[0].value2.labels == value.rank) {
-						rankTab[0].value2.nbData += 1;
-					}
-					else{
-						rankTab[0].value3.nbData += 1;
-					}
+function nbParticipants(dataParse, checkGraph){
+	var count = 0;
+	var keyUser;
+	var useGraph ;
+	var keyQuestionnaires;
+	$.each(dataParse, function(index, value){
+		if (index == 0) {
+			keyUser = value.key_user;
+			keyQuestionnaires = value.key_questionnaires;
+			useGraph = value.use_graph;
+		}
+		console.log(checkGraph);
 
-				});
-				return rankTab[0];
-			}
+		if((keyUser != value.key_user || keyQuestionnaires != value.key_questionnaires) && checkGraph == parseInt(useGraph)){
+			count ++;
+		}
 
-			function percentPieChart(dataParse, dataChart, checkGraph){
-				$.each(dataParse, function(index, value){
-					if(parseInt(value.result) && checkGraph == value.use_graph){
-						dataChart.percent.push(value.key_user);
-					}
-					dataChart.total++;
+		keyUser = value.key_user;
+		keyQuestionnaires = value.key_questionnaires;
+		useGraph = value.use_graph;
+		
+		if(index == (dataParse.length-1)  && checkGraph == parseInt(value.use_graph)){
+			count ++;
+		}
+	});
+	console.log("fkezbfiuez"+count);
+	return count;
+}
 
-				});
+function avgSites(dataParse, checkGraph){
+	var count = 0;
+	var keyUser;
+	var keyQuestionnaires;
+	var useGraph;
+	var avg = 0;
+	var avgSite = 0;
 
-				return ((dataChart.percent.length/dataChart.total)*100).toFixed(2);
-			}
+	$.each(dataParse, function(index, value){
+		if (index == 0) {
+			keyUser = value.key_user;
+			keyQuestionnaires = value.key_questionnaires;
+			useGraph = parseInt(value.use_graph);
+			avg_site = parseInt(value.avg_sites);
+		}
 
-			function nbParticipants(dataParse){
+		console.log( checkGraph == parseInt(useGraph));
+		if((keyUser != value.key_user || keyQuestionnaires != value.key_questionnaires)  && checkGraph == useGraph){
+			avg += avg_site;
+			count ++;
+		}
+		keyUser = value.key_user;
+		keyQuestionnaires = value.key_questionnaires;
+		useGraph = parseInt(value.use_graph);
+		avg_site = parseInt(value.avg_sites);
 
-				var count = 0;
-				var keyUser;
-				var keyQuestionnaires;
+		if(index == (dataParse.length-1)  && checkGraph == parseInt(value.use_graph)){
+			avg += avg_site;
+			count ++;
+		}
+	});
+	if(count == 0){
+		return 0;
+	}
+	return (avg/count).toFixed(2);
+}
 
-				$.each(dataParse, function(index, value){
-					if (index == 0) {
-						keyUser = value.key_user;
-						keyQuestionnaires = value.key_questionnaires;
-					}
-					if(keyUser != value.key_user || keyQuestionnaires != value.key_questionnaires || index == dataParse.length-1){
-						count ++;
-					}
-					keyUser = value.key_user;
-					keyQuestionnaires = value.key_questionnaires;
-				});
-				return count;
-			}
-
-			function avgSites(dataParse){
-				var count = 0;
-				var keyUser;
-				var keyQuestionnaires;
-				var avg = 0;
-
-				$.each(dataParse, function(index, value){
-					if (index == 0) {
-						keyUser = value.key_user;
-						keyQuestionnaires = value.key_questionnaires;
-					}
-					if(keyUser != value.key_user || keyQuestionnaires != value.key_questionnaires || index == dataParse.length-1 || index == 0){
-						avg += parseInt(value.avg_sites);
-						count ++;
-					}
-					keyUser = value.key_user;
-					keyQuestionnaires = value.key_questionnaires;
-				});
-				return (avg/count).toFixed(2);
-			}
-
-			function showElem(id) {
-				var x = document.getElementById(id);
-				if (x.className.indexOf("w3-show") == -1) {
-					x.className += " w3-show";
-				} else { 
-					x.className = x.className.replace(" w3-show", "");
-				}
-			}
+function showElem(id) {
+	var x = document.getElementById(id);
+	if (x.className.indexOf("w3-show") == -1) {
+		x.className += " w3-show";
+	} else { 
+		x.className = x.className.replace(" w3-show", "");
+	}
+}
 
 </script>
 

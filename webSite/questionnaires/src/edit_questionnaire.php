@@ -29,7 +29,7 @@ else{
 	<?php include $_SERVER['DOCUMENT_ROOT'].'/webSite/layout/header.php'; ?>
 	<header class="parallax-window" style="height: 300px" data-parallax="scroll" data-image-src="../img/edit_question.jpg"></header>
 	<div id="form-questionnaire" class="w3-container w3-light-grey">
-		<form id="form" action="management_questionnaire.php" method="post" enctype="multipart/form-data">
+		<form id="form" action="/webSite/questionnaires/src/management_questionnaire.php" method="post" enctype="multipart/form-data">
 			<div class="w3-col l3 w3-margin"></div>
 			<div id="questionnaire" class=" w3-row w3-col l6 w3-col s12 w3-border w3-white w3-margin-bottom" style="margin-top: -80px;">
 				<div class="w3-container w3-red">

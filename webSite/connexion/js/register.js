@@ -49,7 +49,7 @@ $(document).ready(function(){
     }
     if($("#email").val() == $("#emailCheck").val() && $("#password").val() == $("#passwordCheck").val() && $("#password").val().length >= 8 && validateEmail($("#email").val())){
       $.post(
-        '../connexion/register.php',
+        '/webSite/connexion/src/register.php',
         {
           email : $("#email").val(),
           password : md5($("#password").val()),

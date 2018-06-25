@@ -28,6 +28,6 @@ RewriteRule ^webSite/questionnaires/statistics$ /webSite/questionnaires/src/stat
 
 RewriteRule ^webSite/graph-([0-9A-Za-z]*)$ /webSite/graph.php?id=$1 [L]
 
-RewriteRule ^webSite/connexion/connect$ /webSite/connexion/connect.php [L]
+RewriteRule ^webSite/connexion/connect$ /webSite/connexion/src/connect.php [L]
 
-RewriteRule ^webSite/connexion/disconnection$ /webSite/connexion/disconnection.php [L]
+RewriteRule ^webSite/connexion/disconnection$ /webSite/connexion/src/disconnection.php [L]

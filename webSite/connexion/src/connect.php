@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <title>SharedOn</title>
 </head>
-<?php include '../layout/includes.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'].'/webSite/layout/includes.php'; ?>
 <link rel="stylesheet" href="../plugin/country-select-js-master/build/css/countrySelect.css">
 <body>
-  <?php include '../layout/header.php'; ?>
+  <?php include $_SERVER['DOCUMENT_ROOT'].'/webSite/layout/header.php'; ?>
 
   <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
     <div class="w3-content w3-center" style="width:350px;">
@@ -93,11 +93,11 @@
 </div>
 </div>
 
-<?php include '../layout/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'].'/webSite/layout/footer.php'; ?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="../js/md5.min.js" type="text/javascript"></script>
-<script src="../js/connexion.js" type="text/javascript"></script>
-<script src="../plugin/country-select-js-master/build/js/countrySelect.min.js"></script>
+<script src="/webSite/js/md5.min.js" type="text/javascript"></script>
+<script src="/webSite/connexion/js/connexion.js" type="text/javascript"></script>
+<script src="/webSite/plugin/country-select-js-master/build/js/countrySelect.min.js"></script>
 </body>
 </html>

@@ -51,7 +51,7 @@ $(document).ready(function(){
 
       if($("#login").val() != "" && $("#password").val() == $("#passwordCheck").val() && $("#password").val().length >= 8){
         $.post(
-          '../connexion/register.php',
+          '/webSite/connexion/src/register.php',
           {
             login : $("#login").val(),
             password : md5($("#password").val()),
@@ -98,7 +98,7 @@ $(document).ready(function(){
           else{
             e.preventDefault();
             $.post(
-              '../connexion/connexion.php',
+              '/webSite/connexion/src/connexion.php',
               {
                 login : $("#login").val(),
                 password : md5($("#password").val())

@@ -16,6 +16,7 @@ else{
 	<!-- <link rel="stylesheet" type="text/css" href="../css/questionnaire.css"> -->
 	<meta charset="utf-8">
 	<title></title>
+	<link rel="stylesheet" type="text/css" href="/webSite/questionnaires/css/questionnaire.css">
 	<?php include $_SERVER['DOCUMENT_ROOT'].'/webSite/layout/includes.php'; ?>
 </head>
 <body>

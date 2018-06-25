@@ -1,21 +1,3 @@
-var dataset = [
-{ name: 'success percentage', percent: 39.10 },
-{ name: 'failure percentage', percent: 32.51 }
-];
-
-var firstGraph = '#chart1'
-
-var dataset2 = [
-{ name: 'success percentage', percent: 10.10 },
-{ name: 'failure percentage', percent: 32.51 }
-];
-
-var firstGraph2 = '#chart2'
-
-generatePieCharts(dataset, firstGraph);
-
-generatePieCharts(dataset2, firstGraph2);
-
 function generatePieCharts(dataset, div){
 
 	var pie=d3.layout.pie()
@@ -38,7 +20,8 @@ function generatePieCharts(dataset, div){
 	.append("svg")
 	.attr({
 		width:w,
-		height:h
+		height:h,
+		class:'shadow'
 	}).append('g')
 	.attr({
 		transform:'translate('+w/2+','+h/2+')'
@@ -50,14 +33,12 @@ function generatePieCharts(dataset, div){
 	.attr({
 		d:arc,
 		fill:function(d,i){
-			console.log(i+" / "+color(d.data.name));
-			if (i%2 == 0) {
-				return '#1F77B4';
+			if(i%2){
+				return '#f44336';
 			}
 			else{
-				return '#F44336'
+				return '#1f77b4';
 			}
-
 		}
 	});
 
@@ -104,7 +85,7 @@ function generatePieCharts(dataset, div){
 			class:'legend',
 			transform:function(d,i){
                 //Just a calculation for x & y position
-                return 'translate(-75,' + ((i*legendHeight)-35) + ')';
+                return 'translate(-65,' + ((i*legendHeight)-35) + ')';
             }
         });
 		legend.append('rect')
@@ -112,16 +93,18 @@ function generatePieCharts(dataset, div){
 			width:legendRectSize,
 			height:legendRectSize,
 			rx:20,
-			ry:20,
+			ry:20
+		})
+		.style({
 			fill:function(d,i){
-				if (i%2 == 0) {
-					return '#1F77B4';
+				if(i%2){
+					return '#f44336';
 				}
 				else{
-					return '#F44336'
+					return '#1f77b4';
 				}
-
-			}
+			},
+			stroke:color
 		});
 
 		legend.append('text')
@@ -132,9 +115,8 @@ function generatePieCharts(dataset, div){
 		.text(function(d){
 			return d;
 		}).style({
-			fill:'#000000',
-			'font-size':'14px',
-			'width':'50px'
+			fill:'#929DAF',
+			'font-size':'14px'
 		});
 	};
 

@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="icon" type="image/x-icon" href="/webSite/img/lantern.ico" /><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
 <script src="https://unpkg.com/sweetalert2@7.22.2/dist/sweetalert2.all.js"></script>
 <script src="https://unpkg.com/promise-polyfill"></script>
 

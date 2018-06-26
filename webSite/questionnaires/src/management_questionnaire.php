@@ -74,7 +74,7 @@ if (isset($_POST['action'])) {
 			if ( isset($_POST['title']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
 				$id = uniqid();
 
-				$target_dir = "../img/quest_img/".$id;
+				$target_dir = "../../img/quest_img/".$id;
 				$target_file = "";
 
 				if ($_POST['user_email'] != "") {
@@ -108,7 +108,7 @@ if (isset($_POST['action'])) {
 						$stmt->bindParam(':user_email', $user_email);
 						$title = $_POST['title'];
 						$statement = $_POST['statement'];
-						$link_img = $target_file;
+						$link_img = substr($target_file, 3);
 						$auto_correction = ($_POST['auto_correction'] != 'auto') ? 0 : 1;
 						$user_email = $_POST['user_email'];
 						$stmt->execute();
@@ -132,7 +132,7 @@ if (isset($_POST['action'])) {
 									header('Location: ' . $_SERVER['HTTP_REFERER']);
 								}
 								else {
-									$image = $target_file;	
+									$image = substr($target_file, 3);	
 								}
 								chmod($target_file, 0777);
 							}
@@ -200,7 +200,7 @@ if (isset($_POST['action'])) {
 			header("Location: ".$adress."/webSite/questionnaires/questionnaire");
 			if (isset($_POST['id_questionnaire']) && isset($_POST['param_id'])) {
 
-				$target_dir = "../img/quest_img/".$_POST['param_id'];
+				$target_dir = "../../img/quest_img/".$_POST['param_id'];
 				$target_file = "";
 
 				if ($_FILES["questionnaire"]["name"] != "" && $_FILES["questionnaire"]["name"] != $_POST['current_img']) {
@@ -241,7 +241,7 @@ if (isset($_POST['action'])) {
 				$title = $_POST['title'];
 				$statement = $_POST['statement'];
 				$auto_correction = ($_POST['auto_correction'] == 'manuel') ? 0 : 1;
-				$link_img = $target_file;
+				$link_img = substr($target_file, 3);
 				$id = $_POST['id_questionnaire'];
 				$stmt->execute();
 
@@ -282,7 +282,7 @@ if (isset($_POST['action'])) {
 						$target_file = null;
 					}
 
-					$image = $target_file;
+					$image = substr($target_file, 3);
 					$id = $key;
 					$question = $value['question'];
 
@@ -377,8 +377,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'delete') {
 			if (isset($_POST['url'])) {
-
-				if (deleteDirectory('../img/quest_img/' . explode('?id=', $_POST['url'])[1] )) {
+				if (deleteDirectory('../../img/quest_img/' . explode('-', $_POST['url'])[1] )) {
 					$stmt = $conn->prepare("DELETE FROM firsturl WHERE url like :url");
 					$stmt->bindParam(':url', $url);
 					$url = $_POST['url'];

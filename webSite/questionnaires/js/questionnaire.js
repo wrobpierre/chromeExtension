@@ -50,7 +50,6 @@ if (param == undefined) {
 						if (r == true) {
 							var postDel = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"delete", url:value['url'] });
 							postDel.done(function(data){
-								alert(data);
 								location.reload();
 							});
 						}

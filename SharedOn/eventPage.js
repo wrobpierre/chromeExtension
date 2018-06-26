@@ -189,8 +189,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   else if (message.type === 'stop') {
     listen = false;
     saveTime();
-    alert("Your search is save !");
-    // alert("Your search is save !")
     sendResponse({result: listen});
   }
   else if (message.type === 'get') {
@@ -278,48 +276,25 @@ function sendFirstUrl(){
 
 function autoStart(url){
   if (!listen) {
-    //alert('start');
-    //createUniqId();
     sendFirstUrl();
     listen = true;
     firstUrl = url;
 
     var post = $.post(adress+'/dataBase.php', { url:firstUrl, key:"first" });
-    post.done(function(data){
-      alert('start');
-    });
+    post.done(function(data){});
   }
 }
 
 function autoStop(email){
   if (listen) {
-    //alert('stop');
-
     storage.get('data', function(result){
-      //storage.get('uniqId', function(resultId){
-        var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, key:'add', email:email });
-        post.done(function(data){
-          listen = false;
-          question = 1;
-          firstUrl = undefined;
-          storage.clear();
-          alert(data);
-        });
-      //});
+      var post = $.post(adress+'/dataBase.php', { d:result, url:{firstUrl:firstUrl}, key:'add', email:email });
+      post.done(function(data){
+        listen = false;
+        question = 1;
+        firstUrl = undefined;
+        storage.clear();
+      });
     });
   }
 }
-
-  /*chrome.webNavigation.onDOMContentLoaded.addListener(function() {
-   chrome.storage.local.get('event', function(result){
-    var obj = {}
-    if (result.event == undefined) {
-     obj['event'] = 1
-     chrome.storage.local.set(obj)
-   }
-   else {
-     obj['event'] = result.event+1
-     chrome.storage.local.set(obj)
-   }
- })
-})*/

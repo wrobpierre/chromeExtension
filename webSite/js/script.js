@@ -9,7 +9,6 @@ var medianData = [];
 var maxAvg = 0;
 var minAvg;
 var same = false;
-// var adress = "http://localhost/chromeExtension"
 
 function median(values) {
   values.sort(function(a, b){ return a.total - b.total; });
@@ -23,11 +22,7 @@ function median(values) {
 }
 
 var id = document.URL.split('-')[1];
-//var user = getUrlParameter('user');
 
-/*if (id !== undefined && user !== undefined) {
-  var post = $.post(adress+'/dataBase.php', { key:"load", id:id});
-}*/
 if (id !== undefined) {
   var post = $.post(adress+'/dataBase.php', { key:"load", id:id });
 }
@@ -245,87 +240,80 @@ post.done(function(data) {
       notesFilter.appendChild(label);
     }
 
-  //nytg.category_data = [{"label":"Health and Human Services","total":921605000,"num_children":26,"short_label":"Health and Human Services"},{"label":"State","total":31608000,"num_children":8,"short_label":"State"},{"label":"Judicial Branch","total":7502000,"num_children":13,"short_label":"Judicial Branch"},{"label":"International Assistance Programs","total":37399000,"num_children":16,"short_label":"International"},{"label":"Agriculture","total":154667000,"num_children":45,"short_label":"Agriculture"},{"label":"Treasury","total":519490000,"num_children":15,"short_label":"Treasury"},{"label":"Other Defense Civil Programs","total":57416000,"num_children":9,"short_label":"Defense Civil Programs"},{"label":"Appalachian Regional Commission","total":64000,"num_children":2,"short_label":"Appalachian Commission"},{"label":"Legislative Branch","total":4789000,"num_children":20,"short_label":"Legislative Branch"},{"label":"Veterans Affairs","total":137381000,"num_children":9,"short_label":"Veterans Affairs"},{"label":"Justice","total":30023000,"num_children":18,"short_label":"Justice"},{"label":"Interior","total":11357000,"num_children":31,"short_label":"Interior"},{"label":"Commerce","total":9239000,"num_children":21,"short_label":"Commerce"},{"label":"Labor","total":88993000,"num_children":15,"short_label":"Labor"},{"label":"Homeland Security","total":45109000,"num_children":23,"short_label":"Homeland Security"},{"label":"Housing and Urban Development","total":44010000,"num_children":14,"short_label":"Housing"},{"label":"Corps of Engineers--Civil Works","total":4668000,"num_children":3,"short_label":"Corps of Engineers"},{"label":"Executive Office of the President","total":392000,"num_children":12,"short_label":"Office of the President"},{"label":"Energy","total":32300000,"num_children":10,"short_label":"Energy"},{"label":"Transportation","total":74280000,"num_children":22,"short_label":"Transportation"},{"label":"Education","total":55685000,"num_children":15,"short_label":"Education"},{"label":"Federal Deposit Insurance Corporation","total":1515000,"num_children":5,"short_label":"F.D.I.C."},{"label":"District of Columbia","total":902000,"num_children":5,"short_label":"District of Columbia"},{"label":"Environmental Protection Agency","total":8138000,"num_children":2,"short_label":"E.P.A."},{"label":"Defense - Military","total":620259000,"num_children":13,"short_label":"Defense"},{"label":"Institute of Museum and Library Services","total":231000,"num_children":2,"short_label":"Museum and Library Services"},{"label":"National Aeronautics and Space Administration","total":17693000,"num_children":2,"short_label":"NASA"},{"label":"National Archives and Records Administration","total":370000,"num_children":3,"short_label":"National Archives"},{"label":"National Science Foundation","total":7470000,"num_children":2,"short_label":"N.S.F."},{"label":"Nuclear Regulatory Commission","total":127000,"num_children":2,"short_label":"Nuclear Regulation"},{"label":"Office of Personnel Management","total":94857000,"num_children":3,"short_label":"Personnel Management"},{"label":"Postal Service","total":78000,"num_children":2,"short_label":"Postal Service"},{"label":"Public Company Accounting Oversight Board","total":237000,"num_children":2,"short_label":"Accounting Oversight"},{"label":"Railroad Retirement Board","total":7202000,"num_children":3,"short_label":"Railroad Retirement"},{"label":"Small Business Administration","total":1111000,"num_children":2,"short_label":"Small Business"},{"label":"Social Security Administration","total":885315000,"num_children":2,"short_label":"Social Security"},{"label":"Federal Communications Commission","total":9633000,"num_children":2,"short_label":"F.C.C."},{"label":"Securities Investor Protection Corporation","total":259000,"num_children":2,"short_label":"S.I.P.C."},{"label":"Other","total":-512596000,"num_children":97,"short_label":"Other"}];
+    var question = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:'get_data_question', id:id });
+    question.done(function(data){
+      console.log(data);
+      if (data != "") {
+        var dataParse = JSON.parse(data);
+        console.log(dataParse);
 
-  var question = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:'get_data_question', id:id });
-  question.done(function(data){
-    if (data != "") {
+        for (var i = 0; i < maxQuestion; i++) {
+          var questionFilter = document.getElementById('questionFilter');
+          var input = document.createElement("input");
+          var label = document.createElement("label");
+          var content = dataParse[i][2].split("(/=/)")
+          input.setAttribute("class", "sorts questionFilter w3-radio");
+          input.setAttribute("type", "checkbox");
+          input.setAttribute("checked", "checked");
+          input.style.float = "left";
+          label.style.textAlign = "left";
+          label.style.paddingLeft = "25px";
+          label.innerHTML = content[0];
+          questionFilter.appendChild(input);
+          questionFilter.appendChild(label);
+          questionFilter.appendChild(document.createElement("br"));
+        }
 
-      var dataParse = JSON.parse(data);
-      console.log(dataParse);
-
-      for (var i = 0; i < maxQuestion; i++) {
-        var questionFilter = document.getElementById('questionFilter');
-        var input = document.createElement("input");
-        var label = document.createElement("label");
-        var content = dataParse[i][2].split("(/=/)")
-        input.setAttribute("class", "sorts questionFilter w3-radio");
-        input.setAttribute("type", "checkbox");
-        input.setAttribute("checked", "checked");
-        input.style.float = "left";
-        label.style.textAlign = "left";
-        label.style.paddingLeft = "25px";
-        label.innerHTML = content[0];
-        // label.innerHTML = "question "+[i];
-        questionFilter.appendChild(input);
-        questionFilter.appendChild(label);
-        questionFilter.appendChild(document.createElement("br"));
+        document.getElementById('question_title').textContent = dataParse[0]['title'];
+        var li = document.createElement("li");
+        var a = document.createElement("a");
+        a.style.textDecoration = "none";
+        a.style.color = "#999";
+        a.setAttribute("href" ,  "questionnaires/questionnaire-"+id);
+        a.textContent = "Answer this questionnaire"
+        li.appendChild(a);
+        document.getElementById('navBarGraph').appendChild(li);
+        document.querySelector('.nytg-overview > p').textContent = dataParse[0]['statement'];
       }
+    });
+  }
+  else{
+    var $j = jQuery;
+    $j("#nytg-chartFrame").hide();
+    $j("#nytg-error").css('visibility', 'visible');
+  }
 
-      document.getElementById('question_title').textContent = dataParse[0]['title'];
-      var li = document.createElement("li");
-      var a = document.createElement("a");
-      a.style.textDecoration = "none";
-      a.style.color = "#999";
-      a.setAttribute("href" ,  "questionnaires/questionnaire-"+id);
-      a.textContent = "Answer this questionnaire"
-      li.appendChild(a);
-      document.getElementById('navBarGraph').appendChild(li);
-      // document.getElementById('navBarGraph').appendChild() += "<li style='display: none;'><a href='' style='text-decoration: none; color: #999;'>Answer this questionnaire</a></li>";
-      document.querySelector('.nytg-overview > p').textContent = dataParse[0]['statement'];
-    }
-  });
-}
-else{
+  jQuery.noConflict();
   var $j = jQuery;
-  $j("#nytg-chartFrame").hide();
-  $j("#nytg-error").css('visibility', 'visible');
-}
-// BEGIN nytg Additions
-jQuery.noConflict();
-var $j = jQuery;
-// END nytg Additions
 
-var nytg = nytg || {};
+  var nytg = nytg || {};
 
-nytg.formatNumber = function(n) {
-  var s, suffix;
-  suffix = ""
+  nytg.formatNumber = function(n) {
+    var s, suffix;
+    suffix = ""
 
-  if (n >= 1000000000000) {
-    suffix = " trillion"
-    n = n / 1000000000000
-    //decimals = 2
-  } else if (n >= 1000000000) {
-    suffix = " billion"
-    n = n / 1000000000
-    //decimals = 1
-  } else if (n >= 1000000) {
-    suffix = " million"
-    n = n / 1000
-  } 
+    if (n >= 1000000000000) {
+      suffix = " trillion"
+      n = n / 1000000000000
+    } else if (n >= 1000000000) {
+      suffix = " billion"
+      n = n / 1000000000
+    } else if (n >= 1000000) {
+      suffix = " million"
+      n = n / 1000
+    } 
 
-  s = String(Math.round(n));
-  s = s.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-  return  s + suffix;
-};
+    s = String(Math.round(n));
+    s = s.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    return  s + suffix;
+  };
 
-nytg.changeTickValues = [];
-for (var i = 0; i < 2; i++) {
-  nytg.changeTickValues.push(i+1);
-}
+  nytg.changeTickValues = [];
+  for (var i = 0; i < 2; i++) {
+    nytg.changeTickValues.push(i+1);
+  }
 
-nytg.changeScale = [0,2];
+  nytg.changeScale = [0,2];
 
 /********************************
  ** FILE: Chart.js
@@ -339,20 +327,13 @@ nytg.changeScale = [0,2];
     //defaults
     width           : 970,
     height          : 850,
-    groupPadding    : 10,
     totalValue      : 3700000000000,
-    deficitValue    : 901000,
-    // CONST
-    MANDATORY       : "Mandatory",
-    DISCRETIONARY   : "Discretionary",
-    NET_INTEREST    : "Net interest",
+    //deficitValue    : 901000,
     
     //will be calculated later
     boundingRadius  : null,
-    maxRadius       : null,
     centerX         : null,
     centerY         : null,
-    scatterPlotY    : null,
 
     //d3 settings
     defaultGravity  : 0.1,
@@ -442,8 +423,6 @@ nytg.changeScale = [0,2];
     init: function() {
       var that = this;
       
-      this.scatterPlotY = this.changeScale(0);
-      
       this.radiusScale = function(n){ return that.rScale(Math.abs(n)); };
       this.getStrokeColor = function(d){
         return that.strokeColor(d.changeCategory);
@@ -458,58 +437,6 @@ nytg.changeScale = [0,2];
       this.boundingRadius = this.radiusScale(this.totalValue);
       this.centerX = this.width / 2;
       this.centerY = 300;
-      
-      /*nytg.category_data.sort(function(a, b){  
-        return b['total'] - a['total'];  
-      });
-
-      //calculates positions of the category clumps
-      //it is probably overly complicated
-      var columns = [4, 7, 9, 9]
-      rowPadding = [150, 100, 90, 80, 70],
-      rowPosition = [220, 450, 600, 720, 817],
-      rowOffsets = [130, 80, 60, 45, 48]
-      currentX = 0,
-      currentY = 0;
-      for (var i=0; i < nytg.category_data.length; i++) {
-        var t = 0, 
-        w,
-        numInRow = -1,
-        positionInRow = -1,
-        currentRow = -1,
-        cat = nytg.category_data[i]['label'];
-        // calc num in this row
-        for (var j=0; j < columns.length; j++) {
-          if (i < (t + columns[j])) {
-            numInRow = columns[j];
-            positionInRow = i - t;
-            currentRow = j;
-            break;
-          };
-          t += columns[j];
-        };
-        if (numInRow === -1) {
-          numInRow = nytg.category_data.length - d3.sum(columns);
-          currentRow = columns.length;
-          positionInRow = i  - d3.sum(columns)
-        };
-        nytg.category_data[i].row = currentRow;
-        nytg.category_data[i].column = positionInRow;
-        w = (this.width - 2*rowPadding[currentRow]) / (numInRow-1)
-        currentX = w * positionInRow + rowPadding[currentRow];
-        currentY = rowPosition[currentRow];
-        this.categoriesList.push(cat);
-        this.categoryPositionLookup[cat] = {
-          x:currentX, 
-          y:currentY,
-          w: w*0.9,
-          offsetY: rowOffsets[currentRow],
-          numInRow:numInRow,
-          positionInRow:positionInRow
-        }        
-      };
-
-      this.groupScale = d3.scale.ordinal().domain(this.categoriesList).rangePoints([0,1]);*/
 
       var maxView = null;
       var minView = null;
@@ -601,29 +528,29 @@ nytg.changeScale = [0,2];
       .classed('nytg-discretionaryTickLabel', true)*/
 
       // deficit circle
-      d3.select("#nytg-deficitCircle").append("circle")
+      /*d3.select("#nytg-deficitCircle").append("circle")
       .attr('r', this.radiusScale(this.deficitValue))
       .attr('class',"nytg-deficitCircle")
       .attr('cx', 125)
-      .attr('cy', 125);
+      .attr('cy', 125);*/
 
       // $ 100 billion
       d3.select("#nytg-scaleKey").append("circle")
-      .attr('r', this.radiusScale(10000000))
+      .attr('r', 29)
       .attr('class',"nytg-scaleKeyCircle")
       .attr('cx', 30)
-      .attr('cy', 40);
+      .attr('cy', 30);
 
       // $ 10 billion
       d3.select("#nytg-scaleKey").append("circle")
-      .attr('r', this.radiusScale(1000000))
+      .attr('r', 10)
       .attr('class',"nytg-scaleKeyCircle")
       .attr('cx', 30)
       .attr('cy', 50);
 
       // $ 1 billion
       d3.select("#nytg-scaleKey").append("circle")
-      .attr('r', this.radiusScale(100000))
+      .attr('r', 4)
       .attr('class',"nytg-scaleKeyCircle")
       .attr('cx', 30)
       .attr('cy', 55);
@@ -734,27 +661,6 @@ nytg.changeScale = [0,2];
       
       this.svg = d3.select("#nytg-chartCanvas").append("svg:svg")
       .attr("width", this.width);
-      
-      // $ 100 billion
-      d3.select("#nytg-scaleKey").append("circle")
-      .attr('r', this.radiusScale(10000000))
-      .attr('class',"nytg-scaleKeyCircle")
-      .attr('cx', 30)
-      .attr('cy', 40);
-
-      // $ 10 billion
-      d3.select("#nytg-scaleKey").append("circle")
-      .attr('r', this.radiusScale(1000000))
-      .attr('class',"nytg-scaleKeyCircle")
-      .attr('cx', 30)
-      .attr('cy', 50);
-
-      // $ 1 billion
-      d3.select("#nytg-scaleKey").append("circle")
-      .attr('r', this.radiusScale(100000))
-      .attr('class',"nytg-scaleKeyCircle")
-      .attr('cx', 30)
-      .attr('cy', 55);
 
       // This is the every circle
       this.circle = this.svg.selectAll("circle")
@@ -830,22 +736,6 @@ nytg.changeScale = [0,2];
       .start();     
     },
 
-    /*mandatoryLayout: function() {
-      var that = this;
-      this.force
-      .gravity(0)
-      .friction(0.9)
-      .charge(that.defaultCharge)
-      .on("tick", function(e){
-        that.circle
-        .each(that.mandatorySort(e.alpha))
-        .each(that.buoyancy(e.alpha))
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
-      })
-      .start();   
-    },*/
-
     discretionaryLayout: function() {
       $j('#navBarGraph')
 
@@ -884,32 +774,6 @@ nytg.changeScale = [0,2];
       return function(d){        
         var targetY = that.centerY - (d.changeCategory / 3) * that.boundingRadius
         d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * alpha * alpha * 100
-      };
-    },
-
-    mandatorySort: function(alpha) {
-      var that = this;
-      return function(d){
-        var targetY = that.centerY;
-        var targetX = 0;
-
-        if (d.changeCategory > 0) {
-          d.x = - 200
-        } else {
-          d.x =  1100
-        }
-        return;
-
-        if (d.discretion === that.DISCRETIONARY) {
-          targetX = 550
-        } else if ((d.discretion === that.MANDATORY)||(d.discretion === that.NET_INTEREST)) {
-          targetX = 400
-        } else {
-          targetX = 900
-        };
-
-        d.y = d.y + (targetY - d.y) * (that.defaultGravity) * alpha * 1.1
-        d.x = d.x + (targetX - d.x) * (that.defaultGravity) * alpha * 1.1
       };
     },
 
@@ -1016,29 +880,7 @@ nytg.ChooseList.prototype.selectByElement = function(el) {
  ** FILE: base.js
  ********************************/
 
- /*var $j = jQuery;
-
- nytg.filename = function(index){
-  var tabs = [
-  "total",
-  "mandatory",
-  "discretionary",
-  "department"];
-  return tabs[index];
-}
-$j("#save").click(function(){
-  $j.ajax({ 
-    type: "POST", 
-    url: "/save", 
-    data: {
-      'filename':nytg.filename(nytg.mainNav.currentIndex),
-      'contents':nytg.c.getCirclePositions()
-    }
-  });
-  
-})*/
-
-nytg.ready = function() {
+ nytg.ready = function() {
   var that = this;    
   nytg.c = new nytg.Chart();
   nytg.c.init();
@@ -1064,37 +906,25 @@ nytg.ready = function() {
   var currentOverlay = undefined;
   nytg.mainNav = new nytg.ChooseList($j(".nytg-navigation"), onMainChange);
   function onMainChange(evt) {
-    //console.log(this)
     var tabIndex = evt.currentIndex
     if (this.currentOverlay !== undefined) {
       this.currentOverlay.hide();
     };
     if (tabIndex === 0) {
-      $j('svg').remove();
+      $j('#nytg-chartCanvas > svg').remove();
       nytg.c.update(nytg.array_webSites);
       nytg.c.start();
       nytg.c.totalLayout();
-      //eventFire($j("#nytg-totalOverlay"), 'click');
-      //console.log('totalLayout');
       this.currentOverlay = $j("#nytg-totalOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':550});
       $j('#notes').show();
-    } /*else if (tabIndex === 1){
-      $j('svg').remove();
-      nytg.c.update(nytg.array_webSites);
-      nytg.c.start();
-      nytg.c.mandatoryLayout();
-      //console.log('mandatoryLayout');
-      this.currentOverlay = $j("#nytg-mandatoryOverlay");
-      this.currentOverlay.delay(300).fadeIn(500);
-      $j("#nytg-chartFrame").css({'height':550});
-    }*/ else if (tabIndex === 1){
-      $j('svg').remove();
+    }
+    else if (tabIndex === 1){
+      $j('#nytg-chartCanvas > svg').remove();
       nytg.c.update(nytg.array_best_median);
       nytg.c.start();
       nytg.c.discretionaryLayout();
-      //console.log('discretionaryLayout');
       this.currentOverlay = $j("#nytg-discretionaryOverlay");
       this.currentOverlay.delay(300).fadeIn(500);
       $j("#nytg-chartFrame").css({'height':650});

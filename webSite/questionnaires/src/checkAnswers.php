@@ -68,7 +68,7 @@ if (isset($_POST['user_email'])) {
 		var_dump($answers);
 		echo "</pre>";*/
 
-		//header("Location: ".$adress."/webSite/questionnaires/src/result.php");			
+		header("Location: ".$adress."/webSite/questionnaires/src/result.php");			
 		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, knowledge, use_graph, key_user)
 			SELECT :key_question, :answer, :result, :rank, :knowledge, :use_graph, id FROM users WHERE email like :email");
 		$stmt->bindParam(':key_question', $key_question);

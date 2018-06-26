@@ -66,7 +66,7 @@ $_SESSION['timeout']=time();
 
       </div>
       <div class="w3-third w3-center" style="font-size:15em;">
-        <img src="img/extension.png" alt="" style="border-radius: 100%; width: 100%;">
+        <img src="img/extension.png" alt="" style="border-radius: 100%; width: 100%; ">
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@ $_SESSION['timeout']=time();
   <div class="w3-row-padding w3-black w3-opacity w3-padding-64 w3-container">
     <div class="w3-content">
       <div class="w3-third w3-center" style="font-size:15em;">
-        <img src="img/bulle.png" alt="" style="border-radius: 100%; width: 100%;">
+        <img src="img/bulle.PNG" alt="" style="border-radius: 100%; width: 100%;">
       </div>
       <div class="w3-twothird" style="padding-left: 50px;">
 

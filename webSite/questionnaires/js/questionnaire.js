@@ -116,7 +116,7 @@ else {
 		statement = $('<p class="w3-center"></p>').text(dataParse[0]['statement']);
 		$('#content').append(rules,statement);
 
-		var form = $('<form method="post" action="checkAnswers.php"></form>');
+		var form = $('<form method="post" action="/webSite/questionnaires/src/checkAnswers.php"></form>');
 		var user_email = $('<input type="hidden" name="user_email" value="'+checkUser+'">');
 		form.append(user_email);
 

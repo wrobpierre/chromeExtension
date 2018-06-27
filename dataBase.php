@@ -27,6 +27,7 @@ if (isset($_POST['key'])) {
 		if ($_POST['key'] == 'add') {
 			if ( isset($_POST['d']) && isset($_POST['url']) && isset($_POST['email']) ) {
 
+				//Send a request to the database to get the user's id who visited websites.
 				$stmtCheck = $conn->prepare("SELECT id FROM users WHERE email like :email");
 				$stmtCheck->bindParam(':email',$email);
 				$email = $_POST['email'];
@@ -34,6 +35,7 @@ if (isset($_POST['key'])) {
 				
 				$uniqId = $stmtCheck->fetchAll();
 				
+				//Send a request to the database to back up the sites that user visited to answer questions.
 				$stmt = $conn->prepare("INSERT INTO sites (url, title, keywords, view, timer, first_time, host_name, question, key_user, key_first_url) 
 					SELECT :url ,:title ,:keywords,:view,:timer,:first_time,:host_name,:question,:key_user, id
 					FROM firsturl 
@@ -64,6 +66,7 @@ if (isset($_POST['key'])) {
 					$hostName = $value['hostName'];
 					$first_time = $value['firstTime'];
 					$question = json_encode($value['question']);
+					// We don't save sites that have been seen for less than 2 seconds
 					if ( $value['timeOnPage']['hours'] > 0 || $value['timeOnPage']['minutes'] > 0 || $value['timeOnPage']['secondes'] > 2 ) {
 						$timer = json_encode($value['timeOnPage']);
 						$stmt->execute();
@@ -83,6 +86,7 @@ if (isset($_POST['key'])) {
 		elseif ($_POST['key'] == 'load') {
 			$requete = "";
 			if (isset($_POST['id'])) {
+				// Send a request to the database to return all datas necessary at the graphics’ generation.
 				$stmt = $conn->prepare("SELECT s.*,
 					(SELECT distinct SUM(a.result)
 					FROM firsturl fu2
@@ -102,6 +106,7 @@ if (isset($_POST['key'])) {
 		}
 		elseif ($_POST['key'] == 'first') {
 			if (isset($_POST['url'])) {
+				// Send a request to the database to back up the firsturl.
 				$stmt = $conn->prepare("INSERT INTO firsturl (url)
 					VALUES (:url)");
 				$stmt->bindParam(':url', $url);
@@ -111,6 +116,7 @@ if (isset($_POST['key'])) {
 		}
 		elseif ($_POST['key'] == 'get_id_firstUrl') {
 			if (isset($_POST['url'])) {
+				// Send a request to the database to get the firsturl's id.
 				$stmt = $conn->prepare("SELECT id FROM firsturl WHERE url like '".$_POST['url']."'");
 				$stmt->execute();
 
@@ -118,6 +124,7 @@ if (isset($_POST['key'])) {
 			}
 		}
 		elseif ($_POST['key'] == 'get_stat') {
+			// Send a request to the database to get all datas necessary to generate the graphics on the page “statistics.php”.
 			$stmt = $conn->prepare("SELECT qts1.id, qts1.title, qts1.statement, qts1.link_img, q1.question, q1.image, q1.key_questionnaires, a1.result, a1.rank, a1.knowledge, a1.use_graph, a1.key_user, a1.key_question, 
 				( (SELECT COUNT(s.url)
 				FROM questionnaires qts3

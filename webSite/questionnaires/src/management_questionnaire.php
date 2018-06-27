@@ -11,11 +11,12 @@ class all{}
 class questionnaire{}
 
 /**
- * This function replaces every letters with an accent by one without
+ * The function “stripVN” replaces every letters with an accent by one without. 
+ * We use it to convert answers to "text" questions when creating a questionnaire.
  *
- * @param string $str A string with accents
+ * @param string - $str, A string with accents
  *
- * @return string $str A string without accents
+ * @return string - $str, A string without accents
  */
 function stripVN($str) {
 	$str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ|ä)/", 'a', $str);
@@ -36,6 +37,13 @@ function stripVN($str) {
 	return $str;
 }
 
+/**
+ * The function “deleteDirectory” allows to delete a directory with all its contents.
+ * 
+ * @param string - $str, The path of the directory
+ *
+ * @return bool - return true if the directory was deleted
+ */
 function deleteDirectory($dir) {
 	if (!file_exists($dir)) {
 		return true;
@@ -77,12 +85,15 @@ if (isset($_POST['action'])) {
 
 				$target_dir = "../../img/quest_img/".$id;
 				$target_file = "";
-
 				if ($_POST['user_email'] != "") {
+					// Create a directory to store the questionnaire's pictures
 					if (mkdir($target_dir, 0777, true)) {
+						// If there is an image 
 						if ($_FILES["questionnaire"]["name"] != "") {
 							$target_file = $target_dir . "/" . basename($_FILES["questionnaire"]["name"]);
+							// Save the image in the questionnaire's directory
 							if (!move_uploaded_file($_FILES["questionnaire"]["tmp_name"], $target_file)) {
+								// If saving fail redirects to the questionnaire's creation page
 								header('Location: ' . $_SERVER['HTTP_REFERER']);
 								exit;
 							}
@@ -98,6 +109,7 @@ if (isset($_POST['action'])) {
 						$url = $adress."/webSite/questionnaires/questionnaire-".$id;
 						$stmt->execute();
 
+						// Send a request to the database to back up a new questionnaire
 						$stmt = $conn->prepare("INSERT INTO questionnaires (title, statement, link_img, auto_correction, key_user, key_first_url)
 							SELECT :title, :statement, :link_img, :auto_correction, (SELECT u.id FROM users u WHERE u.email LIKE :user_email), fu.id FROM firsturl fu WHERE url like :url");
 						$stmt->bindParam(':title', $title);
@@ -113,6 +125,7 @@ if (isset($_POST['action'])) {
 						$user_email = $_POST['user_email'];
 						$stmt->execute();
 
+						// Send a request to the database to back up the new questionnaire’s questions
 						$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, image, key_questionnaires)
 							SELECT :question, :type_ques, :answer, :image, q.id 
 							FROM questionnaires q 
@@ -125,9 +138,12 @@ if (isset($_POST['action'])) {
 						$stmt->bindParam(':image', $image);
 
 						foreach ($_POST['q'] as $key => $value) {
+							// If there is an image 
 							if ($_FILES["question"]["name"][$key] != "") {
 								$target_file = $target_dir . "/" . basename($_FILES["question"]["name"][$key]);
+								// Save the image in the questionnaire's directory
 								if (!move_uploaded_file($_FILES["question"]["tmp_name"][$key], $target_file)) {
+									// If saving fail redirects to the questionnaire's creation page
 									header('Location: ' . $_SERVER['HTTP_REFERER']);
 								}
 								else {
@@ -140,6 +156,7 @@ if (isset($_POST['action'])) {
 							}
 							$question = $value['question'];
 
+							// Check the questionnaire's type
 							if ($auto_correction == 1) {
 								$type_ques = $value['type_ques'];
 
@@ -177,6 +194,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_questions_to_edit') {
 			if (isset($_POST['id'])) {
+				// Send a request to the database to get the datas necessary to edit a questionnaire
 				$stmt = $conn->prepare("SELECT qtn.title, qtn.statement, qtn.link_img, qtn.auto_correction, qtn.key_user, q.question, q.type_ques, q.image, q.answer, q.id, q.key_questionnaires
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
@@ -195,20 +213,26 @@ if (isset($_POST['action'])) {
 				$target_dir = "../../img/quest_img/".$_POST['param_id'];
 				$target_file = "";
 
+				// Check if there is a new image and compare it to the questionnaire's current image
 				if ($_FILES["questionnaire"]["name"] != "" && $_FILES["questionnaire"]["name"] != $_POST['current_img']) {
+					// Check if there is already a saved image 
 					if ($_POST['current_img'] != "") {
+						// If yes remove the current image and replace it by the new
 						if ( unlink($target_dir . "/" . $_POST['current_img']) ) {
 							$target_file = $target_dir . "/" . basename($_FILES["questionnaire"]["name"]);
 							if (!move_uploaded_file($_FILES["questionnaire"]["tmp_name"], $target_file)) {
+								// If saving fail redirects to the questionnaire's edit page
 								header('Location: ' . $_SERVER['HTTP_REFERER']);
 								exit;
 							}
 							chmod($target_file, 0777);
 						}
 					}
+					// If not just save the image
 					else {
 						$target_file = $target_dir . "/" . basename($_FILES["questionnaire"]["name"]);
 						if (!move_uploaded_file($_FILES["questionnaire"]["tmp_name"], $target_file)) {
+							// If saving fail redirects to the questionnaire's edit page
 							header('Location: ' . $_SERVER['HTTP_REFERER']);
 							exit;
 						}
@@ -222,6 +246,7 @@ if (isset($_POST['action'])) {
 					$target_file = null;
 				}
 
+				// Send a request to the database to apply all the questionnaire’s changes
 				$stmt = $conn->prepare("UPDATE questionnaires 
 					SET title = :title, statement = :statement, auto_correction = :auto_correction, link_img = :link_img
 					WHERE id = :id");
@@ -237,6 +262,7 @@ if (isset($_POST['action'])) {
 				$id = $_POST['id_questionnaire'];
 				$stmt->execute();
 
+				// Send a request to the database to apply the changes to the questions in the questionnaire that we just changed
 				$stmt = $conn->prepare("UPDATE questions 
 					SET question = :question, type_ques = :type_ques ,answer = :answer, image = :image
 					WHERE id = :id");
@@ -247,20 +273,26 @@ if (isset($_POST['action'])) {
 				$stmt->bindParam(':image', $image);
 
 				foreach ($_POST['q'] as $key => $value) {
+					// Check if there is a new image and compare it to the question's current image
 					if ($_FILES["question"]["name"][$key] != "" && $_FILES["question"]["name"][$key] != $value['current_img']) {
+						// Check if there is already a saved image 
 						if ($value['current_img'] != "") {
+							// If yes remove the current image and replace it by the new
 							if ( unlink($target_dir . "/" . $value['current_img']) ) {
 								$target_file = $target_dir . "/" . basename($_FILES["question"]["name"][$key]);
 								if (!move_uploaded_file($_FILES["question"]["tmp_name"][$key], $target_file)) {
+									// If saving fail redirects to the questionnaire's edit page
 									header('Location: ' . $_SERVER['HTTP_REFERER']);
 									exit;
 								}
 								chmod($target_file, 0777);
 							}
 						}
+						// If not just save the image
 						else {
 							$target_file = $target_dir . "/" . basename($_FILES["question"]["name"][$key]);
 							if (!move_uploaded_file($_FILES["question"]["tmp_name"][$key], $target_file)) {
+								// If saving fail redirects to the questionnaire's edit page
 								header('Location: ' . $_SERVER['HTTP_REFERER']);
 								exit;
 							}
@@ -308,6 +340,7 @@ if (isset($_POST['action'])) {
 				}
 
 				if (isset($_POST['nq'])) {
+					// Send a request to the database to back up the new questions add a questionnaire that has just been changed
 					$stmt = $conn->prepare("INSERT INTO questions (question, type_ques, answer, image, key_questionnaires)
 						VALUES(:question, :type_ques, :answer, :image, :id)");
 					$stmt->bindParam(':question', $question);
@@ -318,9 +351,12 @@ if (isset($_POST['action'])) {
 					$id = $_POST['id_questionnaire'];
 
 					foreach ($_POST['nq'] as $key => $value) {
+						// If there is an image 
 						if ($_FILES["new_question"]["name"][$key] != "") {
 							$target_file = $target_dir . "/" . basename($_FILES["new_question"]["name"][$key]);
+							// Save the image in the questionnaire's directory
 							if (!move_uploaded_file($_FILES["new_question"]["tmp_name"][$key], $target_file)) {
+								// If saving fail redirects to the questionnaire's edit page
 								header('Location: ' . $_SERVER['HTTP_REFERER']);
 							}
 							else {
@@ -350,10 +386,8 @@ if (isset($_POST['action'])) {
 								foreach ($value['choices'] as $k => $v) {
 									if (isset($v['answer'])) {
 										$answer = $k;
-									//echo $answer;
 									}
 									$question .= "(/=/)".$v['choice'];
-									//echo $question.'<br>';
 								}
 							}
 						}
@@ -369,7 +403,9 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'delete') {
 			if (isset($_POST['url'])) {
+				// Delete the directory containing questionnaire’s images
 				if (deleteDirectory('../../img/quest_img/' . explode('-', $_POST['url'])[1] )) {
+					//if it’s a success, send a request to the database to delete the firsturl
 					$stmt = $conn->prepare("DELETE FROM firsturl WHERE url like :url");
 					$stmt->bindParam(':url', $url);
 					$url = $_POST['url'];
@@ -384,6 +420,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'delete_question') {
 			if (isset($_POST['id'])) {
+				// Send a request to the database to delete a questions when the user edit a questionnaire
 				$stmt = $conn->prepare("DELETE FROM questions WHERE id like :id");
 				$stmt->bindParam(':id', $id);
 				$id = $_POST['id'];
@@ -393,6 +430,7 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'all') {
+			// Send a request to the database to get the datas necessary to generate the page “questionnaire.php” when there isn’t parameter in the url
 			$stmt = $conn->prepare("SELECT q.title, q.statement, q.link_img, q.auto_correction, q.key_user, fu.url
 				FROM questionnaires q 
 				INNER JOIN firsturl fu ON q.key_first_url = fu.id");
@@ -402,6 +440,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_questions') {
 			if (isset($_POST['id'])) {
+				// Send a request to the database to get the datas necessary to generate the page of a questionnaire
 				$stmt = $conn->prepare("SELECT (qtn.id)id_questionnaire, qtn.title, qtn.statement, qtn.link_img, q.question, q.image, q.type_ques, q.id, SPLIT_STRING(q.answer, '/', 2)particule
 					FROM questionnaires qtn 
 					INNER JOIN questions q ON qtn.id = q.key_questionnaires
@@ -415,6 +454,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_data_question') {
 			if (isset($_POST['id'])) {
+				// Send a request to the database to get the title, the statement and the questionnaire’s question. This request is call in script.js
 				$stmt = $conn->prepare("SELECT qts.title, qts.statement, q.question
 					FROM firsturl fu
 					INNER JOIN questionnaires qts ON fu.id = qts.key_first_url
@@ -427,6 +467,8 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'check_title') {
 			if (isset($_POST['title'])) {
+				// Send a request to the database to check if the title for a questionnaire is already taken.
+				// This request is call in the pages “add_questionnaire.php” and “edit_questionnaire.php”
 				$stmt = $conn->prepare("SELECT * FROM questionnaires WHERE title like :title");
 				$stmt->bindParam(':title', $title);
 				$title = $_POST['title'];
@@ -437,6 +479,8 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'get_user_result') {
 			if (isset($_POST['id'])) {
+				// Send a request to the database to get the answers of the users on a questionnaire. 
+				// This request is call in the page “edit_results.js” to generate the page’s content
 				$stmt = $conn->prepare("SELECT a.key_user, a.key_question, q.question, a.answer, a.result
 					FROM firsturl fu
 					INNER JOIN questionnaires qtn ON fu.id = qtn.key_first_url
@@ -454,7 +498,7 @@ if (isset($_POST['action'])) {
 		elseif ($_POST['action'] == 'edit_user_result') {
 			if (isset($_POST['res'])) {
 				header("Location: ".$adress."/webSite/questionnaires/questionnaire");
-
+				// Send a request to the database to change the users’ results
 				$stmt = $conn->prepare("UPDATE answers
 					SET result = :result
 					WHERE key_user = :user AND key_question = :question");
@@ -475,6 +519,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'already_done') {
 			if ( isset($_POST['user']) && isset($_POST['id_questionnaire']) ) {
+				// Send a request to the database to check if a user has already done a questionnaire
 				$stmt = $conn->prepare("SELECT * 
 					FROM answers a
 					INNER JOIN questions q ON a.key_question = q.id
@@ -491,6 +536,7 @@ if (isset($_POST['action'])) {
 		}
 		elseif ($_POST['action'] == 'reset_user_research') {
 			if ( isset($_POST['user']) && isset($_POST['id_questionnaire']) && isset($_POST['param'])) {
+				// Send a request to the database to delete all the answers of a user to a questionnaire
 				$stmt = $conn->prepare("DELETE a
 					FROM `answers` a
 					INNER JOIN questions q ON a.key_question = q.id
@@ -499,9 +545,9 @@ if (isset($_POST['action'])) {
 				$stmt->bindParam(':id_questionnaire', $id_questionnaire);
 				$user = $_POST['user'];
 				$id_questionnaire = $_POST['id_questionnaire'];
-
 				$stmt->execute();
 
+				// Send a request to the database to delete all the sites a user has used to resolve the questionnaire
 				$stmt = $conn->prepare("DELETE 
 					FROM sites
 					WHERE sites.key_user = (SELECT id FROM users u WHERE u.email LIKE :user) and sites.key_first_url = 
@@ -510,7 +556,6 @@ if (isset($_POST['action'])) {
 				$stmt->bindParam(':url', $url);
 				$user = $_POST['user'];
 				$url = $adress.'/webSite/questionnaires/questionnaire-'.$_POST['param'];
-
 				$stmt->execute();
 			}
 		}

@@ -95,7 +95,6 @@ post.done(function(data) {
           tmp.forEach(function(elem){
             views += parseInt(elem['view']);
             note += parseInt(elem['note']);
-            console.log(elem)
             timer = JSON.parse(elem['timer']);
             tabMedianeView.push(parseInt(elem['view']));
             tabMedianeTime.push(parseInt(timer.hours)*3600+parseInt(timer.minutes)*60+parseInt(timer.secondes));

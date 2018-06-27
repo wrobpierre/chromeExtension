@@ -3,6 +3,14 @@ var adress = "http://163.172.59.102"
 var fileTypes = ['image/jpeg','image/pjpeg','image/png'];
 var fileName = "";
 
+
+/**
+* The function “updateImageDisplay” checked if an image is already display in parent <div>, if there is one, 
+* the function will delete the actual image and replace it by the new image. Else the function will add an image.
+*
+* @param : void
+* @return : void
+*/
 function updateImageDisplay() {
 	input = $(this)[0];
 	preview = $(this).parent().next()[0];
@@ -41,6 +49,13 @@ function updateImageDisplay() {
 	}
 }
 
+/**
+* The function “updateImageDisplay” checked if an image is already display in parent <div>, if there is one, the function will delete 
+* the actual image and replace it by the new image. Else the function will add an image.
+*
+* @param : string file - The extension of the file it can be : image/jpeg, image/pjpeg, image/png
+* @return : bool - Check if the file type is valid
+*/
 function validFileType(file) {
 	for(var i = 0; i < fileTypes.length; i++) {
 		if(file.type === fileTypes[i]) {
@@ -50,6 +65,12 @@ function validFileType(file) {
 	return false;
 }
 
+/**
+* The function “returnFileSize”  look at the size of an element (here an image) and return it size. 
+*
+* @param : string number - The size of the element in octet convert as a string
+* @return : string - Return a string of the size convert with a extension (examples : 20 octets 20Ko, 20Mo)
+*/
 function returnFileSize(number) {
 	if(number < 1024) {
 		return number + ' octets';
@@ -65,6 +86,7 @@ $(document).ready(function(){
 	var input = document.querySelector('#image_upload');
 	input.addEventListener('change', updateImageDisplay);
 
+	//Show inputs for the answers if radio is on auto, else hide them
 	$('input[type=radio][name=auto_correction]').change(function(){
 		if (this.value == 'auto') {
 			$('div.type_answer').show();
@@ -76,14 +98,19 @@ $(document).ready(function(){
 		}
 	})
 
+
 	$('input[value="Add a question"]').click(function(){
 		var div = $('<div id="'+i+'"></div>').attr('class','question w3-section w3-col m12 w3-padding');
+
+		// Change the color of the background in white or grey
 		if(i%2){
 			div.css('background', '#f5f6fa');
 		}
 		else{
 			div.css('background', '#FFFFFF');
 		}
+
+		// Create the HTML elements for a new question
 		var lq = $('<label>Question&nbsp;:&nbsp;</label> <span class="error"></span>');
 		var iq = $('<input class="input_question w3-input" type="text" name="q['+i+'][question]"><br>');
 
@@ -103,6 +130,7 @@ $(document).ready(function(){
 		input_img[0].addEventListener('change', updateImageDisplay);
 		div_img.find('.preview').prev().append(input_img);
 
+		// Choose the type of answer you want 
 		var type_answer = $('<div class="type_answer"></div>'); 
 		var lt = $('<label>Type of question : </label> <span class="error"></span><br>');
 		var select = $('<select class="select_type w3-select" name="q['+i+'][type_ques]">'
@@ -112,6 +140,8 @@ $(document).ready(function(){
 			+'<option value="interval">INTERVAL</option>'
 			+'<option value="radio">RADIO</option>'
 			+'</select>');
+
+		// Generate the HTML elements depending of the value of the answer
 		select.change(function(){
 			$(this).parent().next().empty();
 			var id_parent = $(this).parent().parent().attr('id');
@@ -155,6 +185,8 @@ $(document).ready(function(){
 				$(this).parent().next().append(la,number,valid,radios);
 			}
 		});
+
+		// If response manuel hide the response's HTML elements
 		type_answer.append(lt,select);
 		if ( $('input[type="radio"]:checked').val() == "manuel" ) {
 			type_answer.hide();
@@ -174,6 +206,7 @@ $(document).ready(function(){
 
 var check_title = true;
 
+// Check if the title of the questionnaire don't already exist in the dataBase (two title can't be the same)
 $('input[name="title"]').change(function(){
 	var title = $('input[name="title"]').val();
 	var post = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:'check_title', title:title });
@@ -189,10 +222,12 @@ $('input[name="title"]').change(function(){
 	});
 })
 
+// All the error message for the generation of the questionnaire
 $('form').submit(function(){
 	$('span.error').text('');
 	valid = true;
 
+	// Empty title or title already exist in database
 	if ($('input[name="title"]').val() == "") {
 		$('input[name="title"]').prev().text(' Missing title');
 		valid = false;
@@ -204,11 +239,7 @@ $('form').submit(function(){
 		}
 	}
 
-	/*if ($('textarea[name="statement"]').val() == "") {
-		$('textarea[name="statement"]').prev().text(' Missing statement');
-		valid = false;
-	}*/
-
+	// Image too big 
 	var input = document.querySelector('input[type=file]');
 	$('input[type=file]').each(function(){
 		var curFiles = $(this)[0].files;	
@@ -222,28 +253,35 @@ $('form').submit(function(){
 		}
 	})
 
+	// Radio correction empty
 	if ( $('input[type="radio"]:checked').length == 0 ) {
 		$('input[type="radio"][value="auto"]').prev().prev().text('Select the type of correction')
 		valid = false;
 	}
 
+	// No question in the questionnaire
 	if( $('.all_questions')[0].children.length == 0 ) {
 		$('input[value="+"]').next().text('Please add at least one question');
 		valid = false;
 	}
 	else {
+		// Input question empty
 		$('div.question').each(function(index, value){
 			id = $(this).attr('id');
 			if ($(this).find('input[name="q['+id+'][question]"]').val() == "") {
 				$(this).find('input[name="q['+id+'][question]"]').prev().text('Missing question');
 				valid = false;
 			}
+
+			// Question type empty
 			if ( $('input[type="radio"]:checked').val() == "auto" ) {
 				if ($(this).find('select').find(':selected').text() == "") {
 					$(this).find('select[name="q['+id+'][type_ques]"]').prev().prev().text('Select the type of the question');
 					valid = false;
 				}
 				else {
+
+					// Answer empty
 					if ($(this).find('select').find(':selected').text() == "TEXT" || $(this).find('select').find(':selected').text() == "NUMBER") {
 						if ($(this).find('input[name="q['+id+'][answer]"]').val() == "") {
 							$(this).find('input[name="q['+id+'][answer]"]').prev().text('Missing answer');
@@ -251,27 +289,32 @@ $('form').submit(function(){
 						}
 					}
 					else if ($(this).find('select').find(':selected').text() == "INTERVAL") {
+						// Value for interval empty
 						if ($(this).find('input[name="q['+id+'][min]"]').val() == "" || $(this).find('input[name="q['+id+'][max]"]').val() == "") {
 							$(this).find('input[name="q['+id+'][min]"]').prev().text('Missing min or max');
 							valid = false;
 						}	
 					}
 					else if ($(this).find('select').find(':selected').text() == "RADIO") {
+						//Value for radio empty
 						if ( $(this).find('.answer > .radios > ol > li').length == 0 ) {
 							$(this).find('.answer > span.error').text('Please add at least one choice');
 							valid = false;
 						}
 						else {
+							// No good response for radio type
 							if( $(this).find('.answer > .radios > ol > li').find(':checked').length == 0) {
 								$(this).find('.answer > span.error').text('You need to choose the right choice');
 								valid = false;
 							}
 							else if ($(this).find('.answer > .radios > ol > li').find(':checked').length > 1 ) {
+								// More than one radio can't be the right answer
 								$(this).find('.answer > span.error').text('There can only be one right choice');
 								valid = false;
 							}	
 
 							$(this).find('.answer > .radios > ol > li').each(function(index,value){
+								// One choice for radio is empty
 								if ( $(this).find('input[type=text]').val() == "" ) {
 									$(this).find('span.error').text('Missing choice');
 									valid = false;

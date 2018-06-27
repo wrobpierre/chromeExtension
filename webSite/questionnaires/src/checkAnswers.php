@@ -1,10 +1,4 @@
 <?php
-namespace \chromeExtension\webSite\questionnaires\src\;
-
-/**
- * This file is responsible for checking users' responses and saving them to the database.
- */
-
 header('Access-Control-Allow-Origin: *');
 $adress = "http://163.172.59.102";
 
@@ -14,8 +8,9 @@ error_reporting(E_ALL);
 class answer{}
 
 /**
- * This function replaces every letters with an accent by one without
- *
+ * The function “stripVN” replaces every letters with an accent by one without.
+ * We use it to convert users’ responses so they can be manipulated more easily.
+ * 
  * @param string $str A string with accents
  *
  * @return string $str A string without accents
@@ -54,23 +49,7 @@ if (isset($_POST['user_email'])) {
     	// Set the PDO error mode to exception
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		/**
-		 * The code below generates a query which return the list of answers to questions and their type
-		 *
-		 * ```
-		 * $first = true;
-		 * $requete = "SELECT id, type_ques, answer FROM questions WHERE id=";
-		 * foreach ($_POST['q'] as $key => $value) {
-		 * 	if ($first) {
-		 * 		$requete = $requete.$key;
-		 *		$first = false;
-		 * 	}
-		 * 	else {
-		 *		$requete = $requete.' OR id='.$key;
-		 * 	}
-		 * }
-		 * ```
-		 */
+		// Generates a query which return the list of answers to questions and the questions’ types
 		$first = true;
 		$requete = "SELECT id, type_ques, answer FROM questions WHERE id=";
 		foreach ($_POST['q'] as $key => $value) {
@@ -92,7 +71,8 @@ if (isset($_POST['user_email'])) {
 			$answers[$value['id']] = array("type" => $value['type_ques'], "answer" => $value['answer']);
 		}
 
-		header("Location: ".$adress."/webSite/questionnaires/src/result.php");			
+		header("Location: ".$adress."/webSite/questionnaires/src/result.php");
+		// Send a request to the database to back up the answers of a user to a questionnaire	
 		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, knowledge, use_graph, key_user)
 			SELECT :key_question, :answer, :result, :rank, :knowledge, :use_graph, id FROM users WHERE email like :email");
 		$stmt->bindParam(':key_question', $key_question);
@@ -115,6 +95,7 @@ if (isset($_POST['user_email'])) {
 				$tmp = strtoupper(stripVN($value['answer']));
 				$tmp = explode(" ", $tmp);
 				$a = explode(",", $answers[$key]['answer']);
+				// Check if the user's answer contains all the words necessary for the answer to be correct
 				foreach ($a as $k => $v) {
 					if (array_search($v, $tmp) === false) {
 						$result = false;

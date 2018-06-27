@@ -2,12 +2,18 @@ var adress = "http://163.172.59.102"
 
 var param = document.URL.split('-')[1];
 var nbUsers = 0;
+
+// Get the users responses for a questionnaire 
 var post = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"get_user_result", id:param });
 post.done(function(data){
 	if (data != "") {
 		dataParse = JSON.parse(data);
 		console.log(dataParse);
+
+		//For each user adding radio to correct their answer (true or false)
 		$.each(dataParse, function(index,value){
+
+			//Change the color of the background as white or grey
 			if(nbUsers%2 == 0){
 				var user = $('<li class="w3-section w3-white w3-padding"><h2>User '+index+'</h2></li>');
 			}

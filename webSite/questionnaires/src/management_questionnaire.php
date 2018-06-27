@@ -5,12 +5,18 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 
 $adress = "http://163.172.59.102";
-//$adress = "http://localhost/chromeExtension";
 
 class all{}
 
 class questionnaire{}
 
+/**
+ * This function replaces every letters with an accent by one without
+ *
+ * @param string $str A string with accents
+ *
+ * @return string $str A string without accents
+ */
 function stripVN($str) {
 	$str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ|ä)/", 'a', $str);
 	$str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ|ë)/", 'e', $str);
@@ -50,26 +56,21 @@ function deleteDirectory($dir) {
 
 if (isset($_POST['action'])) {
 
+	/** @var string The name of the server where the database is stored */
 	$servername = "localhost";
+	/** @var string The login of the database */
 	$username = "root";
-
+	/** @var string The password of the database */
 	$password = "stageOsaka";
-	//$password = "";
+	/** @var string The name of the database */
 	$dbname = "chrome_extension";
 
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    	// set the PDO error mode to exception
+    	// Set the PDO error mode to exception
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		if ($_POST['action'] == 'add') {
-			/*echo "<pre>";
-			var_dump($_POST);
-			echo "</pre>";
-
-			echo "<pre>";
-			var_dump($_FILES);
-			echo "</pre>";*/
 			header("Location: ".$adress."/webSite/questionnaires/questionnaire");
 			if ( isset($_POST['title']) && isset($_POST['auto_correction']) && isset($_POST['user_email']) && isset($_POST['q']) ) {
 				$id = uniqid();
@@ -78,7 +79,6 @@ if (isset($_POST['action'])) {
 				$target_file = "";
 
 				if ($_POST['user_email'] != "") {
-					# code...
 					if (mkdir($target_dir, 0777, true)) {
 						if ($_FILES["questionnaire"]["name"] != "") {
 							$target_file = $target_dir . "/" . basename($_FILES["questionnaire"]["name"]);
@@ -125,7 +125,6 @@ if (isset($_POST['action'])) {
 						$stmt->bindParam(':image', $image);
 
 						foreach ($_POST['q'] as $key => $value) {
-
 							if ($_FILES["question"]["name"][$key] != "") {
 								$target_file = $target_dir . "/" . basename($_FILES["question"]["name"][$key]);
 								if (!move_uploaded_file($_FILES["question"]["tmp_name"][$key], $target_file)) {
@@ -190,13 +189,6 @@ if (isset($_POST['action'])) {
 			}
 		}
 		elseif ($_POST['action'] == 'edit') {
-			/*echo "<pre>";
-			var_dump($_POST);
-			echo "</pre>";
-
-			echo "<pre>";
-			var_dump($_FILES);
-			echo "</pre>";*/
 			header("Location: ".$adress."/webSite/questionnaires/questionnaire");
 			if (isset($_POST['id_questionnaire']) && isset($_POST['param_id'])) {
 

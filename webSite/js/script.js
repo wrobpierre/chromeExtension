@@ -30,7 +30,6 @@ else {
   var post = $.post(adress+'/dataBase.php', { key:"load" });
 }
 
-
 post.done(function(data) {
   var nytg = nytg || {}; 
   var time = 0;
@@ -49,83 +48,85 @@ post.done(function(data) {
   if(dataParse.length > 0){
     bestNote = dataParse[0]['note'];
     dataParse.forEach(function(element){
-      timer = JSON.parse(element['timer']);
+      if ( element['host_name'].indexOf('www.google.') == -1 && element['host_name'].indexOf('163.172.59.102') == -1 ) {
+        timer = JSON.parse(element['timer']);
 
-      if (element['note'] > bestNote) {
-        bestNote = element['note'];
-      }
-
-      if ( best_users['view'][element['key_user']] == undefined ) {  
-        best_users['view'][element['key_user']] = [];
-        best_users['view'][element['key_user']]['total'] = JSON.parse(element['question']).length;
-
-        time = parseInt(timer.hours)*3600 + parseInt(timer.minutes)*60 + parseInt(timer.secondes);
-        best_users['time'][element['key_user']] = [];
-        best_users['time'][element['key_user']]['total'] = time;
-
-        best_users['view'][element['key_user']].push(element);
-        best_users['time'][element['key_user']].push(element);
-      } 
-      else {
-        best_users['view'][element['key_user']].push(element);
-        best_users['view'][element['key_user']]['total'] += JSON.parse(element['question']).length;
-
-        time = parseInt(timer.hours)*3600 + parseInt(timer.minutes)*60 + parseInt(timer.secondes);
-        best_users['time'][element['key_user']].push(element);
-        best_users['time'][element['key_user']]['total'] += time;
-      }
-
-      nb_question = element['nb_question'];
-      if (!tabData.find(function(elem){ return elem.url === element.url; })) {
-        tmp = dataParse.filter(function(obj){ return obj.url == element.url; });
-        note = 0;
-        hours = 0;
-        minutes = 0;
-        secondes = 0;
-        views = 0;
-        var tabMedianeTime = [];
-        var tabMedianeView = [];
-        var tabMedianeFirstTime = [];
-        var questionNum = JSON.parse(element['question']);
-        if (maxQuestion < questionNum[0]['question']) {
-          maxQuestion = questionNum[0]['question'];
+        if (element['note'] > bestNote) {
+          bestNote = element['note'];
         }
 
-        tmp.forEach(function(elem){
-          views += parseInt(elem['view']);
-          note += parseInt(elem['note']);
-          timer = JSON.parse(elem['timer']);
-          tabMedianeView.push(parseInt(elem['view']));
-          tabMedianeTime.push(parseInt(timer.hours)*3600+parseInt(timer.minutes)*60+parseInt(timer.secondes));
-          tabMedianeFirstTime.push(new Date(elem['first_time']).getTime());
-        });
-        tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
-        element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
-        element['avg'] = note/tmp.length;
+        if ( best_users['view'][element['key_user']] == undefined ) {  
+          best_users['view'][element['key_user']] = [];
+          best_users['view'][element['key_user']]['total'] = JSON.parse(element['question']).length;
 
-        tabMedianeTime = tabMedianeTime.sort(function compareNombres(a, b) {return a - b;});
-        element['timer'] = JSON.parse(element['timer']);
+          time = parseInt(timer.hours)*3600 + parseInt(timer.minutes)*60 + parseInt(timer.secondes);
+          best_users['time'][element['key_user']] = [];
+          best_users['time'][element['key_user']]['total'] = time;
 
-        if((tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/3600) >= 1){
-          hours = tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/3600;
-          tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))] -= Math.floor(hours)*3600;
-          hours = Math.floor(hours);
+          best_users['view'][element['key_user']].push(element);
+          best_users['time'][element['key_user']].push(element);
+        } 
+        else {
+          best_users['view'][element['key_user']].push(element);
+          best_users['view'][element['key_user']]['total'] += JSON.parse(element['question']).length;
+
+          time = parseInt(timer.hours)*3600 + parseInt(timer.minutes)*60 + parseInt(timer.secondes);
+          best_users['time'][element['key_user']].push(element);
+          best_users['time'][element['key_user']]['total'] += time;
         }
-        if((tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/60)>= 1){
-          minutes = tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/60
-          tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))] -= Math.floor(minutes)*60;
-          minutes = Math.floor(minutes);
-        }
-        secondes = Math.floor(tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]);
 
-        element['timer']['hours'] = hours;
-        element['timer']['minutes'] = minutes;
-        element['timer']['secondes'] = secondes;
+        nb_question = element['nb_question'];
+        
+        if (!tabData.find(function(elem){ return elem.url === element.url; })) {
+          tmp = dataParse.filter(function(obj){ return obj.url == element.url; });
+          note = 0;
+          hours = 0;
+          minutes = 0;
+          secondes = 0;
+          views = 0;
+          var tabMedianeTime = [];
+          var tabMedianeView = [];
+          var tabMedianeFirstTime = [];
+          var questionNum = JSON.parse(element['question']);
+          if (maxQuestion < questionNum[0]['question']) {
+            maxQuestion = questionNum[0]['question'];
+          }
 
-        tabMedianeFirstTime.sort(function compareNombres(a, b) {return a - b;});
-        element['first_time'] = tabMedianeFirstTime[Math.ceil(parseInt(tabMedianeTime.length/2))];
+          tmp.forEach(function(elem){
+            views += parseInt(elem['view']);
+            note += parseInt(elem['note']);
+            console.log(elem)
+            timer = JSON.parse(elem['timer']);
+            tabMedianeView.push(parseInt(elem['view']));
+            tabMedianeTime.push(parseInt(timer.hours)*3600+parseInt(timer.minutes)*60+parseInt(timer.secondes));
+            tabMedianeFirstTime.push(new Date(elem['first_time']).getTime());
+          });
+          tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
+          element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
+          element['avg'] = note/tmp.length;
 
-        if ( element['host_name'].indexOf('www.google.') == -1 && element['host_name'].indexOf('163.172.59.102') == -1 ) {
+          tabMedianeTime = tabMedianeTime.sort(function compareNombres(a, b) {return a - b;});
+          element['timer'] = JSON.parse(element['timer']);
+
+          if((tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/3600) >= 1){
+            hours = tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/3600;
+            tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))] -= Math.floor(hours)*3600;
+            hours = Math.floor(hours);
+          }
+          if((tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/60)>= 1){
+            minutes = tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]/60
+            tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))] -= Math.floor(minutes)*60;
+            minutes = Math.floor(minutes);
+          }
+          secondes = Math.floor(tabMedianeTime[Math.ceil(parseInt(tabMedianeTime.length/2))]);
+
+          element['timer']['hours'] = hours;
+          element['timer']['minutes'] = minutes;
+          element['timer']['secondes'] = secondes;
+
+          tabMedianeFirstTime.sort(function compareNombres(a, b) {return a - b;});
+          element['first_time'] = tabMedianeFirstTime[Math.ceil(parseInt(tabMedianeTime.length/2))];
+
           tabData.push(element);
         }
       }
@@ -884,24 +885,8 @@ nytg.ChooseList.prototype.selectByElement = function(el) {
   var that = this;    
   nytg.c = new nytg.Chart();
   nytg.c.init();
-  //nytg.c.start();
 
-  this.highlightedItems = [];
-  
-  // nytg.s = new nytg.SearchBox("nytg-search", nytg.array_webSites, "name", "department", "budget_2012", "id");
-  // nytg.s.findCallback = function(evt){
-  //   var foundId = evt.id;    
-  //   
-  //   for (var i=0; i < that.highlightedItems.length; i++) {
-  //     $j("#nytg-circle"+that.highlightedItems[i]).css({'stroke-width':1});
-  //   };
-  // 
-  //   that.highlightedItems = [evt.id];
-  //   for (var i=0; i < that.highlightedItems.length; i++) {
-  //     $j("#nytg-circle"+that.highlightedItems[i]).css({'stroke-width':20});
-  //   };
-  //   
-  // }
+  //this.highlightedItems = [];
 
   var currentOverlay = undefined;
   nytg.mainNav = new nytg.ChooseList($j(".nytg-navigation"), onMainChange);

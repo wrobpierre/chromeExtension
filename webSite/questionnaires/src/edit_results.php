@@ -31,7 +31,7 @@ else{
 	<div id="form-questionnaire" class="w3-container w3-light-grey">
 		<div class="w3-col l3 w3-padding"></div>
 		<div class="w3-col l6 w3-col s12 w3-border w3-white w3-margin-bottom" style="margin-top:-80px;">
-			<form method="post" action="management_questionnaire.php">
+			<form method="post" action="/webSite/questionnaires/src/management_questionnaire.php">
 				<h1 class="w3-red w3-padding" style="margin:0;">Rate user responses</h1>
 				<input type="hidden" name="action" value="edit_user_result">
 				<ul class="users" style="list-style: none; padding: 0;">

@@ -1,5 +1,4 @@
 var adress = "http://163.172.59.102"
-// var adress = "http://localhost/chromeExtension"
 
 function generateList(data) {
   if (data != undefined) {
@@ -55,7 +54,6 @@ function generateList(data) {
 function loadList() {
   var storage = chrome.storage.local;
   storage.get('data', function(result) {
-    //console.log(result);
     generateList(result.data);
   })
 }
@@ -80,53 +78,25 @@ function sendData(key) {
         storage.get('firstUrl', function(resultUrl){
           console.log(result);
           var post = $.post(adress+'/dataBase.php', { d:result, url:resultUrl, uniqId: resultId.uniqId, key:key, type:"type"});
-          post.done(function(data) {
-            // var test = $.parseJSON(data);
-            // $.each($.parseJSON(test[0]['timer']), function(i, element){
-              console.log(data);
-            // });
-          });
+          post.done(function(data) {});
         });
       });
     }
   });
 }
 
-/*var obj = {};
-obj['data'] = [{'url':'http://google.fr'}]
-chrome.storage.local.set(obj)
-storage.get('k1',function(result){
-  console.log(result.k1);
-  result.k1.push({test:'test'})
-  obj['k1'] = result.k1
-  storage.set(obj)
-  //console output = {k1:'s1'}
-});
-storage.set(obj)
-chrome.storage.local.get(function(result){
-  console.log(result);
-})*/
-
-
 loadList();
 
 document.addEventListener('DOMContentLoaded', function () {
+  document.getElementsByClassName("overlay")[0].addEventListener("click",function(e) {
+    document.getElementById('start').style.visibility = 'visible';
+    document.getElementById('stop').style.visibility = 'visible';
+  });
 
-    // console.log(document.getElementsByClassName("overlay"));
-    document.getElementsByClassName("overlay")[0].addEventListener("click",function(e) {
-      document.getElementById('start').style.visibility = 'visible';
-      document.getElementById('stop').style.visibility = 'visible';
-    });
-
-    document.getElementsByClassName("overlay")[1].addEventListener("click",function(e) {
-      document.getElementById('start').style.visibility = 'hidden';
-      document.getElementById('stop').style.visibility = 'hidden';
-    });
-
-  // document.getElementById('suppr').addEventListener('click', resetList);
-  //document.getElementById('add').addEventListener('click', function(){ sendData("add") });
-  // document.getElementById('load').addEventListener('click', function(){ sendData("load") });
-  // document.getElementById('delete').addEventListener('click', function(){ sendData("delete") });
+  document.getElementsByClassName("overlay")[1].addEventListener("click",function(e) {
+    document.getElementById('start').style.visibility = 'hidden';
+    document.getElementById('stop').style.visibility = 'hidden';
+  });
 
   chrome.runtime.sendMessage({type: 'get'}, function get(response){
     console.log(response);
@@ -195,18 +165,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (dataParse.length == 0) {
               a.href = adress+"/webSite/graph.php";
               a.textContent = adress+"/webSite/graph.php";
-              // a.href = "http://localhost/chromeExtension/webSite/graph.php";
-              // a.textContent = "http://localhost/chromeExtension/webSite/graph.php";
-
             }
             else {
               a.href = adress+"/webSite/graph.php?id="+dataParse[0].id;
               a.textContent = adress+"/webSite/graph.php?id="+dataParse[0].id;
-              // a.href = "http://localhost/chromeExtension/webSite/graph.php?id="+dataParse[0].id;
-              // a.textContent = "http://localhost/chromeExtension/webSite/graph.php?id="+dataParse[0].id;
-
             }
-            // document.getElementById('data-overlay').appendChild(a);
             resetList();
           });
         });

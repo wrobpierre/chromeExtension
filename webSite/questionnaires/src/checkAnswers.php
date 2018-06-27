@@ -1,13 +1,25 @@
-<?php 
+<?php
+namespace \chromeExtension\webSite\questionnaires\src\;
+
+/**
+ * This file is responsible for checking users' responses and saving them to the database.
+ */
+
 header('Access-Control-Allow-Origin: *');
 $adress = "http://163.172.59.102";
-// $adress = "http://localhost/chromeExtension";
 
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 
 class answer{}
 
+/**
+ * This function replaces every letters with an accent by one without
+ *
+ * @param string $str A string with accents
+ *
+ * @return string $str A string without accents
+ */
 function stripVN($str) {
 	$str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ|ä)/", 'a', $str);
 	$str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ|ë)/", 'e', $str);
@@ -27,18 +39,38 @@ function stripVN($str) {
 	return $str;
 }
 
+/** @var string The name of the server where the database is stored */
 $servername = "localhost";
+/** @var string The login of the database */
 $username = "root";
+/** @var string The password of the database */
 $password = "stageOsaka";
-//$password = "";
+/** @var string The name of the database */
 $dbname = "chrome_extension";
 
 if (isset($_POST['user_email'])) {
 	try {
 		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    	// set the PDO error mode to exception
+    	// Set the PDO error mode to exception
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+		/**
+		 * The code below generates a query which return the list of answers to questions and their type
+		 *
+		 * ```
+		 * $first = true;
+		 * $requete = "SELECT id, type_ques, answer FROM questions WHERE id=";
+		 * foreach ($_POST['q'] as $key => $value) {
+		 * 	if ($first) {
+		 * 		$requete = $requete.$key;
+		 *		$first = false;
+		 * 	}
+		 * 	else {
+		 *		$requete = $requete.' OR id='.$key;
+		 * 	}
+		 * }
+		 * ```
+		 */
 		$first = true;
 		$requete = "SELECT id, type_ques, answer FROM questions WHERE id=";
 		foreach ($_POST['q'] as $key => $value) {
@@ -50,23 +82,15 @@ if (isset($_POST['user_email'])) {
 				$requete = $requete.' OR id='.$key;
 			}
 		}
-
 		$stmt = $conn->prepare($requete);
 		$stmt->execute();
 		
 		$answers = array();
 
+		// I store the result of the previous query in an array
 		foreach ($stmt->fetchAll() as $key => $value) {
 			$answers[$value['id']] = array("type" => $value['type_ques'], "answer" => $value['answer']);
 		}
-
-		/*echo "<pre>";
-		var_dump($_POST);
-		echo "</pre>";
-
-		echo "<pre>";
-		var_dump($answers);
-		echo "</pre>";*/
 
 		header("Location: ".$adress."/webSite/questionnaires/src/result.php");			
 		$stmt = $conn->prepare("INSERT INTO answers (key_question, answer, result, rank, knowledge, use_graph, key_user)

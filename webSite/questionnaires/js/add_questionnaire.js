@@ -6,7 +6,7 @@ var fileName = "";
 
 
 /**
-* The function “updateImageDisplay” checked if an image is already display in parent <div>, if there is one, 
+* The function “updateImageDisplay” check if an image is already display in parent <div>, if there is one, 
 * the function will delete the actual image and replace it by the new image. Else the function will add an image.
 *
 * @param : void
@@ -51,9 +51,8 @@ function updateImageDisplay() {
 }
 
 /**
-* The function “updateImageDisplay” checked if an image is already display in parent <div>, if there is one, the function will delete 
-* the actual image and replace it by the new image. Else the function will add an image.
-*
+* The function “validFileType” check if the format of the file can be supported.
+* 
 * @param : string file - The extension of the file it can be : image/jpeg, image/pjpeg, image/png
 * @return : bool - Check if the file type is valid
 */
@@ -131,7 +130,7 @@ $(document).ready(function(){
 		input_img[0].addEventListener('change', updateImageDisplay);
 		div_img.find('.preview').prev().append(input_img);
 
-		// Choose the type of answer you want 
+		// User choose the type of answer he want 
 		var type_answer = $('<div class="type_answer"></div>'); 
 		var lt = $('<label>Type of question : </label> <span class="error"></span><br>');
 		var select = $('<select class="select_type w3-select" name="q['+i+'][type_ques]">'

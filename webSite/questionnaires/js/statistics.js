@@ -1,85 +1,144 @@
 var adress = "http://163.172.59.102"
-			var post = $.post(adress+'/dataBase.php', { key:"get_stat" });
-			var dataParse;
-			var param = document.URL.split('-')[1];
-			var dataPieChart = {'percent': [] , 'total': 0};
-			var dataPieChart2 = {'percent': [] , 'total': 0};
-			var dataBarChart = [];
-			var dataBarChart2 = [];
-			var dataSecondChart = [];
-			var questionnairesNames = [];
-			var nbQuestions = [];
+var post = $.post(adress+'/dataBase.php', { key:"get_stat" });
+var dataParse;
+var param = document.URL.split('-')[1];
+var dataPieChart = {'percent': [] , 'total': 0};
+var dataPieChart2 = {'percent': [] , 'total': 0};
+var dataBarChart = [];
+var dataBarChart2 = [];
+var dataSecondChart = [];
+var questionnairesNames = [];
+var nbQuestions = [];
 
-			var dataset = [
-			{ name: 'success percentage', percent: 0.00 },
-			{ name: 'failure percentage', percent: 100.00 }
-			];
-			var dataset2 = [
-			{ name: 'success percentage', percent: 0.00 },
-			{ name: 'failure percentage', percent: 100.00 }
-			];
+var dataset = [
+{ name: 'success percentage', percent: 0.00 },
+{ name: 'failure percentage', percent: 100.00 }
+];
+var dataset2 = [
+{ name: 'success percentage', percent: 0.00 },
+{ name: 'failure percentage', percent: 100.00 }
+];
 
 
-			post.done(function(data){
-				if (data != '') {
-					dataParse = JSON.parse(data);
-					console.log(dataParse);
+post.done(function(data){
+	if (data != '') {
+		dataParse = JSON.parse(data);
+		console.log(dataParse);
 
-					var firstGraph = '#chart1'
-					dataset[0].percent = percentPieChart(dataParse, dataPieChart, 0);
-					dataset[1].percent = 100 - dataset[0].percent;
-					generatePieCharts(dataset, firstGraph);
+		var firstGraph = '#chart1'
+		dataset[0].percent = percentPieChart(dataParse, dataPieChart, 0);
+		dataset[1].percent = 100 - dataset[0].percent;
+		generatePieCharts(dataset, firstGraph);
 
-					var firstGraph2 = '#chart2'
-					dataset2[0].percent = percentPieChart(dataParse, dataPieChart2, 1);
-					dataset2[1].percent = 100 - dataset2[0].percent;
-					generatePieCharts(dataset2, firstGraph2);
+		var firstGraph2 = '#chart2'
+		dataset2[0].percent = percentPieChart(dataParse, dataPieChart2, 1);
+		dataset2[1].percent = 100 - dataset2[0].percent;
+		generatePieCharts(dataset2, firstGraph2);
 
-					barChart($('#barChart'), knowledgeBarChart(dataParse, 0), "Without the graph help");
-					barChart($('#barChart3'), knowledgeBarChart(dataParse, 1), "With the graph help");
-					barChart($('#barChart2'), rankBarChart(dataParse, 0), "Without graph help");
-					barChart($('#barChart4'), rankBarChart(dataParse, 1), "With graph help");
-					
+		barChart($('#barChart'), knowledgeBarChart(dataParse, 0), "Without the graph help");
+		barChart($('#barChart3'), knowledgeBarChart(dataParse, 1), "With the graph help");
+		barChart($('#barChart2'), rankBarChart(dataParse, 0), "Without graph help");
+		barChart($('#barChart4'), rankBarChart(dataParse, 1), "With graph help");
 
-					$("#nbParticipants p").append(nbParticipants(dataParse, 0));
-					$("#nbParticipants2 p").append(nbParticipants(dataParse, 1));
-					$("#avgSites p").append(avgSites(dataParse, 0));
-					$("#avgSites2 p").append(avgSites(dataParse, 1));
 
-					return questionnairesInput();
-				}
+		$("#nbParticipants p").append(nbParticipants(dataParse, 0));
+		$("#nbParticipants2 p").append(nbParticipants(dataParse, 1));
+		$("#avgSites p").append(avgSites(dataParse, 0));
+		$("#avgSites2 p").append(avgSites(dataParse, 1));
+
+		return questionnairesInput();
+	}
+});
+
+function questionnairesInput(){
+	$.each(dataParse, function(index, value){
+		var alreadyExist = false;
+		$.each(questionnairesNames, function(index, valueChart){
+			if(value.title == valueChart.title){
+				alreadyExist = true;
+			}
+		});
+		if(!alreadyExist){
+			questionnairesNames.push(value);
+			$('#questionnaires').append('<input class="nav w3-button w3-block w3-left-align" type="button" name="" value="'+value.title+'">');
+		}
+	});
+	$('input').on('click', function(){
+		var firstGraph = '#chart1'
+		if(this.value != "All questionnaires"){
+			var tabQuestionnaires = chooseQuestionnaires(dataParse, this.value);
+			$('#title').text(this.value);
+
+		}
+		else{
+			var tabQuestionnaires = dataParse;
+			$('#title').text("all questionnaires");
+		}
+
+		dataPieChart = {'percent': [] , 'total': 0};
+		dataPieChart2 = {'percent': [] , 'total': 0};
+		dataPieChart3 = {'percent': [] , 'total': 0};
+		dataPieChart4 = {'percent': [] , 'total': 0};
+
+		$('#chart1').children().remove();
+		dataset[0].percent = percentPieChart(tabQuestionnaires, dataPieChart, 0);
+		dataset[1].percent = 100 - dataset[0].percent;
+		generatePieCharts(dataset, firstGraph);
+
+		$('#chart2').children().remove();
+		var firstGraph2 = '#chart2'
+		dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
+		dataset2[1].percent = 100 - dataset2[0].percent;
+		generatePieCharts(dataset2, firstGraph2);
+
+
+		var parentBarChart = $('#barChart').parent();
+		var parentBarChart2 = $('#barChart2').parent();
+		var parentBarChart3 = $('#barChart3').parent();
+		var parentBarChart4 = $('#barChart4').parent();
+
+		$('#barChart').remove();
+		$('#barChart2').remove();
+		$('#barChart3').remove();
+		$('#barChart4').remove();
+
+		parentBarChart.append('<canvas id="barChart" class="w3-col l12"></canvas>');
+		parentBarChart2.append('<canvas id="barChart2" class="w3-col l12"></canvas>');
+		parentBarChart3.append('<canvas id="barChart3" class="w3-col l12"></canvas>');
+		parentBarChart4.append('<canvas id="barChart4" class="w3-col l12"></canvas>');
+
+		barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Number of participants according to their level of knowledge in the area of ​​the questionnaire without graph help");
+		barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "Number of participants according to their level of knowledge in the area of ​​the questionnaire with graph help");
+
+		barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Number of participants based on difficulty in answering questions without graph help");
+		barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "Number of participants based on difficulty in answering questions with graph help");
+
+		$('#nbParticipants p').remove();
+		$("#nbParticipants").append('<p>Number of participants without graph help: '+nbParticipants(tabQuestionnaires, 0)+'</p>');
+		$('#nbParticipants2 p').remove();
+		$("#nbParticipants2").append('<p>Number of participants without graph help: '+nbParticipants(tabQuestionnaires, 1)+'</p>');
+		$('#avgSites p').remove();
+		$("#avgSites").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 0)+'</p>');
+		$('#avgSites2 p').remove();
+		$("#avgSites2").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
+
+		$('#questions').children().remove();
+		var questions = createQuestions(tabQuestionnaires);
+		if(this.value != "All questionnaires"){
+			$('#questions').append('<h3>Look at the statistics for each questions</h3>');
+			$.each(questions, function(index, value){
+				$('#questions').append('<input class="w3-check" type="checkbox" checked="checked" value="'+value.key_question+'">');
+				$('#questions').append('<label>'+value.question.split('(/=/)')[0]+'</label>');
+				$('#questions').append('<br>');
+
 			});
-
-			function questionnairesInput(){
-				$.each(dataParse, function(index, value){
-					var alreadyExist = false;
-					$.each(questionnairesNames, function(index, valueChart){
-						if(value.title == valueChart.title){
-							alreadyExist = true;
-						}
-					});
-					if(!alreadyExist){
-						questionnairesNames.push(value);
-						$('#questionnaires').append('<input class="nav w3-button w3-block w3-left-align" type="button" name="" value="'+value.title+'">');
-					}
-				});
-				$('input').on('click', function(){
-					var firstGraph = '#chart1'
-					if(this.value != "All questionnaires"){
-						var tabQuestionnaires = chooseQuestionnaires(dataParse, this.value);
-						$('#title').text(this.value);
-
-					}
-					else{
-						var tabQuestionnaires = dataParse;
-						$('#title').text("all questionnaires");
-					}
+			$('#questions input').on('click', function(){
+				var choosedQuestion = chooseQuestion(dataParse, questions);
+				if( choosedQuestion != undefined && choosedQuestion.length>0){
+					var tabQuestionnaires = choosedQuestion;
 
 					dataPieChart = {'percent': [] , 'total': 0};
 					dataPieChart2 = {'percent': [] , 'total': 0};
-					dataPieChart3 = {'percent': [] , 'total': 0};
-					dataPieChart4 = {'percent': [] , 'total': 0};
-
 					$('#chart1').children().remove();
 					dataset[0].percent = percentPieChart(tabQuestionnaires, dataPieChart, 0);
 					dataset[1].percent = 100 - dataset[0].percent;
@@ -91,6 +150,17 @@ var adress = "http://163.172.59.102"
 					dataset2[1].percent = 100 - dataset2[0].percent;
 					generatePieCharts(dataset2, firstGraph2);
 
+					$('#chart3').children().remove();
+					var firstGraph3 = '#chart3'
+					dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 0);
+					dataset2[1].percent = 100 - dataset2[0].percent;
+					generatePieCharts(dataset2, firstGraph3);
+
+					$('#chart4').children().remove();
+					var firstGraph4 = '#chart4'
+					dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
+					dataset2[1].percent = 100 - dataset2[0].percent;
+					generatePieCharts(dataset2, firstGraph4);
 
 					var parentBarChart = $('#barChart').parent();
 					var parentBarChart2 = $('#barChart2').parent();
@@ -109,121 +179,51 @@ var adress = "http://163.172.59.102"
 
 					barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Number of participants according to their level of knowledge in the area of ​​the questionnaire without graph help");
 					barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "Number of participants according to their level of knowledge in the area of ​​the questionnaire with graph help");
-					
+
 					barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Number of participants based on difficulty in answering questions without graph help");
 					barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "Number of participants based on difficulty in answering questions with graph help");
-					
+
+
 					$('#nbParticipants p').remove();
-					$("#nbParticipants").append('<p>Number of participants without graph help: '+nbParticipants(tabQuestionnaires, 0)+'</p>');
+					$("#nbParticipants").append('<p>Number of participants : '+nbParticipants(tabQuestionnaires, 0)+'</p>');
 					$('#nbParticipants2 p').remove();
-					$("#nbParticipants2").append('<p>Number of participants without graph help: '+nbParticipants(tabQuestionnaires, 1)+'</p>');
+					$("#nbParticipants2").append('<p>Number of participants : '+nbParticipants(tabQuestionnaires, 1)+'</p>');
 					$('#avgSites p').remove();
 					$("#avgSites").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 0)+'</p>');
 					$('#avgSites2 p').remove();
-					$("#avgSites2").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
+					$("#avgSites2").append('<p>Number of sites visited on average with graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
+				}
+				else{
+					var parentBarChart = $('#barChart').parent();
+					var parentBarChart2 = $('#barChart2').parent();
+					var parentBarChart3 = $('#barChart3').parent();
+					var parentBarChart4 = $('#barChart4').parent();
+					// var parentBarChart4 = $('#barChart4').parent();
 
-					$('#questions').children().remove();
-					var questions = createQuestions(tabQuestionnaires);
-					if(this.value != "All questionnaires"){
-						$('#questions').append('<h3>Look at the statistics for each questions</h3>');
-						$.each(questions, function(index, value){
-							$('#questions').append('<input class="w3-check" type="checkbox" checked="checked" value="'+value.key_question+'">');
-							$('#questions').append('<label>'+value.question.split('(/=/)')[0]+'</label>');
-							$('#questions').append('<br>');
+					$('#chart1').children().remove();
+					$('#chart1').append('<p>No Data</p>');
+					$('#chart2').children().remove();
+					$('#chart2').append('<p>No Data</p>');
+					$('#barChart').remove();
+					parentBarChart.append('<p id="barChart">No Data</p>');
+					$('#barChart2').remove();
+					parentBarChart2.append('<p id="barChart2">No Data</p>');
+					$('#barChart3').remove();
+					parentBarChart3.append('<p id="barChart3">No Data</p>');
+					$('#barChart4').remove();
+					parentBarChart4.append('<p id="barChart4">No Data</p>');
+					$('#nbParticipants p').remove();
+					$("#nbParticipants").append('<p>No Data</p>');
+					$('#avgSites p').remove();
+					$("#avgSites").append('<p>No Data</p>');
+					$('#avgSites2 p').remove();
+					$("#avgSites2").append('<p>No Data</p>');
 
-						});
-						$('#questions input').on('click', function(){
-							var choosedQuestion = chooseQuestion(dataParse, questions);
-							if( choosedQuestion != undefined && choosedQuestion.length>0){
-								var tabQuestionnaires = choosedQuestion;
+				}
+			});
+		}
 
-								dataPieChart = {'percent': [] , 'total': 0};
-								dataPieChart2 = {'percent': [] , 'total': 0};
-								$('#chart1').children().remove();
-								dataset[0].percent = percentPieChart(tabQuestionnaires, dataPieChart, 0);
-								dataset[1].percent = 100 - dataset[0].percent;
-								generatePieCharts(dataset, firstGraph);
-
-								$('#chart2').children().remove();
-								var firstGraph2 = '#chart2'
-								dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
-								dataset2[1].percent = 100 - dataset2[0].percent;
-								generatePieCharts(dataset2, firstGraph2);
-
-								$('#chart3').children().remove();
-								var firstGraph3 = '#chart3'
-								dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 0);
-								dataset2[1].percent = 100 - dataset2[0].percent;
-								generatePieCharts(dataset2, firstGraph3);
-
-								$('#chart4').children().remove();
-								var firstGraph4 = '#chart4'
-								dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
-								dataset2[1].percent = 100 - dataset2[0].percent;
-								generatePieCharts(dataset2, firstGraph4);
-
-								var parentBarChart = $('#barChart').parent();
-								var parentBarChart2 = $('#barChart2').parent();
-								var parentBarChart3 = $('#barChart3').parent();
-								var parentBarChart4 = $('#barChart4').parent();
-
-								$('#barChart').remove();
-								$('#barChart2').remove();
-								$('#barChart3').remove();
-								$('#barChart4').remove();
-
-								parentBarChart.append('<canvas id="barChart" class="w3-col l12"></canvas>');
-								parentBarChart2.append('<canvas id="barChart2" class="w3-col l12"></canvas>');
-								parentBarChart3.append('<canvas id="barChart3" class="w3-col l12"></canvas>');
-								parentBarChart4.append('<canvas id="barChart4" class="w3-col l12"></canvas>');
-
-								barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Number of participants according to their level of knowledge in the area of ​​the questionnaire without graph help");
-								barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "Number of participants according to their level of knowledge in the area of ​​the questionnaire with graph help");
-								
-								barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Number of participants based on difficulty in answering questions without graph help");
-								barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "Number of participants based on difficulty in answering questions with graph help");
-
-
-								$('#nbParticipants p').remove();
-								$("#nbParticipants").append('<p>Number of participants : '+nbParticipants(tabQuestionnaires, 0)+'</p>');
-								$('#nbParticipants2 p').remove();
-								$("#nbParticipants2").append('<p>Number of participants : '+nbParticipants(tabQuestionnaires, 1)+'</p>');
-								$('#avgSites p').remove();
-								$("#avgSites").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 0)+'</p>');
-								$('#avgSites2 p').remove();
-								$("#avgSites2").append('<p>Number of sites visited on average with graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
-							}
-							else{
-								var parentBarChart = $('#barChart').parent();
-								var parentBarChart2 = $('#barChart2').parent();
-								var parentBarChart3 = $('#barChart3').parent();
-								var parentBarChart4 = $('#barChart4').parent();
-								// var parentBarChart4 = $('#barChart4').parent();
-
-								$('#chart1').children().remove();
-								$('#chart1').append('<p>No Data</p>');
-								$('#chart2').children().remove();
-								$('#chart2').append('<p>No Data</p>');
-								$('#barChart').remove();
-								parentBarChart.append('<p id="barChart">No Data</p>');
-								$('#barChart2').remove();
-								parentBarChart2.append('<p id="barChart2">No Data</p>');
-								$('#barChart3').remove();
-								parentBarChart3.append('<p id="barChart3">No Data</p>');
-								$('#barChart4').remove();
-								parentBarChart4.append('<p id="barChart4">No Data</p>');
-								$('#nbParticipants p').remove();
-								$("#nbParticipants").append('<p>No Data</p>');
-								$('#avgSites p').remove();
-								$("#avgSites").append('<p>No Data</p>');
-								$('#avgSites2 p').remove();
-								$("#avgSites2").append('<p>No Data</p>');
-
-							}
-						});
-}
-
-});
+	});
 }
 
 function chooseQuestion(dataParse){

@@ -7,13 +7,19 @@ var param = document.URL.split('-')[1];
 var formHasChanged = false;
 var submitted = false;
 
+// param is the end of the url it contain the unique id of a questionnaire
+// If it is undefind we generate the list of the questionnaire else we load the questionnaire and the user can answer it
 if (param == undefined) {
+
+	// Get the data of all the questionnaires
 	var post = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"all" });
 
 	post.done(function(data){
+
+		// Generate the HTML elements to list the questionnaires
 		if (data != '') {
 			var dataParse = JSON.parse(data);
-			console.log(dataParse);
+
 			document.title = 'Questionnaires';
 			$('h1').text('The questionnaires');
 			var ul = $('<ul></ul>');
@@ -21,12 +27,15 @@ if (param == undefined) {
 			ul.css("padding", "0")
 			ul.css("margin", "0")
 			$.each(dataParse, function(index, value){
+
+				// Change the color of the background in white or grey
 				if (index%2 == 0){
 					var li = $('<li class="list_question w3-col m12 w3-white w3-padding"></li>');
 				}
 				else{
 					var li = $('<li class="list_question w3-col m12 w3-padding" style="background: #f5f6fa;"></li>');
 				}
+
 				var titleDiv = $('<div class="w3-row w3-center"></div>')
 				var title = $('<h2 class=" w3-col m8 "></h2>').text(value['title']);
 
@@ -42,6 +51,7 @@ if (param == undefined) {
 				var do_ques = $('<input type="button" class="w3-button w3-blue w3-col l6 w3-section" style="white-space: normal; border: solid white;" onclick="window:location.href=\''+value['url']+'\'"></input>').attr('value', 'Answer the questionnaire');
 				var graph_ques = $('<input type="button" class="w3-button w3-blue w3-col l6 w3-section" style="white-space: normal; border: solid white;" onclick="window:location.href=\''+adress+'/webSite/graph-'+value['url'].split('-')[1]+'\'"></input>').attr('value', 'Graph');
 
+				// If an user is connected he can access to functionnality
 				if(checkUser != ""){
 					var option = $('<div class="option w3-col m12"></div>')
 					var edit = $('<input type="button" class="w3-button w3-blue w3-col l4 w3-section" style="white-space: normal; border: solid white;"onclick="window:location.href=\''+adress+'/webSite/questionnaires/edit_questionnaire-'+value['url'].split('-')[1]+'\'"></input>').attr('value', 'Edit');
@@ -62,6 +72,8 @@ if (param == undefined) {
 
 
 				always_visible.append(  do_ques,   graph_ques);
+
+				// If the user as created some questionnaies he can modify, delete or edit thier results
 				if(checkUser != "" && checkIdUser == value['key_user']){
 
 					if (value['auto_correction'] == 0) {
@@ -77,6 +89,8 @@ if (param == undefined) {
 				ul.append(li);
 				$('#content').append(ul);
 			})
+
+			// If the user is connected he cancreate a new questionnaire
 			if (checkUser != "") {
 				var add = $('<input type="button" class="w3-button w3-green" onclick="window:location.href=\''+adress+'/webSite/questionnaires/add_questionnaire\'"></input>').attr('value', 'New questionnaire');
 				add.css("background-color", "#00B16A");
@@ -86,7 +100,9 @@ if (param == undefined) {
 			}
 		}
 	});
-}
+} 
+
+// If param contain a uniq id for a questionnaire we load the questionnaire
 else {
 	if (checkUser == "") {
 		document.location.href="../connexion/connect";
@@ -104,30 +120,39 @@ else {
 	        $(window).off('beforeunload');
 	    });
 	});
+
+	// If user try to leave the page (exept for send his responses) we warn him his answer will be lost and we stop the extension
 	window.onunload = function() { chrome.runtime.sendMessage(editorExtensionId, {action: 'stop'}); }
+
+	// Get the parameters of the question
 	var post = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"get_questions", id:param });
 
+	// Generate the HTML elements for a questionnaire 
 	post.done(function(data){
 		var dataParse = JSON.parse(data);
-		console.log(dataParse);
 		document.title = dataParse[0]['title'];
 		$('h1').text(dataParse[0]['title']);
 		rules = $('<p class="w3-center"></p>').text('If you are not sure of the answer, put that you don\'t know or don\'t answer')
 		statement = $('<p class="w3-center"></p>').text(dataParse[0]['statement']);
 		$('#content').append(rules,statement);
 
+		// Form to send the response of the user for the questionnaire
 		var form = $('<form method="post" action="/webSite/questionnaires/src/checkAnswers.php"></form>');
 		var user_email = $('<input type="hidden" name="user_email" value="'+checkUser+'">');
 		form.append(user_email);
 
 		var start = $('<div class="w3-center"></div>');
 		var valid = $('<button class="w3-button w3-blue w3-section">Start questionnaire</button>');
+
+		// Start the questionnaire
 		valid.click(function(){
 			var that = $(this);
+
+			// Check in database if the user have already done this questionnaire (user can't do twice a questionnaire)
 			var already_done = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:"already_done", user:checkUser, id_questionnaire:dataParse[0]['id_questionnaire'] })
 
 			already_done.done(function(data){
-				console.log(data);
+				// If the questionnaire was already done we propose him to delete his last responses to do it again
 				if (data != 0) {
 					var r = confirm("You have already answered this questionnaire, if you continue all your previous data will be deleted");
 					if (r == true) {
@@ -175,6 +200,7 @@ else {
 		start.append(valid);
 		form.append(start);
 
+		// Generate the HTML elements for the questionnaire
 		for (var i = 0; i < dataParse.length; i++) {
 			var div = $('<div class="question w3-center" id="'+(i+1)+'"></div>');
 			if (dataParse.length != 1) {
@@ -242,6 +268,7 @@ else {
 
 			user_opinion.append(question,rank);
 		}
+
 		var label_knowledge = $('<p>What is your level of knowledge on the subject of this questionnaire?</p>');
 		var knowledge = $('<select class="w3-select" name="knowledge">'
 			+'<option value=""></option>'
@@ -263,8 +290,10 @@ else {
 		form.css("margin-top","0px");
 		$('#content').append(form);
 
+		// User can answer the questionnaire
 		$(document).ready(function(){
 
+			// Hide the next and the previous questions
 			$('div.question').css('display','none');
 			$('form > div:last-child').css('display','none');
 
@@ -289,6 +318,7 @@ else {
 				})
 
 				if (valid) {
+					// Stop the extension when the datas were send
 					chrome.runtime.sendMessage(editorExtensionId, {action: 'stop', email: checkUser},
 						function(response) {
 							submitted = true;

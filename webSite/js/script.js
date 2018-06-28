@@ -91,6 +91,7 @@ post.done(function(data) {
 
         nb_question = element['nb_question'];
         
+        // Take the mediane of the notes, views and times
         if (!tabData.find(function(elem){ return elem.url === element.url; })) {
           tmp = dataParse.filter(function(obj){ return obj.url == element.url; });
           note = 0;
@@ -114,10 +115,13 @@ post.done(function(data) {
             tabMedianeTime.push(parseInt(timer.hours)*3600+parseInt(timer.minutes)*60+parseInt(timer.secondes));
             tabMedianeFirstTime.push(new Date(elem['first_time']).getTime());
           });
+
+          // Search the mediane of the views
           tabMedianeView = tabMedianeView.sort(function compareNombres(a, b) {return a - b;});
           element['view'] = tabMedianeView[Math.ceil(parseInt(tabMedianeView.length/2))];
           element['avg'] = note/tmp.length;
 
+          // Search the mediane of the time
           tabMedianeTime = tabMedianeTime.sort(function compareNombres(a, b) {return a - b;});
           element['timer'] = JSON.parse(element['timer']);
 
@@ -217,6 +221,8 @@ post.done(function(data) {
       return a.first_time - b.first_time;
     });
     minAvg = tabData[0]['avg'];
+
+    //Search the minimum time and the maximum time
     tabData.forEach(function(element){
       element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
       if(minTime == null || minTime.hours >= parseInt(element.timer.hours)) {
@@ -236,6 +242,7 @@ post.done(function(data) {
 
       nytg.array_webSites.push(element);
 
+      // Search the minimum average of note and the maximum average of note
       if (minAvg > element['avg'] ) {
         minAvg = element['avg'];
       }
@@ -244,6 +251,7 @@ post.done(function(data) {
       }
     })
 
+    // Create DOM elements to sort the graph by notes average. The elements begin at the minimum average.
     for (var i = minAvg; i <= maxAvg; i++) {
       var notesFilter = document.getElementById('notes');
       var input = document.createElement("input");
@@ -258,12 +266,13 @@ post.done(function(data) {
       notesFilter.appendChild(label);
     }
 
+    // Get the datas of a question
     var question = $.post(adress+'/webSite/questionnaires/src/management_questionnaire.php', { action:'get_data_question', id:id });
     question.done(function(data){
-      console.log(data);
+      
+      // Put the datas of a questions in the input checkbox and create them (name of the question in the label)
       if (data != "") {
         var dataParse = JSON.parse(data);
-        console.log(dataParse);
 
         for (var i = 0; i < maxQuestion; i++) {
           var questionFilter = document.getElementById('questionFilter');
@@ -282,6 +291,7 @@ post.done(function(data) {
           questionFilter.appendChild(document.createElement("br"));
         }
 
+        // Create nav bar on the top of the graphics
         document.getElementById('question_title').textContent = dataParse[0]['title'];
         var li = document.createElement("li");
         var a = document.createElement("a");
@@ -296,6 +306,7 @@ post.done(function(data) {
     });
   }
   else{
+    //If no data don't show the DOM elements and show an error message
     var $j = jQuery;
     $j("#nytg-chartFrame").hide();
     $j("#nytg-error").css('visibility', 'visible');
@@ -389,6 +400,8 @@ post.done(function(data) {
       var hours =0;
       var minutes =0;
       var secondes =0;
+
+      //Create the legend for the time
       for (var i = 0; i < $j(".nytg-colorLabels")[0].children.length; i++) {
         var convertTime = Math.round(divisionTime*multiplyTime);
         var print = "";
@@ -402,11 +415,13 @@ post.done(function(data) {
           print += "Between "+secondes+"sec and ";
         }
         
+        //Convert the seconds in hours
         if(convertTime > 3600){
           hours = Math.floor(convertTime / 3600);
           convertTime -= hours*3600
           print += hours+"h "
         }
+        //Convert the seconds in minutes
         if(convertTime > 60){
           minutes = Math.floor(convertTime / 60);
           convertTime -= minutes*60
@@ -419,7 +434,7 @@ post.done(function(data) {
         $j(".nytg-colorLabels")[0].children[i].textContent = print;
         multiplyTime++;
       }
-
+      //Create 6 category of time (one for each colors)
       if (time < divisionTime) { return -2;
       } else if ( time < divisionTime*2) { return -1;
       } else if ( time < divisionTime*3){ return 0;
@@ -542,6 +557,7 @@ post.done(function(data) {
       var minView = null;
       var percent = 0;
 
+      //Search the website with the most views and for the less views
       for (var i=0; i < this.data.length; i++) {
         if (maxView == null || maxView < parseInt(this.data[i].view)) {
           maxView = this.data[i].view;

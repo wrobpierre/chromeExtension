@@ -154,6 +154,7 @@ post.done(function(data) {
 
     // Check if the users are the same
     if (median_view[0]['key_user'] === median_time[0]['key_user']) {
+      // If it's the same I only use one array it does not matter since there will only be one line on the graphic
       same = true;
 
       median_view.forEach( function(element, index) {
@@ -168,6 +169,7 @@ post.done(function(data) {
       var nb_site_view = nytg.array_best_median.length;
     }
     else {
+      // On the other hand if the users are different I give type according to which list the element comes from
       median_view.forEach( function(element, index) {
         var question = JSON.parse(element['question']);
         question.forEach( function(el) {
@@ -742,8 +744,11 @@ post.done(function(data) {
     discretionarySort: function() {
       var that = this;
       return function(d){
+        // Check if the users are the same 
         if (!same) {
+          // if they are different I pay attention to the type to know where to place it on the y axis
           if (d['type'] == 'view') {
+            // Then I use the order numbers to find out where to place it on the x axis.
             if (d.order == undefined) {
               lastX = 0*(870/nb_site_view)+(60+d.radius);  
             }
@@ -911,6 +916,7 @@ $j('.sorts').click(function() {
     }
   });
 
+  // Check on which graph is the user
   if ($j("#navBarGraph").find('.selected')[0].id == 'nytg-nav-all') {
     nytg.array_webSites = [];
     
@@ -952,6 +958,7 @@ $j('.sorts').click(function() {
       }
     });
   }
+  // Here we check on
   else if ($j("#navBarGraph").find('.selected')[0].id == 'nytg-nav-discretionary') {
     var i = 0;
     var j = 0;

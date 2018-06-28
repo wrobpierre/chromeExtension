@@ -6,6 +6,7 @@ $(document).ready(function(){
     if(register){
       e.preventDefault();
       $job = "";
+      // Labels for the work question
       switch($("#job").val()) {
         case "1": $job ="Administrative and support service activities";
         break;
@@ -49,6 +50,7 @@ $(document).ready(function(){
         $job = null;
       }
 
+      // Check if the password is good
       if($("#login").val() != "" && $("#password").val() == $("#passwordCheck").val() && $("#password").val().length >= 8){
         $.post(
           '/webSite/connexion/src/register.php',
@@ -81,6 +83,7 @@ $(document).ready(function(){
         );
             }
             else{
+              // Errors
               if($("#login").val() == ""){
                 $("#result").html("<p>The login is empty.</p>");
               }

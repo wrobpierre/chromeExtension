@@ -52,7 +52,7 @@ function getCurrentTabUrl(eventUrl) {
       url = eventUrl;
     }
 
-    // Get
+    // For the first url, records navigations datas in the storage of a website
     storage.get('firstUrl', function(result) {
       if(result.firstUrl != undefined && result.firstUrl != url){
         var keywords;
@@ -167,13 +167,11 @@ function saveList(values) {
 }
 
 /**
- *
- *
- *
- *
- * @param string - 
- * @param string - 
- * @param object - 
+ * Compare two date and give the diffrence between them.
+ * 
+ * @param object dateBegin - Is a date object in JS
+ * @param object dateEnd - Is a date object in JS
+ * @param object - The storage of the chorme Extension
  *
  * @return void
  */
@@ -184,16 +182,21 @@ function compareDate(dateBegin, dateEnd, element){
   var hours = 0;
   var minutes = 0;
 
+  // Number of hours
   if((durationMilliSec/3600) >= 1){
     hours = durationMilliSec/3600;
     durationMilliSec -= Math.floor(hours)*3600;
     hours = Math.floor(hours);
   }
+
+  // Number of minutes
   if((durationMilliSec/60)>= 1){
     minutes = durationMilliSec/60
     durationMilliSec -= Math.floor(minutes)*60;
     minutes = Math.floor(minutes);
   }
+
+  // Number of secondes
   var secondes = Math.floor(durationMilliSec);
 
   var duration = [hours, minutes, secondes];
@@ -264,12 +267,12 @@ chrome.runtime.onMessageExternal.addListener(
   });
 
 /**
- *
+ * This function update and return the firstUrl. 
  *
  *
  * @param void
  *
- * @return string - 
+ * @return string - The firstUrl is return because we need a response when this function is call.
  */
 function sendSecondUrl(){
   storage.get('firstUrl', function(result) {
@@ -306,6 +309,13 @@ function createUniqId(){
   });
 }
 
+/**
+ * Check in a current window if the firstUrl exist (add it if not) and return it.
+ *
+ * @param void
+ *
+ * @return string - the firstUrl
+ */
 function sendFirstUrl(){
   storage.get('firstUrl', function(result) {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {

@@ -1,5 +1,12 @@
+/**
+* Principal function of this page, it create the pie chart, give it the datas and draw it.
+* @param : object dataset - une object that contain all the  percent of success for questions.
+* @param : object div - The DOM element we will use to display the chart.
+* @return : void
+*/
 function generatePieCharts(dataset, div){
 
+	//create the donut of the chart
 	var pie=d3.layout.pie()
 	.value(function(d){return d.percent})
 	.sort(null)
@@ -33,6 +40,7 @@ function generatePieCharts(dataset, div){
 	.attr({
 		d:arc,
 		fill:function(d,i){
+			// color of the donut blue or red
 			if(i%2){
 				return '#f44336';
 			}
@@ -51,7 +59,7 @@ function generatePieCharts(dataset, div){
 		};
 	});
 
-
+	// Create the legend of the chart
 	var restOfTheData=function(){
 		var text=svg.selectAll('text')
 		.data(pie(dataset))
@@ -96,6 +104,7 @@ function generatePieCharts(dataset, div){
 		})
 		.style({
 			fill:function(d,i){
+				// color of the legend blue or red
 				if(i%2){
 					return '#f44336';
 				}

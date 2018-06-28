@@ -1,6 +1,6 @@
 var adress = "http://163.172.59.102"
 
-function generateList(data) {
+/*function generateList(data) {
   if (data != undefined) {
     while (document.getElementById('nbSite').firstChild) {
       document.getElementById('nbSite').removeChild(document.getElementById('nbSite').firstChild);
@@ -85,7 +85,7 @@ function sendData(key) {
   });
 }
 
-loadList();
+loadList();*/
 
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementsByClassName("overlay")[0].addEventListener("click",function(e) {
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('stop').style.visibility = 'hidden';
   });
 
-  chrome.runtime.sendMessage({type: 'get'}, function get(response){
+  /*chrome.runtime.sendMessage({type: 'get'}, function get(response){
     console.log(response);
     if (response.result) {
       document.getElementById('start').disabled = response.result;   
@@ -108,10 +108,10 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('start').disabled = response.result;   
       document.getElementById('stop').disabled = !response.result; 
     }
-  });
+  });*/
 
+  // Send a message to our extension to return the email of the person using the extension
   chrome.runtime.sendMessage({type: 'getEmail'}, function getEmail(response){
-    console.log(response.email);
     while (document.getElementById('connected').firstChild) {
       document.getElementById('connected').removeChild(document.getElementById('connected').firstChild);
     }
@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var pUser = document.createElement("p");
     var img = document.createElement("img");
     img.style.float = "left"
+    // If response.email is different of null, informs the user that the extension is saving its navigation data
     if (response.email != null) {
       img.setAttribute("src", "check.png");
       img.setAttribute("alt", "connected");
@@ -135,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('connected').appendChild(pUser);
   });
 
-  document.getElementById('start').addEventListener('click', function(){
+  /*document.getElementById('start').addEventListener('click', function(){
     document.getElementById('start').disabled = true; 
     document.getElementById('stop').disabled = false;
     chrome.runtime.sendMessage({type: 'start'}, function start(response){
@@ -176,9 +177,5 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
     chrome.runtime.sendMessage({type: 'reset'}, function get(response){});
-  });
-
-  chrome.storage.local.get('event', function(result) {
-    console.log(result.event);
-  })
+  });*/
 });

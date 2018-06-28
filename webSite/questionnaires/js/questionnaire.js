@@ -170,6 +170,7 @@ else {
 							}
 
 							var url = window.location.href; 
+							// Extension start to listen
 							chrome.runtime.sendMessage(editorExtensionId, {action: 'start', url: url, email: checkUser},
 								function(response) {
 									console.log(response);

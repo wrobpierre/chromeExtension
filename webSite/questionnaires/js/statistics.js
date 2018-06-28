@@ -19,11 +19,10 @@ var dataset2 = [
 { name: 'failure percentage', percent: 100.00 }
 ];
 
-
+// Create the HTML elements and generate graphics with datas
 post.done(function(data){
 	if (data != '') {
 		dataParse = JSON.parse(data);
-		console.log(dataParse);
 
 		var firstGraph = '#chart1'
 		dataset[0].percent = percentPieChart(dataParse, dataPieChart, 0);
@@ -51,6 +50,8 @@ post.done(function(data){
 });
 
 function questionnairesInput(){
+
+	// Create input to choose the questionnaire you want to see and give him title of questionnaires
 	$.each(dataParse, function(index, value){
 		var alreadyExist = false;
 		$.each(questionnairesNames, function(index, valueChart){
@@ -63,6 +64,8 @@ function questionnairesInput(){
 			$('#questionnaires').append('<input class="nav w3-button w3-block w3-left-align" type="button" name="" value="'+value.title+'">');
 		}
 	});
+
+	// When a questionnaire is selected
 	$('input').on('click', function(){
 		var firstGraph = '#chart1'
 		if(this.value != "All questionnaires"){
@@ -75,22 +78,24 @@ function questionnairesInput(){
 			$('#title').text("all questionnaires");
 		}
 
+		// Object to create the data pie chart
 		dataPieChart = {'percent': [] , 'total': 0};
 		dataPieChart2 = {'percent': [] , 'total': 0};
 		dataPieChart3 = {'percent': [] , 'total': 0};
 		dataPieChart4 = {'percent': [] , 'total': 0};
 
+		// Generate the pie chart for users who don't used help graph
 		$('#chart1').children().remove();
 		dataset[0].percent = percentPieChart(tabQuestionnaires, dataPieChart, 0);
 		dataset[1].percent = 100 - dataset[0].percent;
 		generatePieCharts(dataset, firstGraph);
 
+		// Generate the pie chart for users who used help graph
 		$('#chart2').children().remove();
 		var firstGraph2 = '#chart2'
 		dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
 		dataset2[1].percent = 100 - dataset2[0].percent;
 		generatePieCharts(dataset2, firstGraph2);
-
 
 		var parentBarChart = $('#barChart').parent();
 		var parentBarChart2 = $('#barChart2').parent();
@@ -107,10 +112,16 @@ function questionnairesInput(){
 		parentBarChart3.append('<canvas id="barChart3" class="w3-col l12"></canvas>');
 		parentBarChart4.append('<canvas id="barChart4" class="w3-col l12"></canvas>');
 
+		// Generate the bar chart for the knowledge for users who don't used help graph
 		barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Number of participants according to their level of knowledge in the area of ​​the questionnaire without graph help");
+		
+		// Generate the bar chart for the knowledge for users who used help graph
 		barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "Number of participants according to their level of knowledge in the area of ​​the questionnaire with graph help");
 
+		// Generate the bar chart for the rank for users who don't used help graph
 		barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Number of participants based on difficulty in answering questions without graph help");
+		
+		// Generate the bar chart for the rank for users who used help graph
 		barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "Number of participants based on difficulty in answering questions with graph help");
 
 		$('#nbParticipants p').remove();
@@ -123,6 +134,8 @@ function questionnairesInput(){
 		$("#avgSites2").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
 
 		$('#questions').children().remove();
+
+		// push only the value of the selected question into this tab
 		var questions = createQuestions(tabQuestionnaires);
 		if(this.value != "All questionnaires"){
 			$('#questions').append('<h3>Look at the statistics for each questions</h3>');
@@ -132,6 +145,8 @@ function questionnairesInput(){
 				$('#questions').append('<br>');
 
 			});
+
+			// When user select a question on the checkbox
 			$('#questions input').on('click', function(){
 				var choosedQuestion = chooseQuestion(dataParse, questions);
 				if( choosedQuestion != undefined && choosedQuestion.length>0){
@@ -139,23 +154,28 @@ function questionnairesInput(){
 
 					dataPieChart = {'percent': [] , 'total': 0};
 					dataPieChart2 = {'percent': [] , 'total': 0};
+
+					// Generate the pie chart for users who don't used help graph
 					$('#chart1').children().remove();
 					dataset[0].percent = percentPieChart(tabQuestionnaires, dataPieChart, 0);
 					dataset[1].percent = 100 - dataset[0].percent;
 					generatePieCharts(dataset, firstGraph);
 
+					// Generate the pie chart for users who used help graph
 					$('#chart2').children().remove();
 					var firstGraph2 = '#chart2'
 					dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
 					dataset2[1].percent = 100 - dataset2[0].percent;
 					generatePieCharts(dataset2, firstGraph2);
 
+					// Generate the pie chart for users who don't used help graph
 					$('#chart3').children().remove();
 					var firstGraph3 = '#chart3'
 					dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 0);
 					dataset2[1].percent = 100 - dataset2[0].percent;
 					generatePieCharts(dataset2, firstGraph3);
 
+					// Generate the pie chart for users who used help graph
 					$('#chart4').children().remove();
 					var firstGraph4 = '#chart4'
 					dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
@@ -177,13 +197,16 @@ function questionnairesInput(){
 					parentBarChart3.append('<canvas id="barChart3" class="w3-col l12"></canvas>');
 					parentBarChart4.append('<canvas id="barChart4" class="w3-col l12"></canvas>');
 
+					// Generate the bar chart for users who don't used help graph
 					barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Number of participants according to their level of knowledge in the area of ​​the questionnaire without graph help");
+					
+					// Generate the bar chart for users who used help graph
 					barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "Number of participants according to their level of knowledge in the area of ​​the questionnaire with graph help");
 
 					barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Number of participants based on difficulty in answering questions without graph help");
 					barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "Number of participants based on difficulty in answering questions with graph help");
 
-
+					//Generate the global informations
 					$('#nbParticipants p').remove();
 					$("#nbParticipants").append('<p>Number of participants : '+nbParticipants(tabQuestionnaires, 0)+'</p>');
 					$('#nbParticipants2 p').remove();
@@ -193,12 +216,12 @@ function questionnairesInput(){
 					$('#avgSites2 p').remove();
 					$("#avgSites2").append('<p>Number of sites visited on average with graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
 				}
+				// If no datas detected
 				else{
 					var parentBarChart = $('#barChart').parent();
 					var parentBarChart2 = $('#barChart2').parent();
 					var parentBarChart3 = $('#barChart3').parent();
 					var parentBarChart4 = $('#barChart4').parent();
-					// var parentBarChart4 = $('#barChart4').parent();
 
 					$('#chart1').children().remove();
 					$('#chart1').append('<p>No Data</p>');
@@ -226,6 +249,13 @@ function questionnairesInput(){
 	});
 }
 
+/**
+* The function “chooseQuestion” allow the user to choose the statistic of which question he want to see.
+* It check if the questions’ checkbox are checked or not.
+* 
+* @param : object dataParse- Datas of questionnaires to generate the statistics
+* @return : array - Array of objects which are sort by checked questions
+*/
 function chooseQuestion(dataParse){
 	var checkedQuestions = [];
 	var checked = $('#questions input');
@@ -241,6 +271,13 @@ function chooseQuestion(dataParse){
 	return checkedQuestions;
 }
 
+/**
+* The function “createQuestions” initialize the array questions which will contain the questions than a user want to see on the graphics 
+* (in this array you can’t have the same question twice).
+* 
+* @param : object dataParse-  Datas of questionnaires to generate the statistics
+* @return : array - Array of objects containing the datas of the questions 
+*/
 function createQuestions(dataParse){
 	var questions = []
 	var questionAlreadyExist = false;
@@ -257,6 +294,13 @@ function createQuestions(dataParse){
 	return questions;
 }
 
+/**
+* The function “chooseQuestionnaires” allow the user to choose the statistic of which questionnaire he want to see.  
+* 
+* @param : object dataParse-  Datas of questionnaires to generate the statistics
+* @param : string title - Datas of questionnaires to generate the statistics
+* @return : array - Array of objects containing the datas of the questions  
+*/
 function chooseQuestionnaires(dataParse, title){
 	var tabQuestionnaires = []
 	$.each(dataParse, function(index, value){
@@ -267,6 +311,14 @@ function chooseQuestionnaires(dataParse, title){
 	return tabQuestionnaires;
 }
 
+/**
+* The function “knowledgeBarChart” count the number of person who said they had a knowledge as novice, medium or expert.  
+* checkGraph determine if they had used the graph help.
+*
+* @param : object data Datas of questionnaires to generate the statistics.
+* @param : int checkGraph- if 1 the user has used the graphics help to answer questionnaires, else he don’t use the graphics help.
+* @return : array - Array of objects containing their knowledges 
+*/
 function knowledgeBarChart(data, checkGraph){
 	var keyUser;
 	var keyQuestionnaires;
@@ -283,9 +335,6 @@ function knowledgeBarChart(data, checkGraph){
 			keyQuestionnaires = value.key_questionnaires;
 			useGraph = value.use_graph;
 			knowledge = value.knowledge;
-		}
-		if (checkGraph == 1) {
-			console.log(value);
 		}
 
 		if((keyUser != value.key_user || keyQuestionnaires != value.key_questionnaires) && checkGraph == parseInt(useGraph)){
@@ -318,6 +367,14 @@ function knowledgeBarChart(data, checkGraph){
 	return knowledgeTab[0];
 }
 
+/**
+* The function “rankBarChart” count the number of person who find the questions as easy, medium or hard. 
+* checkGraph determine if they had used the graph help.
+*
+* @param : object dataPrase Datas of questionnaires to generate the statistics.
+* @param : int checkGraph- if 1 the user has used the graphics help to answer questionnaires, else he don’t use the graphics help.
+* @return : array - Array of objects containing the difficulties 
+*/
 function rankBarChart(dataParse, checkGraph){
 	var keyUser;
 	var keyQuestionnaires;
@@ -345,6 +402,13 @@ function rankBarChart(dataParse, checkGraph){
 	return rankTab[0];
 }
 
+/**
+* The function “percentPieChart” Calculate the percent of persons who answers right to list of questions.
+*
+* @param : object dataParse Datas of questionnaires to generate the statistics.
+* @param : object dataChart An object containing  a tab for the percent of right answer and an int for the total of questions.
+* @return : float- The percent of right answer for some questions
+*/
 function percentPieChart(dataParse, dataChart, checkGraph){
 	$.each(dataParse, function(index, value){
 		if(parseInt(value.result) && checkGraph == value.use_graph){
@@ -357,6 +421,13 @@ function percentPieChart(dataParse, dataChart, checkGraph){
 	return ((dataChart.percent.length/dataChart.total)*100).toFixed(2);
 }
 
+/**
+* The function “nbParticipants” Calculate the number of participants depending of their uses of the help graphics.
+*
+* @param : object dataParse Datas of questionnaires to generate the statistics.
+* @param : int checkGraph - if 1 the user has used the graphics help to answer questionnaires, else he don’t use the graphics help.
+* @return : int - The number of participants
+*/
 function nbParticipants(dataParse, checkGraph){
 	var count = 0;
 	var keyUser;
@@ -382,10 +453,16 @@ function nbParticipants(dataParse, checkGraph){
 			count ++;
 		}
 	});
-	console.log("fkezbfiuez"+count);
 	return count;
 }
 
+/**
+* The function “avgSites” Calculate the notes average of users for some questions.
+*
+* @param : object dataParse Datas of questionnaires to generate the statistics.
+* @param : int checkGraph - if 1 the user has used the graphics help to answer questionnaires, else he don’t use the graphics help.
+* @return : int - The average of notes.
+*/
 function avgSites(dataParse, checkGraph){
 	var count = 0;
 	var keyUser;
@@ -423,6 +500,12 @@ function avgSites(dataParse, checkGraph){
 	return (avg/count).toFixed(2);
 }
 
+/**
+* The function “avgSites” Calculate the notes average of users for some questions.
+*
+* @param : The function “showElem” Show the slide’s bar elements.
+* @param : object id- The id of an element of the DOM.
+*/
 function showElem(id) {
 	var x = document.getElementById(id);
 	if (x.className.indexOf("w3-show") == -1) {

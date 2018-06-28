@@ -6,31 +6,39 @@ var question = 1;
 var firstUrl;
 var adress = "http://163.172.59.102";
 var userEmail = null;
-// var adress = "http://localhost/chromeExtension"
 
+// Fires whenever the user opens a new tab and reloads a tab.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-
+  // Get information about the active tab
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+    // If the tab is still loading
     if(changeInfo.status == "loading"){
+      // We just take the url
       onUpdatedUrl = tabs[0].url;
     }
   });
+  // If the tab has finished loading
   if (changeInfo.status == "complete") {
     saveTime();
     getCurrentTabUrl(onUpdatedUrl);
   }  
 }); 
 
-chrome.tabs.onCreated.addListener(function(tab) {
-
-})
-
+/**
+ * Store the current tab’s url in the storage and get all tab’s datas to generate an object
+ * that we will store in the storage and save in the database in the end.
+ *
+ * @param string - The tab’s url where the user is located
+ *
+ * @return void
+ */
 function getCurrentTabUrl(eventUrl) {
   var urlRes
   var queryInfo = {
     active: true,
     currentWindow: true
   };
+  // Get information about the active tab
   chrome.tabs.query(queryInfo, (tabs) => {
     var tab = tabs.find(val => val.url == eventUrl);
     var url;
@@ -44,6 +52,7 @@ function getCurrentTabUrl(eventUrl) {
       url = eventUrl;
     }
 
+    // Get
     storage.get('firstUrl', function(result) {
       if(result.firstUrl != undefined && result.firstUrl != url){
         var keywords;
@@ -76,8 +85,10 @@ function getCurrentTabUrl(eventUrl) {
   });
 }
 
+// Fires when the active tab in a window changes
 chrome.tabs.onActivated.addListener(function(tabId, removeInfo) {
   var currentUrl;
+  // Get information about the active tab
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     currentUrl = tabs[0].url;
     getCurrentTabUrl(currentUrl);
@@ -85,6 +96,13 @@ chrome.tabs.onActivated.addListener(function(tabId, removeInfo) {
   });
 });
 
+/**
+ * Update the time spent on a tab each time it changes tab.
+ *
+ * @param void
+ *
+ * @return void
+ */
 function saveTime(){
   storage = chrome.storage.local;
   var dateEnd = new Date();
@@ -109,6 +127,13 @@ function saveTime(){
   });
 }
 
+/**
+ * Store values in the storage
+ *
+ * @param object - The object generate in the function “getCurrentTabUrl”
+ *
+ * @return void
+ */
 function saveList(values) {
   storage = chrome.storage.local;
   storage.get('data', function(result) {
@@ -141,6 +166,17 @@ function saveList(values) {
   })  
 }
 
+/**
+ *
+ *
+ *
+ *
+ * @param string - 
+ * @param string - 
+ * @param object - 
+ *
+ * @return void
+ */
 function compareDate(dateBegin, dateEnd, element){
   var timeBegin = new Date(dateBegin).getTime();
   var timeEnd = new Date(dateEnd).getTime();
@@ -179,6 +215,8 @@ function compareDate(dateBegin, dateEnd, element){
   element.timeOnPage.hours += hours;
 }
 
+// Fired when a message is sent from a content script (by tabs.sendMessage).
+// This event manages all internal communications of the extension.
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   if (message.type === 'start') {
     createUniqId();
@@ -207,6 +245,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
   }
 });
 
+// Fired when a message is sent from our website (by runtime.sendMessage).
+// Cannot be used in a content script. This event manages all communications between the extension and the website.
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
     if (request.action == 'stop') {
@@ -223,6 +263,14 @@ chrome.runtime.onMessageExternal.addListener(
     }
   });
 
+/**
+ *
+ *
+ *
+ * @param void
+ *
+ * @return string - 
+ */
 function sendSecondUrl(){
   storage.get('firstUrl', function(result) {
     var obj = {}
@@ -233,6 +281,13 @@ function sendSecondUrl(){
   });
 }
 
+/**
+ * Generate a unique id for the user and store the id in the storage
+ *
+ * @param void
+ *
+ * @return void
+ */
 function createUniqId(){
   storage.get('uniqId', function(result) {
     var id = (new Date().getTime().toString() + Math.floor((Math.random()*10000)+1).toString(16));
@@ -274,6 +329,14 @@ function sendFirstUrl(){
   });
 }
 
+/**
+ * This function starts recording web browsing data for a user. 
+ * This function is called when the user starts to make a questionnaire.
+ *
+ * @param string - The starting url of the search
+ *
+ * @return void
+ */
 function autoStart(url){
   if (!listen) {
     sendFirstUrl();
@@ -285,6 +348,14 @@ function autoStart(url){
   }
 }
 
+/**
+ * This function stops recording web browsing data for a user.
+ * This function is called when the user sends his answers.
+ *
+ * @param string - it is the email of the user who answered the questionnaire
+ *
+ * @return void
+ */
 function autoStop(email){
   if (listen) {
     storage.get('data', function(result){

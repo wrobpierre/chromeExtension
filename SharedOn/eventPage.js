@@ -309,6 +309,13 @@ function createUniqId(){
   });
 }
 
+/**
+ * Check in a current window if the firstUrl exist (add it if not) and return it.
+ *
+ * @param void
+ *
+ * @return string - the firstUrl
+ */
 function sendFirstUrl(){
   storage.get('firstUrl', function(result) {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {

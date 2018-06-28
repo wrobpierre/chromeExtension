@@ -10,6 +10,13 @@ var maxAvg = 0;
 var minAvg;
 var same = false;
 
+/**
+ * Returns the median of the array passed in parameter.
+ *
+ * @param array - An array containing objects
+ *
+ * @return object - The median of the array
+ */
 function median(values) {
   values.sort(function(a, b){ return a.total - b.total; });
   var half = Math.floor(values.length/2);
@@ -36,11 +43,15 @@ post.done(function(data) {
   var alreadySave = false;
   var maxQuestion = 0;
 
+  // List of data displayed in the graph "All web site"
   nytg.array_webSites = [];
+  // List of data displayed in the graph "Timeline"
   nytg.array_best_median = [];
 
   best_users = [];
+  // Contains all the users who answered the questionnaire, with all the sites they visited during the search and the number of sites visited
   best_users['view'] = [];
+  // Contains all the users who answered the questionnaire, with all the sites they visited during the search and the total time they put in doing the questionnaire
   best_users['time'] = [];
   
   dataParse = JSON.parse(data);
@@ -48,13 +59,16 @@ post.done(function(data) {
   if(dataParse.length > 0){
     bestNote = dataParse[0]['note'];
     dataParse.forEach(function(element){
+      // Check if the domain of the page belongs to google or to our site
       if ( element['host_name'].indexOf('www.google.') == -1 && element['host_name'].indexOf('163.172.59.102') == -1 ) {
         timer = JSON.parse(element['timer']);
 
+        // This condition allow us to know the best note
         if (element['note'] > bestNote) {
           bestNote = element['note'];
         }
 
+        // Check if the item has already been added to the array
         if ( best_users['view'][element['key_user']] == undefined ) {  
           best_users['view'][element['key_user']] = [];
           best_users['view'][element['key_user']]['total'] = JSON.parse(element['question']).length;
@@ -130,13 +144,15 @@ post.done(function(data) {
         }
       }
     });
-
+    
+    // Remove all users with a lower rating than the highest rating
     var tmp_best_users_view = best_users['view'].filter(function(element){ return element[0]['note'] == bestNote; });
     var tmp_best_users_time = best_users['time'].filter(function(element){ return element[0]['note'] == bestNote; });
 
     median_view = median(tmp_best_users_view);
     median_time = median(tmp_best_users_time);
 
+    // Check if the users are the same
     if (median_view[0]['key_user'] === median_time[0]['key_user']) {
       same = true;
 
@@ -177,6 +193,7 @@ post.done(function(data) {
       var nb_site_time = nytg.array_best_median.length - nb_site_view;
     }
 
+    // Sort by order of visit of the sites
     nytg.array_best_median.sort(function(a,b) {
       return a.first_time - b.first_time;
     });
@@ -185,6 +202,7 @@ post.done(function(data) {
 
     var order_view = 0;
     var order_time = 0;
+    // Gives positions and a visit order number, this numbers is used to determine the position of the circle on the "Timeline" graph
     nytg.array_best_median.forEach( function(element, index) {
       element["positions"] = {"total":{"x": Math.random()*600 - 300, "y": Math.random()*600 - 300 }};
       if (element['type'] == 'view') {
@@ -344,15 +362,23 @@ post.done(function(data) {
         return -Math.pow(d.radius,2.0)/8 
       };
     },
-    links           : [],
+    //links           : [],
     nodes           : [],
-    positiveNodes   : [],
+    //positiveNodes   : [],
     force           : {},
     svg             : {},
     circle          : {},
     gravity         : null,
     charge          : null,
     changeTickValues: nytg.changeTickValues,
+    /**
+     * This function determines the color of the circles.
+     * The color is based on the "timer" setting of the websites.
+     *
+     * @param object - this is the "timer" parameter of a site
+     *
+     * @return void
+     */
     categorizeChange: function(c){
       var time = parseInt(c['hours'])*3600 + parseInt(c['minutes'])*60 + parseInt(c['secondes']);
       var nbSecondesMax = parseInt(maxTime['hours'])*3600 + parseInt(maxTime['minutes'])*60 + parseInt(maxTime['secondes']);
@@ -420,6 +446,14 @@ post.done(function(data) {
     categoryPositionLookup  : {},
     categoriesList          : [],
     
+    /**
+     * This function initiates all variables and functions of "Chart".
+     * And initialize the legend of the graphics.
+     *
+     * @param void
+     *
+     * @return void
+     */
     init: function() {
       var that = this;
       
@@ -435,73 +469,22 @@ post.done(function(data) {
       };
       
       this.boundingRadius = this.radiusScale(this.totalValue);
-      this.centerX = this.width / 2;
       this.centerY = 300;
 
-      var maxView = null;
-      var minView = null;
-      var percent = 0;
-
-      for (var i=0; i < this.data.length; i++) {
-        if (maxView == null || maxView < parseInt(this.data[i].view)) {
-          maxView = this.data[i].view;
-        }
-        if (minView == null || minView > parseInt(this.data[i].view)) {
-          minView = this.data[i].view;
-        }
-      }
-
-      percent = maxView/100;
-      // Builds the nodes data array from the original data
-      for (var i=0; i < this.data.length; i++) {
-        var n = this.data[i];
-
-        var res = Math.exp((this.data[i].view/5)/percent);
-        var out = {
-          sid: n['id'],
-          radius: this.radiusScale(res),
-          group: n['host_name'],
-          change: n['timer'],
-          changeCategory: this.categorizeChange(n['timer']),
-          value: n['view'],
-          url: n['url'],
-          avg: n['avg'],
-          positions: n.positions,
-          x:Math.random() * 1000,
-          y:Math.random() * 1000
-        }
-        if (n.positions.total) {
-          out.x = n.positions.total.x + (n.positions.total.x - (that.width / 2)) * 0.5;
-          out.y = n.positions.total.y + (n.positions.total.y - (150)) * 0.5;
-        };
-        this.nodes.push(out)
-      };
-
-      this.nodes.sort(function(a, b){  
-        return Math.abs(b.value) - Math.abs(a.value);  
-      });
-      
-      for (var i=0; i < this.nodes.length; i++) {
-        this.positiveNodes.push(this.nodes[i])
-      };
-      
       this.svg = d3.select("#nytg-chartCanvas").append("svg:svg")
       .attr("width", this.width);
       
       if (!same) { 
         d3.select("#nytg-discretionaryOverlay").append("div")
-        .html("<p></p>")
         .style("top", '260px')
         .classed('nytg-discretionaryTick', true)
 
         d3.select("#nytg-discretionaryOverlay").append("div")
-        .html("<p></p>")
         .style("top", '440px')
         .classed('nytg-discretionaryTick', true)
       }
       else {
         d3.select("#nytg-discretionaryOverlay").append("div")
-        .html("<p></p>")
         .style("top", '330px')
         .classed('nytg-discretionaryTick', true)
       }
@@ -514,25 +497,9 @@ post.done(function(data) {
         .classed('nytg-discretionaryZeroTick', (this.changeTickValues[i] === 0) )
       };*/
       d3.select("#nytg-discretionaryOverlay").append("div")
-      //.html("<p></p>")
       .style("top", this.changeScale(0)+'px')
       .classed('nytg-discretionaryTick', true)
       .classed('nytg-discretionaryZeroTick', true)
-      /*d3.select("#nytg-discretionaryOverlay").append("div")
-      .html("<p>+26% or higher</p>")
-      .style("top", this.changeScale(100)+'px')
-      .classed('nytg-discretionaryTickLabel', true)
-      d3.select("#nytg-discretionaryOverlay").append("div")
-      .html("<p>&minus;26% or lower</p>")
-      .style("top", this.changeScale(-100)+'px')
-      .classed('nytg-discretionaryTickLabel', true)*/
-
-      // deficit circle
-      /*d3.select("#nytg-deficitCircle").append("circle")
-      .attr('r', this.radiusScale(this.deficitValue))
-      .attr('class',"nytg-deficitCircle")
-      .attr('cx', 125)
-      .attr('cy', 125);*/
 
       // $ 100 billion
       d3.select("#nytg-scaleKey").append("circle")
@@ -554,55 +521,15 @@ post.done(function(data) {
       .attr('class',"nytg-scaleKeyCircle")
       .attr('cx', 30)
       .attr('cy', 55);
-      
-      // This is the every circle
-      this.circle = this.svg.selectAll("circle")
-      .data(this.nodes, function(d) { return d.sid; });
-
-      this.circle.enter().append("svg:circle")
-      .attr("r", function(d) { return 0; } )
-      .style("fill", function(d) { return that.getFillColor(d); } )
-      .style("stroke-width", 1)
-      .attr('id',function(d){ return 'nytg-circle'+d.sid })
-      .style("stroke", function(d){ return that.getStrokeColor(d); })
-      .on("mouseover",function(d,i) { 
-        var el = d3.select(this)
-        var xpos = Number(el.attr('cx'))
-        var ypos = (el.attr('cy') - d.radius - 10)
-        el.style("stroke","#000").style("stroke-width",3);
-        d3.select("#nytg-tooltip").style('top',ypos+"px").style('left',xpos+"px").style('display','block')
-        .classed('nytg-plus', (d.changeCategory > 0))
-        .classed('nytg-minus', (d.changeCategory < 0));
-        
-        var $j = jQuery;
-
-        d3.select("#nytg-tooltip .nytg-url").html(that.nameFormat(d.url.substr(0, 35)+"..."))
-        d3.select("#nytg-tooltip .nytg-domain").text(d.group)
-        var url = new URL(d.url)
-
-        $j("#nytg-tooltip .nytg-logo").html('<img class="icon" src="'+url.protocol+"//"+url.hostname+"/favicon.ico"+'" alt="icon site" style="width: 40px;" onerror = "this.remove()" />')
-        if (d.value == 1) {
-          d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' view') 
-        }
-        else{
-          d3.select("#nytg-tooltip .nytg-value").html(that.bigFormat(d.value)+' views')
-        }
-      })
-
-      .on("mouseout",function(d,i) { 
-        d3.select(this)
-        .style("stroke-width",1)
-        .style("stroke", function(d){ return that.getStrokeColor(d); })
-        d3.select("#nytg-tooltip").style('display','none')})
-
-      .on("click", function(d) {
-        var win = window.open(d.url, '_blank');
-        win.focus();
-      });
-
-      this.circle.transition().duration(2000).attr("r", function(d){return d.radius})
     },
 
+    /**
+     * This function generates all the circles from the list of elements passed in parameter
+     *
+     * @param array - The list of elements to display in the graphic
+     *
+     * @return void
+     */
     update: function(array_data){
       var that = this;
 
@@ -720,6 +647,13 @@ post.done(function(data) {
       // this.circle.call(this.force.drag)
     },
     
+    /**
+     * This function manages the graphic display "All web site".
+     *
+     * @return void
+     *
+     * @param void
+     */
     totalLayout: function() {
       var that = this;
       this.force
@@ -736,6 +670,13 @@ post.done(function(data) {
       .start();     
     },
 
+    /**
+     * This function manages the graphic display "Timeline".
+     *
+     * @return void
+     *
+     * @param void
+     */
     discretionaryLayout: function() {
       $j('#navBarGraph')
 
@@ -746,7 +687,7 @@ post.done(function(data) {
       .friction(0.2)
       .on("tick", function(e){
         that.circle
-        .each(that.discretionarySort(e.alpha))
+        .each(that.discretionarySort())
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
       })
@@ -757,6 +698,13 @@ post.done(function(data) {
     // FORCES
     // ----------------------------------------------------------------------------------------
 
+    /**
+     * Manage moving circles smoothly when displaying the "All web sites" graph.
+     *
+     * @param float
+     *
+     * @return void
+     */
     totalSort: function(alpha) {
       var that = this;
       return function(d){
@@ -769,6 +717,13 @@ post.done(function(data) {
       };
     },
 
+    /**
+     * Make sure to sort the circles. Green circles at the top and the red circles at the bottom.
+     *
+     * @param float
+     *
+     * @return void
+     */
     buoyancy: function(alpha) {
       var that = this;
       return function(d){        
@@ -777,7 +732,14 @@ post.done(function(data) {
       };
     },
 
-    discretionarySort: function(alpha) {
+    /**
+     * Manage moving circles smoothly when displaying the "Timeline" graph.
+     *
+     * @return void
+     *
+     * @param void
+     */
+    discretionarySort: function() {
       var that = this;
       return function(d){
         if (!same) {
@@ -880,6 +842,13 @@ nytg.ChooseList.prototype.selectByElement = function(el) {
  ** FILE: base.js
  ********************************/
 
+ /**
+  * This is the function that starts the generation of graphics, without it nothing is displayed.
+  *
+  * @return void
+  *
+  * @param void
+  */
  nytg.ready = function() {
   var that = this;    
   nytg.c = new nytg.Chart();

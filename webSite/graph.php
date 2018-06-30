@@ -37,7 +37,7 @@
 		</div>
 
 	</div>
-	<div id="shell" class="w3-col m9 w3-margin">
+	<div id="shell" class="w3-col m9 w3-padding">
 		<div id="page" class="tabContent active">                   
 			<div id="main">
 				<div id="interactiveShell">
@@ -117,10 +117,10 @@
 														<h5>Timeline</h5>
 														<p>This graphic represent the navigation of two users with the best note (if only one line appears it's because there is only one people who answered this questionnaire). The graph reads from left to right, it represents the timeline of a user's navigation.</p>
 														<ul>
-															<li>The first line is the user who visited the fewest websites.</li>
-															<li>The second line is the user who answered the questionnaire the most quickly.</li>
-															<li>The size of the circles represents the number of times the user went to the page.</li>
-															<li>The color représente the time spend on the page (Red a few time and green a lot of time).</li>
+															<li><p>The first line is the user who visited the fewest websites.</p></li>
+															<li><p>The second line is the user who answered the questionnaire the most quickly.</p></li>
+															<li><p>The size of the circles represents the number of times the user went to the page.</p></li>
+															<li><p>The color représente the time spend on the page (Red a few time and green a lot of time).</p></li>
 														</ul>
 													</div>
 												</div>

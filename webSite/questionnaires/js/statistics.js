@@ -81,8 +81,14 @@ function questionnairesInput(){
 		// Object to create the data pie chart
 		dataPieChart = {'percent': [] , 'total': 0};
 		dataPieChart2 = {'percent': [] , 'total': 0};
-		dataPieChart3 = {'percent': [] , 'total': 0};
-		dataPieChart4 = {'percent': [] , 'total': 0};
+		dataset = [
+		{ name: 'success percentage', percent: 0.00 },
+		{ name: 'failure percentage', percent: 100.00 }
+		];
+		dataset2 = [
+		{ name: 'success percentage', percent: 0.00 },
+		{ name: 'failure percentage', percent: 100.00 }
+		];
 
 		// Generate the pie chart for users who don't used help graph
 		$('#chart1').children().remove();
@@ -113,25 +119,25 @@ function questionnairesInput(){
 		parentBarChart4.append('<canvas id="barChart4" class="w3-col l12"></canvas>');
 
 		// Generate the bar chart for the knowledge for users who don't used help graph
-		barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Number of participants according to their level of knowledge in the area of ​​the questionnaire without graph help");
+		barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Without graph help");
 		
 		// Generate the bar chart for the knowledge for users who used help graph
-		barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "Number of participants according to their level of knowledge in the area of ​​the questionnaire with graph help");
+		barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "With graph help");
 
 		// Generate the bar chart for the rank for users who don't used help graph
-		barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Number of participants based on difficulty in answering questions without graph help");
+		barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Without graph help");
 		
 		// Generate the bar chart for the rank for users who used help graph
-		barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "Number of participants based on difficulty in answering questions with graph help");
+		barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "With graph help");
 
 		$('#nbParticipants p').remove();
 		$("#nbParticipants").append('<p>Number of participants without graph help: '+nbParticipants(tabQuestionnaires, 0)+'</p>');
 		$('#nbParticipants2 p').remove();
-		$("#nbParticipants2").append('<p>Number of participants without graph help: '+nbParticipants(tabQuestionnaires, 1)+'</p>');
+		$("#nbParticipants2").append('<p>Number of participants with graph help: '+nbParticipants(tabQuestionnaires, 1)+'</p>');
 		$('#avgSites p').remove();
 		$("#avgSites").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 0)+'</p>');
 		$('#avgSites2 p').remove();
-		$("#avgSites2").append('<p>Number of sites visited on average without graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
+		$("#avgSites2").append('<p>Number of sites visited on average with graph help: '+avgSites(tabQuestionnaires, 1)+'</p>');
 
 		$('#questions').children().remove();
 
@@ -154,6 +160,14 @@ function questionnairesInput(){
 
 					dataPieChart = {'percent': [] , 'total': 0};
 					dataPieChart2 = {'percent': [] , 'total': 0};
+					dataset = [
+					{ name: 'success percentage', percent: 0.00 },
+					{ name: 'failure percentage', percent: 100.00 }
+					];
+					dataset2 = [
+					{ name: 'success percentage', percent: 0.00 },
+					{ name: 'failure percentage', percent: 100.00 }
+					];
 
 					// Generate the pie chart for users who don't used help graph
 					$('#chart1').children().remove();
@@ -167,20 +181,6 @@ function questionnairesInput(){
 					dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
 					dataset2[1].percent = 100 - dataset2[0].percent;
 					generatePieCharts(dataset2, firstGraph2);
-
-					// Generate the pie chart for users who don't used help graph
-					$('#chart3').children().remove();
-					var firstGraph3 = '#chart3'
-					dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 0);
-					dataset2[1].percent = 100 - dataset2[0].percent;
-					generatePieCharts(dataset2, firstGraph3);
-
-					// Generate the pie chart for users who used help graph
-					$('#chart4').children().remove();
-					var firstGraph4 = '#chart4'
-					dataset2[0].percent = percentPieChart(tabQuestionnaires, dataPieChart2, 1);
-					dataset2[1].percent = 100 - dataset2[0].percent;
-					generatePieCharts(dataset2, firstGraph4);
 
 					var parentBarChart = $('#barChart').parent();
 					var parentBarChart2 = $('#barChart2').parent();
@@ -198,13 +198,13 @@ function questionnairesInput(){
 					parentBarChart4.append('<canvas id="barChart4" class="w3-col l12"></canvas>');
 
 					// Generate the bar chart for users who don't used help graph
-					barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Number of participants according to their level of knowledge in the area of ​​the questionnaire without graph help");
+					barChart($('#barChart'), knowledgeBarChart(tabQuestionnaires, 0), "Without graph help");
 					
 					// Generate the bar chart for users who used help graph
-					barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "Number of participants according to their level of knowledge in the area of ​​the questionnaire with graph help");
+					barChart($('#barChart3'), knowledgeBarChart(tabQuestionnaires, 1), "With graph help");
 
-					barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Number of participants based on difficulty in answering questions without graph help");
-					barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "Number of participants based on difficulty in answering questions with graph help");
+					barChart($('#barChart2'), rankBarChart(tabQuestionnaires, 0), "Without graph help");
+					barChart($('#barChart4'), rankBarChart(tabQuestionnaires, 1), "With graph help");
 
 					//Generate the global informations
 					$('#nbParticipants p').remove();
@@ -244,9 +244,9 @@ function questionnairesInput(){
 
 				}
 			});
-		}
+}
 
-	});
+});
 }
 
 /**
@@ -411,14 +411,22 @@ function rankBarChart(dataParse, checkGraph){
 */
 function percentPieChart(dataParse, dataChart, checkGraph){
 	$.each(dataParse, function(index, value){
-		if(parseInt(value.result) && checkGraph == value.use_graph){
-			dataChart.percent.push(value.key_user);
+		if (checkGraph == value.use_graph) {
+			if(parseInt(value.result)){
+				console.log(value);
+				dataChart.percent.push(value.key_user);
+			}
+			dataChart.total++;
 		}
-		dataChart.total++;
 
 	});
-
-	return ((dataChart.percent.length/dataChart.total)*100).toFixed(2);
+	if (dataChart.total != 0) {
+		console.log(((dataChart.percent.length/dataChart.total)*100).toFixed(2));
+		return ((dataChart.percent.length/dataChart.total)*100).toFixed(2);
+	}
+	else{
+		return 0;
+	}
 }
 
 /**

@@ -1,6 +1,6 @@
 var adress = "http://163.172.59.102"
 
-/*function generateList(data) {
+function generateList(data) {
   if (data != undefined) {
     while (document.getElementById('nbSite').firstChild) {
       document.getElementById('nbSite').removeChild(document.getElementById('nbSite').firstChild);
@@ -57,7 +57,7 @@ function loadList() {
     generateList(result.data);
   })
 }
-
+/*
 function resetList() {
   chrome.storage.local.clear(function() {
     var error = chrome.runtime.lastError;
@@ -84,8 +84,8 @@ function sendData(key) {
     }
   });
 }
-
-loadList();*/
+*/
+loadList();
 
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementsByClassName("overlay")[0].addEventListener("click",function(e) {

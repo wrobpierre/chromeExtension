@@ -487,7 +487,6 @@ function avgSites(dataParse, checkGraph){
 			avg_site = parseInt(value.avg_sites);
 		}
 
-		console.log( checkGraph == parseInt(useGraph));
 		if((keyUser != value.key_user || keyQuestionnaires != value.key_questionnaires)  && checkGraph == useGraph){
 			avg += avg_site;
 			count ++;

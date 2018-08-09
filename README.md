@@ -5,7 +5,7 @@
 #SharedOn
 
 ## What is SharedOn ?
-Do you often use your internet to answer a question?
+Do you often use internet to answer a question?
 
 But you do not always understand the author's explanations and spend a lot of time learning about other sites.
 
